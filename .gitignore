@@ -1,0 +1,25 @@
+# ── Windows / OneDrive が勝手に作るもの ──
+desktop.ini
+Thumbs.db
+*.lnk
+
+# ── Node ──
+node_modules/
+.next/
+dist/
+npm-debug.log*
+pnpm-debug.log*
+
+# ── 自分で取っていたバックアップ ──
+# これからは git が履歴を持つので、手で複製したものは追いかけない
+*.bak
+prototype/play_backup.html
+
+# ── 作り直せるもの ──
+# node prototype/db/seed-airports.cjs で生成できる
+prototype/db/*.db
+
+# ── エディタ ──
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius: 0.75rem;
+}
+
+:root { --background: #061725; --foreground: #eef8ff; --primary: #76e4ed; --primary-foreground: #062033; --secondary: #163b52; --secondary-foreground: #edfaff; --muted: #123249; --muted-foreground: #8ba4b6; --border: rgba(255,255,255,.1); --ring: #76e4ed; }
+* { box-sizing: border-box; }
+html { background: #061725; }
+body { margin: 0; font-family: Arial, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif; }
+.sky-glow { background: radial-gradient(circle at 82% -10%, rgba(28, 130, 173, .24), transparent 35%), radial-gradient(circle at 10% 68%, rgba(83, 53, 159, .13), transparent 28%); }
+.gantt-area { background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012)), repeating-linear-gradient(90deg, transparent 0, transparent calc(6.25% - 1px), rgba(255,255,255,.045) calc(6.25% - 1px), rgba(255,255,255,.045) 6.25%); }
+.flight-block { box-shadow: 0 9px 24px rgba(1, 10, 20, .28); }
