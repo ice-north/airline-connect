@@ -1873,6 +1873,19 @@
     .fin-grid b.pos{color:#1f7a3d;}.fin-grid b.loss{color:#c0392b;}
     .fin-ops{display:flex;gap:6px;margin-top:8px;}
     .fin-ops .fin-btn{flex:1;width:auto;padding:8px 4px;}
+    /* ── 2026-10-27：企画タブに置く「銀行・証券」の入口 ──
+       お金の話（借入・買収）が会社タブの2か所に散っていたので、入口をここに集めた */
+    .fin-entry{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
+    .fin-card{display:block;width:100%;text-align:left;padding:11px 12px;border-radius:12px;
+      border:2px solid #cfe6f3;background:#f6fbfe;color:#17384a;font-family:inherit;cursor:pointer;min-height:58px}
+    .fin-card:hover{background:#eaf6fd;border-color:#9fd3ee}
+    .fin-card b{display:block;font-size:14px;line-height:19px}
+    .fin-card small{display:block;margin-top:3px;font-size:11px;line-height:15px;color:#496572}
+    .fin-card.bank{border-color:#c9ddf7;background:#f2f7ff}
+    .fin-card.bank:hover{background:#e9f1ff}
+    .fin-card.stock{border-color:#d3e9cd;background:#f5fbf3}
+    .fin-card.stock:hover{background:#edf7ea}
+    .fin-win{width:min(560px,95vw)}
     .pnl-chart{width:100%;height:96px;background:#f7fbfe;border:1.5px solid #dcecf5;border-radius:12px;}
     .chart-cap{font-size:12px;color:#405964;text-align:right;margin-top:3px;}
     /* 企画（認知度・販促） */
@@ -2600,7 +2613,7 @@
       state.draftOpen=false;if(state.draft){state.draft.stops=[];state.draft.planeId=null;state.draft.pick=null;}
       /* 2026-10-26：開いている窓も「いま触っている最中」なので、読むたびに閉じる。
          設定の窓を開けたまま保存すると、つづきから始めた瞬間に窓が出てしまう。 */
-      state.fleetSetup=null;state.fleetDraft=null;state.shopOpen=false;
+      state.fleetSetup=null;state.fleetDraft=null;state.shopOpen=false;state.finWin=null;
       syncAssign();ensureOutlook();if(d.view){mainView.lat=d.view.lat;mainView.lng=d.view.lng;mainView.z=clampZ(d.view.z);zoomTarget=mainView.z;}return true;}catch(e){return false;}}
     function resetGame(){try{localStorage.removeItem(SAVE_KEY);}catch(e){}const fmt=state.moneyFmt;applyState(null);state.moneyFmt=fmt||'sen';   /* 表示の好みは進行ではないのでやり直しても残す */mainView.lat=35.8;mainView.lng=138.7;mainView.z=MAP_Z0;zoomTarget=mainView.z;invalidateInf();render();}
     // 装備プリセット：座席配置とサービス水準
@@ -4875,7 +4888,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         :!flying.length?'待機中：<b>「航路」タブで路線を作り、機体を載せる</b>'
         :`運航中 <b>${flying.length}路線</b>／週<b>${flying.reduce((s,r)=>s+r.frequency,0)}便</b>`
           +(idle.length?`　<span class="idle-warn">⚠ 遊休機 ${idle.length}機</span>`:'');}applyTutTabs();
-      renderMap();renderPanel();renderTutorial();renderShop();renderPlanePicker();renderFleetModal();renderChapterBar();scheduleSave()}
+      renderMap();renderPanel();renderTutorial();renderShop();renderPlanePicker();renderFleetModal();renderFinWin();renderChapterBar();scheduleSave()}
     function renderMap(){refreshMainMap();renderOverlay();}
     function renderOverlay(){
       const mapEl=byId('mainMap'),host=byId('airports');
@@ -5240,7 +5253,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
        now:()=>state.secondBase?`${state.secondBase}を開設済み`:'まだ本社だけ（空港の画面から開けます）',
        done:()=>!!state.secondBase},
       {n:'第4章　再編',g:'他社を1社、仲間にする',ic:'🤝',
-       hint:'まず自分が大きくなること。自社より小さい会社しか仲間にできません。',
+       hint:'企画タブの〔📈 証券〕から。まず自分が大きくなること——自社より小さい会社しか仲間にできません。',
        now:()=>{const mine=Math.round(ownWeight());
          const can=Object.keys(rivals).filter(c=>!(state.rivalMerged||{})[c]&&!memberBlockedWhy(c));
          return can.length?`いま仲間にできる会社 ${can.length}社（自社 ${mine.toLocaleString()}旅客）`
@@ -7042,6 +7055,42 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       <p style="font-size:12px;color:var(--muted);margin:6px 2px 0">機体は<b>持っているだけで値が下がります</b>（生産中の型で年${Math.round(DEPR_NEW*100)}%、生産終了なら年${Math.round(DEPR_OLD*100)}%）。借入枠はこの<b>資産価値の7割</b>なので、古い機体ばかりだと枠も痩せます。</p>
       <div class="fin-ops"><button class="mini-btn fin-btn" data-fin="borrow" ${loanRoom()<loanStep()?'disabled':''}>${yen(loanStep())} 借りる</button><button class="mini-btn fin-btn" data-fin="repay" ${state.loan<=0?'disabled':''}>${yen(Math.min(state.loan,loanStep()))} 返す</button></div>
       <p style="font-size:12px;color:var(--muted);margin:7px 2px 0">利息は毎週 <b>${(loanRate()*100).toFixed(2)}%</b>。機体を買う頭金が足りないときの<b>つなぎ</b>に使いましょう。資金がマイナスになると倒産です。</p></div>`;}
+    /* ── 2026-10-27：お金の窓（🏦銀行・📈証券）──
+       借入は「会社タブの右サイドバー」、買収は「地図の下の折りたたみ」と、
+       お金の話が離れた2か所に分かれていて、どちらも見つけにくかった。
+       どちらも**会社をどう大きくするか**という同じ種類の手なので、
+       企画タブの入口から窓で開く形に揃える（買い物の窓と同じ作り）。 */
+    function openFinWin(k){state.finWin=k;sfx.pop();render();}
+    function closeFinWin(){state.finWin=null;sfx.tap();render();}
+    function renderFinWin(){
+      const old=byId('finModal');
+      if(!state.finWin){if(old)old.remove();return;}
+      const bank=state.finWin==='bank';
+      const html=`<div class="shop-modal" id="finModal"><div class="shop-win fin-win">
+        <div class="shop-head"><b>${bank?'🏦 銀行':'📈 証券'}</b><span class="shop-cash">所持金 ${yen(Math.round(state.cash))}</span><button class="shop-close" id="closeFinWin">✕ とじる</button></div>
+        <div class="shop-body">${bank?financeHtml():stockHtml()}</div></div></div>`;
+      /* 窓の根は作り直さない（作り直すと、押すたびに入場アニメが再生されてチラつく）。
+         中の手は貼り替えるたびに結び直し、背景を押して閉じる手は作ったときだけ。 */
+      paintModal('finModal',html,()=>{
+        byId('closeFinWin').addEventListener('click',closeFinWin);
+        document.querySelectorAll('#finModal .fin-btn').forEach(b=>b.addEventListener('click',()=>{
+          if(b.dataset.fin==='borrow'){const w=tutBlockMoney('borrow');if(w)return notice(w);return borrowLoan(loanStep());}
+          return repayLoan(Math.min(state.loan,loanStep()));}));
+        document.querySelectorAll('#finModal .al-btn').forEach(b=>b.addEventListener('click',()=>allianceAction(b.dataset.ally,b.dataset.kind)));
+      },()=>{
+        byId('finModal').addEventListener('click',e=>{if(e.target.id==='finModal')closeFinWin();});
+      });
+    }
+    /* 証券の窓。買える相手は「自社より小さい会社」だけなので、
+       まず自社の大きさを出してから一覧を並べる（押せない理由が先に分かる） */
+    function stockHtml(){
+      const mine=Math.round(ownWeight()),live=livingCarriers().length;
+      const own=Object.keys(state.alliances||{}).filter(c=>state.alliances[c]==='member');
+      const wk=own.reduce((s,c)=>s+carrierWeeklyProfit(c),0);
+      return `<div class="money-line"><span class="ml-ic">📈</span><div><b>自社の規模 ${mine.toLocaleString()} 旅客/週</b><small>買えるのは<b>これより小さい会社</b>だけです（残り${live}社）</small></div></div>`
+        +(own.length?`<div class="fin-grid"><div><span>傘下の会社</span><b>${own.length}社</b></div><div><span>傘下からの収入</span><b class="pos">+${yen(wk)}</b></div><div><span>次に買えるまで</span><b>${Math.max(0,MERGE_COOLDOWN-(state.week-(state.lastMergeWeek||-999)))}週</b></div></div>`:'')
+        +allianceHtml();
+    }
     function allianceHtml(){
       const al=state.alliances||{},rank={member:0,ally:1};
       const rows=Object.keys(rivals).filter(c=>!(state.rivalMerged||{})[c]).map(c=>({c,v:carrierValue(c),f:carrierFreq(c),a:al[c]}))
@@ -7200,7 +7249,16 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           <button class="mini-btn promo-btn" data-act="regad" data-r="${x.rg}" ${x.now>=100||state.cash<REG_AD_COST?'disabled':''}>+14</button>
           <small class="rg-sub">${x.seats?`週${x.seats.toLocaleString()}席`:'未就航'}　市場を <b>${x.pct}%</b> 取れます</small>
         </div>`;}).join('');
-      return `<h2>企画（広告・キャンペーン）</h2>
+      const ownCo=Object.keys(state.alliances||{}).filter(c=>state.alliances[c]==='member').length;
+      return `<h2>企画（資金・広告）</h2>
+      ${/* ── 2026-10-27：お金の入口をここに置いた ──
+            借りるのは会社タブの右サイドバー、買収は地図の下の折りたたみ、と
+            離れた2か所に分かれていた。どちらも「会社をどう大きくするか」の手なので、
+            広告と並べて企画タブに集める。中身は窓で開く（欄に詰めると一覧が読めない）。 */''}
+      <div class="fin-entry">
+        <button type="button" class="fin-card bank" id="openBank"><b>🏦 銀行</b><small>${state.loan>0?`借入 ${yen(Math.round(state.loan))}・`:''}あと ${yen(loanRoom())} 借りられます</small></button>
+        <button type="button" class="fin-card stock" id="openStock"><b>📈 証券</b><small>${ownCo?`傘下 ${ownCo}社・`:''}他社と提携・買収</small></button>
+      </div>
       <p><b>知名度は地域ごとに違います。</b>飛んでいる地域では名前が広まり、飛んでいない地域では無名のままです。
       路線の集客に効くのは<b>両端の地域の知名度</b>——片方で知られていなければ、客は集まりません。</p>
       <div class="aware-box"><div class="aware-head"><b>📣 全国平均</b><span>${aw}/100（人口で重みづけ）</span></div><div class="aware-bar"><i style="width:${aw}%"></i></div></div>
@@ -7237,8 +7295,9 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       <h3 class="step-title">🏆 全国ランキング（週間旅客数）</h3>${rankBoardHtml()}
       <p style="font-size:12px;color:var(--muted);margin:4px 2px 0">大手が乗り入れていない空白路線を積み上げ、シェアを伸ばして日本一を目指しましょう。</p>
       ${modLines.length?`<div class="market"><b>現在の強化効果</b><br><span>${modLines.join('　/　')}</span></div>`:''}
+      ${/* 2026-10-27：右のサイドバーにあった「🏦 お金を借りる」を外した。
+            企画タブの〔🏦 銀行〕へ移したので、ここに置くと入口が2つになる。 */''}
       ${masterDetail('coSide',[
-        {k:'fin',ic:'🏦',label:'お金を借りる',sub:state.loan>0?`借入 ${yen(Math.round(state.loan))}`:'無借金',body:()=>financeHtml()},
         {k:'sys',ic:'⚙️',label:'表示設定・セーブ',sub:'自動保存',body:()=>
           `<div class="field"><label>金額の表示</label><div class="seg">${Object.keys(moneyFormats).map(k=>`<button type="button" class="seg-btn${(state.moneyFmt||'sen')===k?' on':''}" data-money="${k}">${moneyFormats[k]}<small>${(function(){const f=state.moneyFmt;state.moneyFmt=k;const s=yen(123456789);state.moneyFmt=f;return s;})()}</small></button>`).join('')}</div></div>`
           +`<p style="font-size:12px;color:var(--muted);margin:10px 2px 8px">進行は<b>自動保存</b>されます。次に開くと「コンティニュー」で再開できます。</p>`
@@ -7274,7 +7333,8 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         {k:'plane_pl',ic:'💰',label:'機材別 週次収支',sub:`${state.planes.length}機ぶん`,body:()=>fleetPLHtml()},
         {k:'pnl',  ic:'📈',label:'資金推移グラフ',sub:`第${state.week}週まで`,body:()=>pnlChartHtml()},
         {k:'fleet',ic:'✈', label:'保有機材',    sub:`${state.planes.length}機・就航便と時刻`,body:()=>fleet},
-        {k:'ally', ic:'🤝',label:'提携・買収',  sub:'他社と組む',body:()=>allianceHtml()},
+        /* 2026-10-27：「🤝 提携・買収」はここから外し、企画タブの〔📈 証券〕へ移した。
+           ここに残すと入口が2つになる。会社タブに残るのは**読む情報**だけ。 */
         {k:'world',ic:'🛫',label:'他社の動き',  sub:'社風と最近の出来事',body:()=>rivalWorldHtml()},
         {k:'res',  ic:'🔬',label:'調査部門',    sub:'見込みの精度',body:()=>researchHtml()},
         {k:'assets',ic:'🛠',label:'導入済みの設備',sub:`機材${state.equipment.length}・施設${state.facilities.length}`,
@@ -7700,15 +7760,22 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         bindRouteDrawers();
         document.querySelectorAll('[data-rsort]').forEach(b=>b.addEventListener('click',()=>{state.routeSort=b.dataset.rsort;sfx.tap();render();}));
         document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{state.routeView=b.dataset.view;sfx.tap();render();}));
-        {const pb=byId('cmPedia');if(pb)pb.addEventListener('click',()=>{sfx.tap();openPedia();});}document.querySelectorAll('.fin-btn').forEach(b=>b.addEventListener('click',()=>{
+        {const pb=byId('cmPedia');if(pb)pb.addEventListener('click',()=>{sfx.tap();openPedia();});}
+        /* 2026-10-27：借入と買収の手は窓（#finModal）へ移した。
+           ここで `.fin-btn` を document 全体から拾うと、窓が開いたまま会社タブを描き直したときに
+           窓のボタンへ二重に手が付き、押しても取り消し合って何も起きなくなる。欄の中だけに絞る。 */
+        document.querySelectorAll('#panel .fin-btn,#wide .fin-btn').forEach(b=>b.addEventListener('click',()=>{
           if(b.dataset.fin==='borrow'){const w=tutBlockMoney('borrow');if(w)return notice(w);return borrowLoan(loanStep());}
           return repayLoan(Math.min(state.loan,loanStep()));}));document.querySelectorAll('.lease-return').forEach(b=>b.addEventListener('click',()=>returnLease(b.dataset.p)));
         /* 売却は戻せないので、2度押しで確定させる */
         document.querySelectorAll('.plane-sell').forEach(b=>b.addEventListener('click',()=>{
           {const w=tutBlockMoney('sell');if(w)return notice(w);}
           if(b.dataset.c!=='1'){b.dataset.c='1';b.textContent='本当に売るならもう一度';return;}
-          sellPlane(b.dataset.p);}));document.querySelectorAll('.al-btn').forEach(b=>b.addEventListener('click',()=>allianceAction(b.dataset.ally,b.dataset.kind)));document.querySelectorAll('.seg-btn[data-money]').forEach(b=>b.addEventListener('click',()=>setMoneyFmt(b.dataset.money)));document.querySelectorAll('[data-res]').forEach(b=>b.addEventListener('click',()=>setResearch(b.dataset.res)));{const cr=byId('coRename');if(cr)cr.addEventListener('click',()=>{const n=cleanAirlineName(byId('coName').value),c=cleanAirlineCode(byId('coCode').value);state.airline={name:n,code:c};sfx.chime();notice(`社名を「${n}（${c}）」に変更しました。`);saveGame();render();});}{const rt=byId('replayTutBtn');if(rt)rt.addEventListener('click',()=>{state.tutorial={step:0,done:false};try{localStorage.removeItem('am_tut_done');}catch(e){}sfx.pop();state.panelView='fleet';notice('管制塔カンセの案内を最初から表示します。');render();});}{const tt=byId('toTitleBtn');if(tt)tt.addEventListener('click',()=>{sfx.tap();saveGame();showTitle();});}{const rg=byId('resetGameBtn');if(rg)rg.addEventListener('click',()=>{if(rg.dataset.c!=='1'){rg.dataset.c='1';rg.textContent='本当に消してよければもう一度';return;}sfx.tap();resetGame();showTitle();});}return}
-      if(state.panelView==='promo'){byId('panel').innerHTML=promoHtml();document.querySelectorAll('.promo-btn').forEach(b=>b.addEventListener('click',()=>promoAction(b.dataset.act,b.dataset.r)));return}
+          sellPlane(b.dataset.p);}));document.querySelectorAll('#panel .al-btn,#wide .al-btn').forEach(b=>b.addEventListener('click',()=>allianceAction(b.dataset.ally,b.dataset.kind)));document.querySelectorAll('.seg-btn[data-money]').forEach(b=>b.addEventListener('click',()=>setMoneyFmt(b.dataset.money)));document.querySelectorAll('[data-res]').forEach(b=>b.addEventListener('click',()=>setResearch(b.dataset.res)));{const cr=byId('coRename');if(cr)cr.addEventListener('click',()=>{const n=cleanAirlineName(byId('coName').value),c=cleanAirlineCode(byId('coCode').value);state.airline={name:n,code:c};sfx.chime();notice(`社名を「${n}（${c}）」に変更しました。`);saveGame();render();});}{const rt=byId('replayTutBtn');if(rt)rt.addEventListener('click',()=>{state.tutorial={step:0,done:false};try{localStorage.removeItem('am_tut_done');}catch(e){}sfx.pop();state.panelView='fleet';notice('管制塔カンセの案内を最初から表示します。');render();});}{const tt=byId('toTitleBtn');if(tt)tt.addEventListener('click',()=>{sfx.tap();saveGame();showTitle();});}{const rg=byId('resetGameBtn');if(rg)rg.addEventListener('click',()=>{if(rg.dataset.c!=='1'){rg.dataset.c='1';rg.textContent='本当に消してよければもう一度';return;}sfx.tap();resetGame();showTitle();});}return}
+      if(state.panelView==='promo'){byId('panel').innerHTML=promoHtml();document.querySelectorAll('.promo-btn').forEach(b=>b.addEventListener('click',()=>promoAction(b.dataset.act,b.dataset.r)));
+        byId('openBank').addEventListener('click',()=>openFinWin('bank'));
+        byId('openStock').addEventListener('click',()=>openFinWin('stock'));
+        return}
       if(state.panelView==='routes'){
         const d=state.draft,park=d.park||state.base,previewPlane=state.planes.find(p=>!p.assigned)||state.planes[0];
         let chips=`<span class="chip base">${park}</span>`;d.stops.forEach((n,i)=>{chips+=`<span class="chip-arrow">→</span><span class="chip">${n}<button data-rm="${i}" class="chip-x" title="外す">×</button></span>`;});chips+=`<span class="chip-arrow">→</span><span class="chip park">${park}<small>泊×${nightRate(park)}</small></span>`;
