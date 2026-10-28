@@ -1902,8 +1902,16 @@
     .stk-row .al-info b,.stk-row .al-info span span{display:inline}
     .stk-row .al-info>b,.stk-row .al-info>span{display:block}
     .stk-row .al-b{display:inline-block}
-    /* 「保有 6単元（¥33,330千）」が狭い画面で「保／有」と割れないように */
-    .stk-hold{white-space:nowrap}
+    /* 折り返さない1かたまりにしておく。狭い画面では、行の途中で割れるのではなく
+       まるごと次の行へ落ちる（inline-block にしないと、はみ出してボタンの下に潜る） */
+    /* 折り返さない1かたまりにしておく。狭い画面では行の途中で割れるのではなく、
+       まるごと次の行へ落とす。
+       2026-10-28：`.stk-row .al-info span span{display:inline}`（中の<span>を行に戻す規則）に
+       負けて効いていなかった。span.stk-hold と書いて、そちらより強くする。 */
+    .stk-row .al-info span.stk-hold{white-space:nowrap;display:inline-block}
+    /* 他社の株の見出しと、便数の札 */
+    .stk-head{font-size:13px;color:#2a4657;margin:16px 0 8px;padding-top:12px;border-top:2px solid #e3edf3}
+    .al-b.freq{background:#c2d2da;color:#2a4657}
     .money-line small b{display:inline}
     .stk-row{align-items:flex-start}
     .stk-ic{background:#eef5f9;color:#2a4657;margin-top:2px}
@@ -2462,7 +2470,10 @@
         return s+(v<=l.paid*VALUE_FLOOR?0:Math.round(v*(1-Math.pow(1-DEPR_FACIL,1/52))));},0);
       return state.planes.reduce((s,p)=>s+planeDepreciation(p),0)+ownedUpgrades().reduce((s,id)=>s+upgradeDepreciation(id),0)+lng;}
     /* 純資産＝資産（現金＋有形固定資産）−負債（借入金） */
-    function netWorth(){return Math.round(state.cash)+tangibleAssets()-Math.round(state.loan);}
+    /* 2026-10-28：持ち株も会社の値打ちのうち。現金が株に変わっただけで純資産が減ると、
+       優待を買う手がただの損に見えてしまう。
+       ただし借入枠（機体の資産価値の7割）には入れない——株を担保に借りて株を買う輪ができるため */
+    function netWorth(){return Math.round(state.cash)+tangibleAssets()+allStockValue()-Math.round(state.loan);}
     function sellPlane(planeId){
       const p=state.planes.find(x=>x.id===planeId);if(!p)return;
       if(p.leased)return notice('リース機は売れません。「返却」で保証金が戻ります。');
@@ -2625,7 +2636,7 @@
       if(kind==='lounge')return buildLounge(name);
       if(kind==='handling')return startHandling(name);
     }
-    const state={base:null,secondBase:null,selectedBase:null,selected:null,panelView:'airport',cash:400000000,day:1,week:1,reputation:70,brand:35,awareness:20,regionAware:null,tutorialFilled:false,tutPos:null,draftOpen:false,openRoute:{},loan:0,history:[],rivalAdds:[],alliances:{},suggestions:null,shares:{},stockPx:{},stockPrev:{},stockLot:1,finTab:'shares',chapter:0,cleared:[],won:false,moneyFmt:'sen',
+    const state={base:null,secondBase:null,selectedBase:null,selected:null,panelView:'airport',cash:400000000,day:1,week:1,reputation:70,brand:35,awareness:20,regionAware:null,tutorialFilled:false,tutPos:null,draftOpen:false,openRoute:{},loan:0,history:[],rivalAdds:[],alliances:{},suggestions:null,shares:{},stockPx:{},stockPrev:{},stockLot:1,finTab:'shares',cShares:{},carrierMood:{},carrierPrev:{},cLot:10,chapter:0,cleared:[],won:false,moneyFmt:'sen',
       /* 四半期の収支：qAcc はその期に入った週の決算、lastQuarterReport は締めたあとの集計 */
       qAcc:[],lastQuarterReport:null,pendingQuarter:false,airline:{name:'あおぞら航空',code:'AOZ'},difficulty:'normal',weather:null,wxNext:[],rivalNew:[],rivalGone:[],rivalMerged:{},rivalAllies:[],worldLog:[],tutorial:{step:0,done:(()=>{try{return localStorage.getItem('am_tut_done')==='1'}catch(e){return false}})()},gameOver:false,equipment:[],facilities:[],airportDev:{},shopTab:'air',shopSort:'class',shopRev:false,shopOpenItem:{},routeSort:'net',routeView:'card',openSect:{},pickFor:null,fleetSetup:null,fleetDraft:null,planes:[],routes:[],draft:{stops:[],park:null,frequency:7,fare:'普通',timeBand:1,season:'all',days:[0,1,2,3,4,5,6],trips:1},lastReport:null,activeFlights:[],currentFlight:null,operationQueue:[],simulating:false,simulationSpeed:1};
     // 初期状態の控え。セーブに無い項目はここから埋める（古いセーブでも壊れないように）
@@ -2647,7 +2658,10 @@
       state.fleetSetup=null;state.fleetDraft=null;state.shopOpen=false;state.finWin=null;
       /* 2026-10-27：古いセーブには株の欄が無い。無ければ作って、株価は初期値から始める */
       if(!state.shares)state.shares={};if(!state.stockPx)state.stockPx={};if(!state.stockPrev)state.stockPrev={};
-      if(!state.stockLot)state.stockLot=1;if(!state.finTab)state.finTab='shares';ensureStockPx();
+      if(!state.stockLot)state.stockLot=1;if(!state.finTab)state.finTab='shares';
+      if(!state.cShares)state.cShares={};if(!state.carrierMood)state.carrierMood={};if(!state.carrierPrev)state.carrierPrev={};
+      if(!state.cLot)state.cLot=10;
+      ensureStockPx();
       syncAssign();ensureOutlook();if(d.view){mainView.lat=d.view.lat;mainView.lng=d.view.lng;mainView.z=clampZ(d.view.z);zoomTarget=mainView.z;}return true;}catch(e){return false;}}
     function resetGame(){try{localStorage.removeItem(SAVE_KEY);}catch(e){}const fmt=state.moneyFmt;applyState(null);state.moneyFmt=fmt||'sen';   /* 表示の好みは進行ではないのでやり直しても残す */mainView.lat=35.8;mainView.lng=138.7;mainView.z=MAP_Z0;zoomTarget=mainView.z;invalidateInf();render();}
     // 装備プリセット：座席配置とサービス水準
@@ -3316,6 +3330,53 @@
       let t=-1;for(let i=0;i<n;i++)if(u>=STOCK_TIERS[i])t=i;return t;}
     function stockLotCost(id,lots){return stockPx(id)*STOCK_UNIT*Math.max(1,lots|0);}
     function stockValue(){return Object.keys(stockCatalog).reduce((s,id)=>s+stockUnits(id)*STOCK_UNIT*stockPx(id),0);}
+    /* ── 2026-10-28：他社（航空会社）の株 ──
+       取引先の株が「費用を下げる」のに対し、同業の株は性格が違う。
+         ・毎週の<b>配当</b>（相手の儲けのうち、持っているぶん）
+         ・<b>仲間にする値段が持株ぶん安くなる</b>（株は買収の前払いでもある）
+       値段は「会社の大きさ（便数）÷ 発行株数 × その週の人気」。
+       便数が増えれば自然に上がるので、揺れは取引先より小さくしてある。
+       1社＝100万株＝1,000単元なので、1単元＝0.1%。 */
+    const CARRIER_SHARES=1000000;
+    function carrierTradable(c){return !!rivals[c]&&!(state.rivalMerged||{})[c]&&!isOwned(c);}
+    function carrierMood(c){const m=(state.carrierMood||{})[c];return m>0?m:1;}
+    function carrierPx(c){return Math.max(50,Math.round(carrierValue(c)/CARRIER_SHARES*carrierMood(c)));}
+    function carrierPrevPx(c){const p=(state.carrierPrev||{})[c];return p>0?Math.round(p):carrierPx(c);}
+    function carrierUnits(c){return Math.max(0,Math.floor(((state.cShares||{})[c])||0));}
+    function carrierMaxUnits(){return Math.floor(CARRIER_SHARES/STOCK_UNIT);}   /* 1,000単元＝100% */
+    function carrierStake(c){return Math.min(1,carrierUnits(c)*STOCK_UNIT/CARRIER_SHARES);}
+    function carrierDividend(c){return carrierTradable(c)?Math.round(carrierWeeklyProfit(c)*carrierStake(c)):0;}
+    function dividendWeekly(){try{return Object.keys(rivals).reduce((s,c)=>s+carrierDividend(c),0);}catch(e){return 0;}}
+    function carrierStockValue(){try{return Object.keys(rivals).reduce((s,c)=>s+(carrierTradable(c)?carrierUnits(c)*STOCK_UNIT*carrierPx(c):0),0);}catch(e){return 0;}}
+    /* 取引先＋他社をあわせた持ち株の値打ち。純資産と貸借対照表で使う */
+    function allStockValue(){return Math.round(stockValue()+carrierStockValue());}
+    function buyCarrierStock(c,lots){
+      if(!rivals[c])return;
+      if((state.rivalMerged||{})[c])return notice(`${c} はもう他社に買われています。`);
+      if(isOwned(c))return notice(`${c} はもう仲間です。株を買う必要はありません。`);
+      if(!state.cShares)state.cShares={};
+      const room=carrierMaxUnits()-carrierUnits(c);
+      if(room<=0)return notice(`${c} の株はすべて持っています（100%）。`);
+      lots=Math.min(Math.max(1,lots|0),room);
+      const cost=carrierPx(c)*STOCK_UNIT*lots;
+      if(state.cash<cost)return notice(`${c} の株を${lots}単元 買うには ${yen(cost)} 必要です（あと ${yen(cost-state.cash)}）。`);
+      state.cash-=cost;state.cShares[c]=carrierUnits(c)+lots;
+      sfx.cash();notice(`✈ ${c} の株を${lots}単元 買いました（${yen(cost)}）。持株 ${(carrierStake(c)*100).toFixed(1)}%・毎週の配当 ${yen(carrierDividend(c))}。`);
+      render();}
+    function sellCarrierStock(c,lots){
+      const have=carrierUnits(c);if(!have)return;
+      lots=Math.max(1,Math.min(lots|0,have));
+      const gain=carrierPx(c)*STOCK_UNIT*lots;
+      state.cash+=gain;state.cShares[c]=have-lots;
+      sfx.chime();notice(`✈ ${c} の株を${lots}単元 売りました（+${yen(gain)}）。持株 ${(carrierStake(c)*100).toFixed(1)}%。`);
+      render();}
+    /* 相手が消えたとき（他社に買われた／自社の仲間になった）の持株のしまつ */
+    function settleCarrierShares(c,why){
+      const u=carrierUnits(c);if(!u)return 0;
+      const paid=why==='merged'?Math.round(carrierPx(c)*STOCK_UNIT*u*1.2):0;   /* 買収なら2割増しで買い取られる */
+      if(paid)state.cash+=paid;
+      delete state.cShares[c];
+      return paid;}
     // 購入した機材・施設・株の優待を1つにまとめる。倍率は掛け算、加算値は足し算。
     const MOD_MUL=['opCostMult','maintMult','fuelMult','baseNightMult',
                    'svcCostMult','buildCostMult','adCostMult','overheadMult','revMult'];
@@ -3342,7 +3403,14 @@
         const swing=(Math.random()*2-1)*s.vol;
         let nx=cur*(1+drift+swing);
         nx=Math.max(s.px*0.35,Math.min(s.px*3.2,nx));        /* 下限と上限。0や青天井にはしない */
-        state.stockPx[id]=Math.round(nx);});}
+        state.stockPx[id]=Math.round(nx);});
+      /* 他社の株。値段の土台は便数そのものなので、ここで動かすのは「人気」だけ。
+         便数が増えれば値段も上がり、減れば下がる——会社の中身を見て買う形にしたい */
+      if(!state.carrierMood)state.carrierMood={};if(!state.carrierPrev)state.carrierPrev={};
+      try{Object.keys(rivals).forEach(c=>{
+        state.carrierPrev[c]=carrierPx(c);
+        const m=carrierMood(c);
+        state.carrierMood[c]=Math.max(0.55,Math.min(1.8,m*(1+(1-m)*0.10+(Math.random()*2-1)*0.045)));});}catch(e){}}
     function buyStock(id,lots){const s=stockCatalog[id];if(!s)return;
       lots=Math.max(1,lots|0);const cost=stockLotCost(id,lots);
       if(state.cash<cost)return notice(`${s.n} を${lots}単元買うには ${yen(cost)} 必要です（あと ${yen(cost-state.cash)}）。`);
@@ -4082,8 +4150,12 @@
       if(!small.length)return null;
       const target=small[Math.floor(Math.random()*small.length)];
       const buyer=['JAL','ANA'].filter(m=>livingCarriers().includes(m))[Math.floor(Math.random()*2)]||'ANA';
+      /* 2026-10-28：その会社の株を持っていたら、買い手が2割増しで買い取る。
+         値段は買収の報せを立てる前に出す（立てたあとだと便数が動いて値が狂う） */
+      const paid=settleCarrierShares(target,'merged');
       state.rivalMerged[target]=buyer;
-      return `${buyer}が ${target} を買収（もう仲間にできません）`;
+      return `${buyer}が ${target} を買収（もう仲間にできません）`
+        +(paid?`。持っていた株は ${yen(paid)} で買い取られました`:'');
     }
     function rivalWorldTurn(){
       const msgs=[];
@@ -6075,6 +6147,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           ${cost('借入利息',m.interest)}
           ${cost('リース料',m.lease)}
           ${m.handling?row('地上業務受託',' +'+yen(m.handling)):''}
+          ${m.divid?row('他社株の配当',' +'+yen(m.divid)):''}
           ${m.ally?row('提携先の取り分',sign(m.ally)):''}
           ${row('四半期の純益（現金の増減）',sign(m.net),'sum '+(m.net>=0?'pos':'neg'))}
           ${row('減価償却費','−'+yen(m.depr),'ind')}
@@ -6369,7 +6442,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       {const want=tutDestTarget();
        if(want&&name!==want&&stops.indexOf(name)<0){
          notice(`いまは ${want} 線をひく手順です。<b>${want}</b> を選んでください。ほかの行き先は、案内が終わってから自由にひけます。`);return;}}if(stops[stops.length-1]===name){stops.pop();}else{if(stops.length>=6){notice('経由地は最大6か所までです。');return;}stops.push(name);}sfx.snap();render();}
-    function reportHtml(){const r=state.lastWeekReport;if(!r)return '';const cls=r.net>=0?'profit':'loss';return `<section class="report${state._reportAnim?' fresh':''}"><h3 class="step-title">${(()=>{const c=calendarOf(r.week);return `${c.ic} ${c.year}年目 ${c.month} 第${c.weekOfMonth}週 の決算${c.event?`（${c.event}）`:''}`;})()}</h3><div class="report-total"><div>旅客数<b>${r.passengers.toLocaleString()}人</b></div><div>売上<b>${yen(r.revenue)}</b></div><div>運航費<b>−${yen(r.opcost)}</b></div><div>夜間格納<b>−${yen(r.night)}</b></div>${r.overhead?`<div>本社経費<b>−${yen(r.overhead)}</b></div>`:''}${r.handling?`<div>地上業務受託<b style="color:var(--green)">+${yen(r.handling)}</b></div>`:''}<div class="${cls}" style="grid-column:1/3">週次純益（現金）<b>${r.net>=0?'+':''}${yen(r.net)}</b></div></div>
+    function reportHtml(){const r=state.lastWeekReport;if(!r)return '';const cls=r.net>=0?'profit':'loss';return `<section class="report${state._reportAnim?' fresh':''}"><h3 class="step-title">${(()=>{const c=calendarOf(r.week);return `${c.ic} ${c.year}年目 ${c.month} 第${c.weekOfMonth}週 の決算${c.event?`（${c.event}）`:''}`;})()}</h3><div class="report-total"><div>旅客数<b>${r.passengers.toLocaleString()}人</b></div><div>売上<b>${yen(r.revenue)}</b></div><div>運航費<b>−${yen(r.opcost)}</b></div><div>夜間格納<b>−${yen(r.night)}</b></div>${r.overhead?`<div>本社経費<b>−${yen(r.overhead)}</b></div>`:''}${r.handling?`<div>地上業務受託<b style="color:var(--green)">+${yen(r.handling)}</b></div>`:''}${r.divid?`<div>他社株の配当<b style="color:var(--green)">+${yen(r.divid)}</b></div>`:''}<div class="${cls}" style="grid-column:1/3">週次純益（現金）<b>${r.net>=0?'+':''}${yen(r.net)}</b></div></div>
       ${r.depr!=null?`<div class="report-acct"><div class="ra-row"><span>現金の増減</span><b class="${r.net>=0?'pos':'neg'}">${r.net>=0?'+':''}${yen(r.net)}</b></div><div class="ra-row"><span>減価償却費（機体・設備の目減り）</span><b class="neg">−${yen(r.depr)}</b></div><div class="ra-row sum"><span>会計上の損益</span><b class="${r.profit>=0?'pos':'neg'}">${r.profit>=0?'+':''}${yen(r.profit)}</b></div><div class="ra-row worth"><span>純資産（現金＋資産−借入）</span><b>${yen(r.worth)}</b></div></div>`:''}
       ${outlookHtml()}${(()=>{if(r.fcNet==null)return '';const dif=r.net-r.fcNet,pct=Math.abs(r.fcNet)>1?Math.round(dif/Math.abs(r.fcNet)*100):0;
       const mood=r.mood>=1.05?['☀️','全国的に出足が良い週でした']:r.mood<=0.95?['🌧','全国的に出足の鈍い週でした']:['〰️','おおむね平年どおりの週でした'];
@@ -7000,7 +7073,8 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         b=Math.max(b,al[c]==='member'?0.25:0.12);}
       return 1+b;}
     function allyCost(c){return Math.round(carrierValue(c)*0.05);}
-    function memberCost(c){return carrierValue(c);}
+    /* 2026-10-28：持っている株は買収の前払い。持株のぶんだけ残りを払えばいい */
+    function memberCost(c){return Math.max(0,Math.round(carrierValue(c)*(1-carrierStake(c))));}
     function allianceAction(c,kind){
       const cur=allianceOf(c);
       if(kind==='ally'){
@@ -7013,7 +7087,10 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         const why=memberBlockedWhy(c);if(why)return notice(why+'。');
         const cost=memberCost(c);if(state.cash<cost)return notice(`${c} を仲間にするには ${yen(cost)} 必要です。`);
         state.cash-=cost;state.alliances[c]='member';state.lastMergeWeek=state.week;
-        notice(`${c} が仲間になりました！毎週の収入とお客さんが自社に加わります。`);
+        /* 2026-10-28：持っていた株は会社ごと自分のものになるので、ここで消す（払い戻しはしない） */
+        const had=carrierUnits(c);settleCarrierShares(c,'member');
+        notice(`${c} が仲間になりました！毎週の収入とお客さんが自社に加わります。`
+          +(had?`　持っていた株 ${had}単元は自社のものになりました。`:''));
       }
       sfx.launch();radio('ally',{name:c,what:kind==='ally'?'提携':'仲間入り'});invalidateInf();render();
     }
@@ -7182,14 +7259,15 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       const cash=Math.round(state.cash),fl=fleetValue(),gr=groundValue(),flC=fleetCost(),grC=groundCost();
       /* 2026-10-28：持っている株も資産。現金が株に変わっただけで会社が痩せたように
          見えると、優待を買う手がただの損に見えてしまう */
-      const stk=Math.round(stockValue());
-      const assets=cash+stk+fl+gr,loan=Math.round(state.loan),worth=assets-loan;
+      const stk=Math.round(stockValue()),cstk=Math.round(carrierStockValue());
+      const assets=cash+stk+cstk+fl+gr,loan=Math.round(state.loan),worth=assets-loan;
       const row=(label,val,cls,ind)=>`<div class="bs-row${ind?' ind':''}${cls?' '+cls:''}"><span>${label}</span><b>${val<0?'−':''}${yen(Math.abs(val))}</b></div>`;
       const nLease=state.planes.filter(p=>p.leased).length;
       return `<div class="bs">
         <div class="bs-head">資産</div>
         ${row('現金',cash)}
-        ${stk?row('投資有価証券（時価）',stk):''}
+        ${stk?row('投資有価証券（取引先・時価）',stk):''}
+        ${cstk?row('投資有価証券（航空会社・時価）',cstk):''}
         ${fl?row('機体（取得価額）',flC,'',true)+row('減価償却累計額',-(flC-fl),'minus',true)+row('機体（簿価）',fl,'sub'):''}
         ${gr?row('設備・施設（取得価額）',grC,'',true)+row('減価償却累計額',-(grC-gr),'minus',true)+row('設備・施設（簿価）',gr,'sub'):''}
         ${row('資産合計',assets,'total')}
@@ -7236,6 +7314,12 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           if(finTab()===b.dataset.fintab)return;state.finTab=b.dataset.fintab;sfx.tap();render();}));
         document.querySelectorAll('#finModal .stk-lotb').forEach(b=>b.addEventListener('click',()=>{
           const n=+b.dataset.lot;if(state.stockLot===n)return;state.stockLot=n;sfx.tap();render();}));
+        document.querySelectorAll('#finModal .c-lotb').forEach(b=>b.addEventListener('click',()=>{
+          const n=+b.dataset.clot;if(state.cLot===n)return;state.cLot=n;sfx.tap();render();}));
+        document.querySelectorAll('#finModal .cst-btn').forEach(b=>b.addEventListener('click',()=>{
+          const lot=carrierLot();
+          if(b.dataset.kind==='buy'){const w=tutBlockMoney('stock');if(w)return notice(w);return buyCarrierStock(b.dataset.car,lot);}
+          return sellCarrierStock(b.dataset.car,lot);}));
         document.querySelectorAll('#finModal .stk-btn').forEach(b=>b.addEventListener('click',()=>{
           const lot=[1,5,20].indexOf(state.stockLot)>=0?state.stockLot:1;
           if(b.dataset.kind==='buy'){const w=tutBlockMoney('stock');if(w)return notice(w);return buyStock(b.dataset.stk,lot);}
@@ -7279,7 +7363,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           +(t+1<s.tiers.length?`<i class="stk-next">あと${STOCK_TIERS[t+1]-u}単元で <b>${s.tiers[t+1].t}</b></i>`:'<i class="stk-next">これが最上段です</i>');
         return `<div class="al-row stk-row"><div class="al-ic stk-ic">${s.ic}</div>
           <div class="al-info"><b>${s.n}<span class="al-b cd stk-sec">${s.sec}</span></b>
-          <span><b class="stk-px">${px.toLocaleString()}円</b> <i class="${chg>=0?'up':'down'}">前週比 ${chg>=0?'+':'−'}${Math.abs(chg).toFixed(1)}%</i>${u?`<span class="stk-hold">　保有 <b>${u}単元</b>（${yen(u*STOCK_UNIT*px)}）</span>`:''}</span>
+          <span><b class="stk-px">${px.toLocaleString()}円</b> <i class="${chg>=0?'up':'down'}">前週比 ${chg>=0?'+':'−'}${Math.abs(chg).toFixed(1)}%</i>${u?`<span class="stk-hold">　保有 <b>${u}単元</b></span><span class="stk-hold">（${yen(u*STOCK_UNIT*px)}）</span>`:''}</span>
           <span class="stk-yu">${yu}</span><span class="stk-tx">${s.tx}</span></div>
           <div class="al-btns"><button class="mini-btn stk-btn" data-stk="${id}" data-kind="buy" ${state.cash>=cost?'':'disabled'} title="${lot}単元＝${(STOCK_UNIT*lot).toLocaleString()}株">買う ${yen(cost)}</button>
           <button class="mini-btn stk-btn" data-stk="${id}" data-kind="sell" ${u?'':'disabled'}>売る ${sellN?yen(stockLotCost(id,sellN)):''}</button></div></div>`;}).join('');
@@ -7287,7 +7371,45 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       <div class="stk-lot"><span>いちどに売買する量</span>${[1,5,20].map(n=>`<button type="button" class="seg-btn stk-lotb${lot===n?' on':''}" data-lot="${n}">${n}単元</button>`).join('')}</div>
       ${rows}
       <p class="stk-note">優待は<b>飛ばした量に比例して</b>効きます（燃料費−6%は、燃料を多く使う会社ほど大きな額になります）。<br>
-      だから<b>路線を増やしてから買う</b>方が得です。株価は毎週ゆるく上下し、放っておくと元の値段のほうへ戻っていきます。</p>`;
+      だから<b>路線を増やしてから買う</b>方が得です。株価は毎週ゆるく上下し、放っておくと元の値段のほうへ戻っていきます。</p>
+      ${carrierSharesHtml()}`;
+    }
+    /* ── 2026-10-28：同じ画面に他社（航空会社）の株も並べる ──
+       取引先の株とは効き方が違うので、見出しと売買の単位を分けて下に置く。
+         ・取引先 … 優待（費用の倍率が下がる）・1単元ずつ
+         ・航空会社 … 配当と買収の前払い・1社＝1,000単元なので%で売買する */
+    const CARRIER_LOTS=[10,50,200];               /* 1%・5%・20% */
+    function carrierLot(){return CARRIER_LOTS.indexOf(state.cLot)>=0?state.cLot:CARRIER_LOTS[0];}
+    function carrierSharesHtml(){
+      const lot=carrierLot(),pct=u=>(u/carrierMaxUnits()*100);
+      const list=Object.keys(rivals).filter(c=>!(state.rivalMerged||{})[c])
+        .map(c=>({c,f:carrierFreq(c),u:carrierUnits(c),own:isOwned(c)}))
+        .sort((a,b)=>(b.u-a.u)||(b.f-a.f));
+      const held=list.filter(x=>x.u>0).length,div=dividendWeekly(),val=carrierStockValue();
+      const rows=list.map(({c,f,u,own})=>{
+        const px=carrierPx(c),pv=carrierPrevPx(c),chg=pv?(px-pv)/pv*100:0;
+        const cost=px*STOCK_UNIT*lot,sellN=Math.min(lot,u),al=allianceOf(c);
+        const badge=own?'<span class="al-b own">仲間</span>':al==='ally'?'<span class="al-b cd">提携中</span>':'';
+        const info=own
+          ? '<i class="stk-on">仲間になったので、株は自社のものになっています</i>'
+          /* 持っていないときに「配当 ¥0」と出しても何も分からない。
+             1%持ったらいくらになるかを出して、買うかどうかを決められるようにする */
+          : `<i class="${u?'stk-on':'stk-none'}">${u?`配当 毎週 +${yen(carrierDividend(c))}`
+              :`1%持つと 配当 毎週 +${yen(Math.round(carrierWeeklyProfit(c)*0.01))}`}</i>`
+            +`<i class="stk-next">仲間にする値段 ${yen(memberCost(c))}${u?`（持株ぶん −${pct(u).toFixed(1)}%）`:''}</i>`;
+        return `<div class="al-row stk-row"><div class="al-ic stk-ic" style="background:${rivals[c].color}22;color:${rivals[c].color}">✈</div>
+          <div class="al-info"><b>${c}${badge}<span class="al-b freq">${f}往復/日</span></b>
+          <span><b class="stk-px">${px.toLocaleString()}円</b> <i class="${chg>=0?'up':'down'}">前週比 ${chg>=0?'+':'−'}${Math.abs(chg).toFixed(1)}%</i>${u?`<span class="stk-hold">　持株 <b>${pct(u).toFixed(1)}%</b></span><span class="stk-hold">（${yen(u*STOCK_UNIT*px)}）</span>`:''}</span>
+          <span class="stk-yu">${info}</span></div>
+          <div class="al-btns">${own?'<span class="al-done">仲間です</span>'
+            :`<button class="mini-btn cst-btn" data-car="${c}" data-kind="buy" ${state.cash>=cost&&u<carrierMaxUnits()?'':'disabled'}>買う ${yen(cost)}</button>
+              <button class="mini-btn cst-btn" data-car="${c}" data-kind="sell" ${u?'':'disabled'}>売る ${sellN?yen(px*STOCK_UNIT*sellN):''}</button>`}</div></div>`;}).join('');
+      return `<h4 class="stk-head">✈ 航空会社の株</h4>
+      <div class="money-line"><span class="ml-ic">✈</span><div><b>${held?`${held}社ぶん ${yen(val)}・配当 毎週 +${yen(div)}`:'同業の株は、配当と「買収の前払い」になります'}</b><small>値段は<b>その会社の便数</b>で決まります。伸びる会社を早く買うほど得。<b>1社＝1,000単元</b></small></div></div>
+      <div class="stk-lot"><span>いちどに売買する量</span>${CARRIER_LOTS.map(n=>`<button type="button" class="seg-btn c-lotb${lot===n?' on':''}" data-clot="${n}">${(n/carrierMaxUnits()*100).toFixed(0)}%</button>`).join('')}</div>
+      ${rows}
+      <p class="stk-note">持っている株は<b>買収の前払い</b>です。〔✈ 航空会社〕のタブで仲間にするとき、<b>持株のぶんだけ値段が引かれます</b>（仲間にすると株は自社のものになります）。<br>
+      ほかの会社に買われてしまったときは、<b>2割増しで買い取られます</b>。</p>`;
     }
     /* 航空会社のタブ。買える相手は「自社より小さい会社」だけなので、
        まず自社の大きさを出してから一覧を並べる（押せない理由が先に分かる） */
@@ -7314,7 +7436,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           btns+=`<button class="mini-btn al-btn" data-ally="${c}" data-kind="member" ${(!why&&state.cash<mc)||why?'disabled':''}>仲間 ${yen(mc)}</button>`;
         }
         /* 2026-10-21：押せない理由を黙っていると、ただ壊れたボタンに見える */
-        return `<div class="al-row"><div class="al-ic" style="background:${rivals[c].color}22;color:${rivals[c].color}">✈</div><div class="al-info"><b>${c} ${badge(a)}</b><span>${f}往復/日${a==='member'?`　毎週 +${yen(carrierWeeklyProfit(c))}`:''}</span>${(a!=='member'&&why)?`<span class="al-why">${why}</span>`:''}</div><div class="al-btns">${btns}</div></div>`;}).join('');
+        return `<div class="al-row"><div class="al-ic" style="background:${rivals[c].color}22;color:${rivals[c].color}">✈</div><div class="al-info"><b>${c} ${badge(a)}</b><span>${f}往復/日${a==='member'?`　毎週 +${yen(carrierWeeklyProfit(c))}`:''}${(a!=='member'&&carrierUnits(c))?`　持株 ${(carrierStake(c)*100).toFixed(1)}%（そのぶん値引き）`:''}</span>${(a!=='member'&&why)?`<span class="al-why">${why}</span>`:''}</div><div class="al-btns">${btns}</div></div>`;}).join('');
     }
     function pnlChartHtml(){const h=state.history;if(h.length<2)return '<p style="font-size:12px;color:var(--muted)">運航を重ねると、ここに資金推移グラフが出ます。</p>';const W=290,H=96,pad=6,cashes=h.map(x=>x.cash),min=Math.min(...cashes,0),max=Math.max(...cashes,1),xf=i=>pad+i/(h.length-1)*(W-2*pad),yf=v=>H-pad-(v-min)/((max-min)||1)*(H-2*pad),pts=h.map((p,i)=>`${xf(i).toFixed(1)},${yf(p.cash).toFixed(1)}`).join(' '),zy=yf(0);return `<svg viewBox="0 0 ${W} ${H}" class="pnl-chart" preserveAspectRatio="none"><line x1="0" y1="${zy.toFixed(1)}" x2="${W}" y2="${zy.toFixed(1)}" stroke="#e0a0a0" stroke-dasharray="3 3"/><polyline points="${pts}" fill="none" stroke="#1f9fe0" stroke-width="2"/></svg><div class="chart-cap">資金推移（直近${h.length}週）</div>`;}
     function planePL(plane){const r=activeRouteOf(plane),nightW=nightCost(plane,planePark(plane))*7,lease=plane.leased?plane.leaseFee:0;if(!r)return{plane,route:null,rev:0,fuel:0,fees:0,crew:0,maint:0,svc:0,night:nightW,lease,net:-nightW-lease};const wk=weeklyEstimate(r,plane);return{plane,route:r,rev:wk.revenue,fuel:wk.fuel,fees:wk.fees,crew:wk.crew,maint:wk.maint,svc:wk.svc,night:wk.night,lease,net:wk.net-lease};}
@@ -7466,7 +7588,9 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
             広告と並べて企画タブに集める。中身は窓で開く（欄に詰めると一覧が読めない）。 */''}
       <div class="fin-entry">
         <button type="button" class="fin-card bank" id="openBank"><b>🏦 銀行</b><small>${state.loan>0?`借入 ${yen(Math.round(state.loan))}・`:''}あと ${yen(loanRoom())} 借りられます</small></button>
-        <button type="button" class="fin-card stock" id="openStock"><b>📈 証券</b><small>${(function(){const held=Object.keys(stockCatalog).filter(id=>stockUnits(id)>0).length;
+        <button type="button" class="fin-card stock" id="openStock"><b>📈 証券</b><small>${(function(){
+          const held=Object.keys(stockCatalog).filter(id=>stockUnits(id)>0).length
+                    +Object.keys(rivals).filter(c=>carrierUnits(c)>0&&carrierTradable(c)).length;
           return (held?`株 ${held}銘柄・`:'')+(ownCo?`傘下 ${ownCo}社・`:'')+'株主優待と買収';})()}</small></button>
       </div>
       <p><b>知名度は地域ごとに違います。</b>飛んでいる地域では名前が広まり、飛んでいない地域では無名のままです。
@@ -8694,7 +8818,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         revenue:Math.round(sum(weeks,'revenue')),opcost:Math.round(sum(weeks,'opcost')),
         night:Math.round(sum(weeks,'night')),lease:Math.round(sum(weeks,'lease')),
         interest:Math.round(sum(weeks,'interest')),overhead:Math.round(sum(weeks,'overhead')),
-        handling:Math.round(sum(weeks,'handling')),ally:Math.round(sum(weeks,'ally')),
+        handling:Math.round(sum(weeks,'handling')),divid:Math.round(sum(weeks,'divid')),ally:Math.round(sum(weeks,'ally')),
         passengers:Math.round(sum(weeks,'passengers')),
         load:loadDen?Math.round(loadNum/loadDen):0,
         net,depr,profit:net-depr,
@@ -8720,7 +8844,8 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       let ally=0;for(const c in (state.alliances||{}))if(state.alliances[c]==='member')ally+=carrierWeeklyProfit(c);
       const overhead=overheadWeekly(revenue);   /* 売上比例分があるので、その週の実績売上で計算する */
       const handling=handlingTotal();   /* 航空以外の収入：他社便の地上業務受託 */
-      const net=Math.round(revenue-opcost-night-lease-interest-overhead+ally+handling);state.cash+=net;const asg=state.planes.filter(p=>p.assigned),avgQ=asg.length?asg.reduce((s,p)=>s+cabinConfig(p).quality,0)/asg.length:40,avgLoad=rows.length?rows.reduce((s,x)=>s+x.load,0)/rows.length:0,/* 運賃が読みやすい会社ほど信用される。全路線の安定度の平均で ±6 */
+      const divid=dividendWeekly();     /* 他社株の配当（持株比率ぶんの取り分） */
+      const net=Math.round(revenue-opcost-night-lease-interest-overhead+ally+handling+divid);state.cash+=net;const asg=state.planes.filter(p=>p.assigned),avgQ=asg.length?asg.reduce((s,p)=>s+cabinConfig(p).quality,0)/asg.length:40,avgLoad=rows.length?rows.reduce((s,x)=>s+x.load,0)/rows.length:0,/* 運賃が読みやすい会社ほど信用される。全路線の安定度の平均で ±6 */
       flying2=state.routes.filter(r=>flying(r)),stead=flying2.length?flying2.reduce((s,r)=>s+fareSteadiness(r),0)/flying2.length:1,
       /* 顧客満足度。乗った人がどう感じたかを毎週ゆっくり積む（reputation を実体として使う） */
       sat=companySatisfaction(),
@@ -8742,7 +8867,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       /* 2026-10-28：株価は週が変わるときに動かす。
          いま見ている値段で買った直後に数字が変わるのを避ける */
       moveStockPrices();
-      state.lastWeekReport={week:w,revenue:Math.round(revenue),opcost:Math.round(opcost),night:Math.round(night),lease:Math.round(lease),interest,ally:Math.round(ally),cancelled,net,overhead,handling,depr,profit:net-depr,worth:netWorth(),assets:tangibleAssets(),devNews,passengers:Math.round(passengers),reaction,mood:weekMood,fcNet:Math.round(fcNetTotal-night-lease-interest+ally),rows:rows.sort((a,b)=>b.net-a.net)};state.history.push({week:w,cash:Math.round(state.cash),net,worth:netWorth()});if(state.history.length>52)state.history.shift();if(state.cash<0)state.gameOver=true;
+      state.lastWeekReport={week:w,revenue:Math.round(revenue),opcost:Math.round(opcost),night:Math.round(night),lease:Math.round(lease),interest,ally:Math.round(ally),cancelled,net,overhead,handling,divid,depr,profit:net-depr,worth:netWorth(),assets:tangibleAssets(),devNews,passengers:Math.round(passengers),reaction,mood:weekMood,fcNet:Math.round(fcNetTotal-night-lease-interest+ally),rows:rows.sort((a,b)=>b.net-a.net)};state.history.push({week:w,cash:Math.round(state.cash),net,worth:netWorth()});if(state.history.length>52)state.history.shift();if(state.cash<0)state.gameOver=true;
       accumulateQuarter(state.lastWeekReport);
       rows.forEach(x=>{const r=state.routes.find(y=>y.id===x.id);if(r)r.lossStreak=x.net<0?(r.lossStreak||0)+1:0;});
       advanceOutlook();                                 /* 今週の空模様が確定し、予報が1つ先へずれる */
