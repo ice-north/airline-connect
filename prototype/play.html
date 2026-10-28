@@ -1884,6 +1884,26 @@
     .fin-card.bank{border-color:#c9ddf7;background:#f2f7ff}
     .fin-card.bank:hover{background:#e9f1ff}
     .fin-card.stock{border-color:#d3e9cd;background:#f5fbf3}
+    /* 2026-10-28：自社株で3枚になった。1枚あたり150px前後では「銀行」の
+       長い添え書きが入らないので、狭いときだけ縦に積む */
+    .fin-card.ipo{border-color:#e4d7c2;background:#fdfaf3}
+    .fin-entry{grid-template-columns:repeat(3,1fr)}
+    @media(max-width:520px){.fin-entry{grid-template-columns:1fr}}
+    /* 上場の条件と、売り出し／増資／買い戻しのボタン */
+    .ipo-conds{display:grid;gap:5px;margin:0 0 9px}
+    .ipo-cond{display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-radius:10px;
+      border:1.5px solid #e4eef5;background:#fff}
+    .ipo-cond>span{flex:0 0 auto;color:#b4c3cc;font-weight:500}
+    .ipo-cond.ok{border-color:#bfe3c9;background:#f4fbf5}
+    .ipo-cond.ok>span{color:#2fa35a}
+    .ipo-cond b{display:block;font-size:12px;color:#2a4657}
+    .ipo-cond small{display:block;font-size:12px;color:#5d7883;margin-top:1px}
+    .ipo-ops{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 4px}
+    .ipo-ops .mini-btn{width:auto;min-height:60px;padding:8px 6px;text-align:center;line-height:1.35}
+    .ipo-ops .mini-btn b{display:block;font-size:12px;font-weight:500}
+    .ipo-ops .mini-btn i{display:block;font-style:normal;font-size:12px;color:#1f7a3d}
+    .ipo-ops .mini-btn em{display:block;font-style:normal;font-size:12px;color:#7b8f99}
+    .ipo-ops .mini-btn[disabled] i,.ipo-ops .mini-btn[disabled] em{color:inherit;opacity:.8}
     .fin-card.stock:hover{background:#edf7ea}
     .fin-win{width:min(560px,95vw)}
     /* 証券の窓のタブ。買い物の窓の並べ替えボタンと同じ見た目に揃える */
@@ -2643,7 +2663,8 @@
       if(kind==='lounge')return buildLounge(name);
       if(kind==='handling')return startHandling(name);
     }
-    const state={base:null,secondBase:null,selectedBase:null,selected:null,panelView:'airport',cash:400000000,day:1,week:1,reputation:70,brand:35,awareness:20,regionAware:null,tutorialFilled:false,tutPos:null,draftOpen:false,openRoute:{},loan:0,history:[],rivalAdds:[],alliances:{},suggestions:null,shares:{},stockPx:{},stockPrev:{},stockLot:1,finTab:'shares',cShares:{},carrierMood:{},carrierPrev:{},cLot:10,stockHist:{},carrierHist:{},chapter:0,cleared:[],won:false,moneyFmt:'sen',
+    const state={base:null,secondBase:null,selectedBase:null,selected:null,panelView:'airport',cash:400000000,day:1,week:1,reputation:70,brand:35,awareness:20,regionAware:null,tutorialFilled:false,tutPos:null,draftOpen:false,openRoute:{},loan:0,history:[],rivalAdds:[],alliances:{},suggestions:null,shares:{},stockPx:{},stockPrev:{},stockLot:1,finTab:'shares',cShares:{},carrierMood:{},carrierPrev:{},cLot:10,stockHist:{},carrierHist:{},
+      listed:false,shareUnits:0,floatUnits:0,ownMood:1,ownPrev:0,ownHist:[],ipoWeek:null,ipoPx:0,ipoRaised:0,lastIssueWeek:-999,worth0:0,ownMood0:1,chapter:0,cleared:[],won:false,moneyFmt:'sen',
       /* 四半期の収支：qAcc はその期に入った週の決算、lastQuarterReport は締めたあとの集計 */
       qAcc:[],lastQuarterReport:null,pendingQuarter:false,airline:{name:'あおぞら航空',code:'AOZ'},difficulty:'normal',weather:null,wxNext:[],rivalNew:[],rivalGone:[],rivalMerged:{},rivalAllies:[],worldLog:[],tutorial:{step:0,done:(()=>{try{return localStorage.getItem('am_tut_done')==='1'}catch(e){return false}})()},gameOver:false,equipment:[],facilities:[],airportDev:{},shopTab:'air',shopSort:'class',shopRev:false,shopOpenItem:{},routeSort:'net',routeView:'card',openSect:{},pickFor:null,fleetSetup:null,fleetDraft:null,planes:[],routes:[],draft:{stops:[],park:null,frequency:7,fare:'普通',timeBand:1,season:'all',days:[0,1,2,3,4,5,6],trips:1},lastReport:null,activeFlights:[],currentFlight:null,operationQueue:[],simulating:false,simulationSpeed:1};
     // 初期状態の控え。セーブに無い項目はここから埋める（古いセーブでも壊れないように）
@@ -2669,6 +2690,13 @@
       if(!state.cShares)state.cShares={};if(!state.carrierMood)state.carrierMood={};if(!state.carrierPrev)state.carrierPrev={};
       if(!state.cLot)state.cLot=10;
       if(!state.stockHist)state.stockHist={};if(!state.carrierHist)state.carrierHist={};
+      if(!Array.isArray(state.ownHist))state.ownHist=[];
+      if(!(state.ownMood>0))state.ownMood=1;if(!(state.ownMood0>0))state.ownMood0=state.ownMood;
+      if(!(state.shareUnits>0)){state.listed=false;state.shareUnits=0;state.floatUnits=0;}
+      if(state.lastIssueWeek==null)state.lastIssueWeek=-999;
+      /* 古いセーブには開業時の値打ちが無い。いまの値打ちを基準にする
+         （そのぶん条件は厳しくなるが、勝手に上場できてしまうよりはいい） */
+      if(!(state.worth0>0))state.worth0=Math.max(1,netWorth());
       ensureStockPx();
       syncAssign();ensureOutlook();if(d.view){mainView.lat=d.view.lat;mainView.lng=d.view.lng;mainView.z=clampZ(d.view.z);zoomTarget=mainView.z;}return true;}catch(e){return false;}}
     function resetGame(){try{localStorage.removeItem(SAVE_KEY);}catch(e){}const fmt=state.moneyFmt;applyState(null);state.moneyFmt=fmt||'sen';   /* 表示の好みは進行ではないのでやり直しても残す */mainView.lat=35.8;mainView.lng=138.7;mainView.z=MAP_Z0;zoomTarget=mainView.z;invalidateInf();render();}
@@ -3378,6 +3406,111 @@
       state.cash+=gain;state.cShares[c]=have-lots;
       sfx.chime();notice(`✈ ${c} の株を${lots}単元 売りました（+${yen(gain)}）。持株 ${(carrierStake(c)*100).toFixed(1)}%。`);
       render();}
+    /* ── 2026-10-28：自社株（上場・新株発行・自社株買い）──
+       借入は「返す前提の金」で、枠も機体の資産価値の7割しかない。
+       路線と機体をまとめて増やしたい時期に、そこが詰まる。
+       上場は**返さなくていい金**を一度に入れるかわり、
+       もうけの一部を永久に外へ渡す——という別の選択肢にした。
+
+       自社株価は **会社の値打ち ÷ 発行済み株式 × 人気**。
+       人気は先週の利益率とブランドで動く。つまり株価は
+       「いまの経営がどう見られているか」の要約になる。 */
+    const IPO_UNITS=10000;          /* 上場時の発行済み＝10,000単元（1,000万株） */
+    const IPO_PREMIUM=1.20;         /* 公開価格は帳簿の値打ちより少し高く付く */
+    const DIV_PAYOUT=0.50;          /* 黒字のうち株主に配る割合（全部は配らない） */
+    const ISSUE_DISC=0.95;          /* 新株は市場価格より少し安くないと買ってもらえない */
+    const BUYBACK_PREM=1.03;        /* 買い戻しは少し高くつく */
+    const ISSUE_COOLDOWN=13;        /* 増資は四半期に1回まで */
+    function isListed(){return !!state.listed&&state.shareUnits>0;}
+    function ownBookPx(){const n=state.shareUnits||IPO_UNITS;return Math.max(1,netWorth()/(n*STOCK_UNIT));}
+    function ownPx(){return Math.max(1,Math.round(ownBookPx()*(state.ownMood>0?state.ownMood:1)));}
+    function ownPrevPx(){return state.ownPrev>0?Math.round(state.ownPrev):ownPx();}
+    function ownFloatRate(){return isListed()?Math.min(1,(state.floatUnits||0)/state.shareUnits):0;}
+    function ownSelfRate(){return 1-ownFloatRate();}
+    function ownMarketCap(){return isListed()?ownPx()*STOCK_UNIT*state.shareUnits:0;}
+    /* 外部の株主へ配る額。赤字の週は配らない（配当は利益から出すもの） */
+    function ownDividend(net){
+      if(!isListed()||!state.floatUnits||!(net>0))return 0;
+      return Math.round(net*ownFloatRate()*DIV_PAYOUT);
+    }
+    /* 1週ぶんの人気の動き。先週の利益率で上下し、放っておくと1へ戻る */
+    function moveOwnPrice(){
+      if(!isListed())return;
+      state.ownPrev=ownPx();
+      const r=state.lastWeekReport;
+      const margin=(r&&r.revenue>0)?Math.max(-1,Math.min(1,r.net/r.revenue)):0;
+      const mom=Math.max(-0.09,Math.min(0.09,margin*0.30));
+      const brand=((effectiveBrand()-50)/50)*0.012;
+      /* 2026-10-28：戻る先は「1」ではなく**上場したときの人気**。
+         公開価格は帳簿より2割高く、入った現金で帳簿のほうも太るので、
+         上場直後の人気は1を下回る。そこから1へ戻そうとすると、
+         赤字を出していても株価がじりじり上がるという嘘になっていた。 */
+      const tgt=state.ownMood0>0?state.ownMood0:1;
+      const back=(tgt-(state.ownMood>0?state.ownMood:1))*0.12;
+      const noise=(Math.random()*2-1)*0.020;
+      state.ownMood=Math.max(0.45,Math.min(2.2,(state.ownMood>0?state.ownMood:1)*(1+mom+brand+back+noise)));
+    }
+    /* 上場の条件。どれも「いま◯／◯」で出せる形にしてある——
+       灰色のボタンだけ見せて理由を言わないのがいちばん不親切 */
+    function ipoReady(){
+      /* 開業したときの値打ちを基準にする。難易度でも案内でも開業資金が違うので、
+         決め打ちの金額にすると「むずかしい」では一生届かず「かんたん」では最初から満たしてしまう */
+      const base=state.worth0>0?state.worth0:difficultyOf().cash;
+      const need=Math.round(base*2),worth=netWorth();
+      const h=(state.history||[]).slice(-12),prof=h.filter(x=>x.net>0).length;
+      const routes=state.routes.filter(r=>r.aircraftId).length;
+      return {worth,need,prof,needProf:8,weeks:h.length,routes,needRoutes:3,
+        ok:worth>=need&&prof>=8&&routes>=3};
+    }
+    function doIPO(pct){
+      if(isListed())return notice('もう上場しています。');
+      const w=tutBlockMoney('stock');if(w)return notice(w);
+      const r=ipoReady();
+      if(!r.ok)return notice('上場の条件がまだそろっていません。');
+      const px=Math.max(1,Math.round(netWorth()/(IPO_UNITS*STOCK_UNIT)*IPO_PREMIUM));
+      const flo=Math.max(1,Math.round(IPO_UNITS*pct));
+      const raised=px*STOCK_UNIT*flo;
+      state.shareUnits=IPO_UNITS;state.floatUnits=flo;state.listed=true;
+      state.ipoWeek=state.week;state.ipoPx=px;state.ipoRaised=raised;
+      state.cash+=raised;
+      /* 入ってきた金のぶん帳簿の値打ちが増えるので、そのままだと初値が跳ねる。
+         人気の係数で割り戻して、初値＝公開価格に揃える */
+      state.ownMood=1;state.ownMood=Math.max(0.45,Math.min(2.2,px/ownBookPx()));
+      state.ownMood0=state.ownMood;   /* 人気が戻る先。ここを1にすると、赤字でも株価が上がってしまう */
+      state.ownPrev=px;state.ownHist=[px];
+      sfx.launch();radio('ipo',{px:px.toLocaleString(),cash:yen(raised)});
+      notice(`🏛 上場しました。公開価格 ${px.toLocaleString()}円 × ${flo.toLocaleString()}単元で ${yen(raised)} を調達。外部株主の持ち分は ${Math.round(pct*100)}%です。`);
+      saveGame();render();
+    }
+    function issueShares(pct){
+      if(!isListed())return notice('先に上場してください。');
+      const wait=ISSUE_COOLDOWN-(state.week-(state.lastIssueWeek!=null?state.lastIssueWeek:-999));
+      if(wait>0)return notice(`増資は${ISSUE_COOLDOWN}週に1回までです（あと${wait}週）。`);
+      const add=Math.max(1,Math.round(state.shareUnits*pct));
+      const px=Math.max(1,Math.round(ownPx()*ISSUE_DISC));
+      const raised=px*STOCK_UNIT*add;
+      state.shareUnits+=add;state.floatUnits+=add;state.cash+=raised;
+      state.lastIssueWeek=state.week;
+      state.ownMood=Math.max(0.45,(state.ownMood>0?state.ownMood:1)*0.97);   /* 薄まったぶん売られる */
+      sfx.cash();
+      notice(`📄 新株 ${add.toLocaleString()}単元を ${px.toLocaleString()}円で発行。${yen(raised)} が入りました。外部の持ち分は ${Math.round(ownFloatRate()*100)}%になります。`);
+      saveGame();render();
+    }
+    function buyBackShares(pct){
+      if(!isListed())return;
+      if(!state.floatUnits)return notice('買い戻せる株はもうありません。');
+      const n=Math.min(state.floatUnits,Math.max(1,Math.round(state.shareUnits*pct)));
+      const px=Math.round(ownPx()*BUYBACK_PREM);
+      const cost=px*STOCK_UNIT*n;
+      if(state.cash<cost)return notice(`${n.toLocaleString()}単元を買い戻すには ${yen(cost)} 必要です（あと ${yen(cost-state.cash)}）。`);
+      /* 買い戻した株は消す（消却）。残りの1株あたりの値打ちが上がる */
+      state.cash-=cost;state.floatUnits-=n;state.shareUnits-=n;
+      state.ownMood=Math.min(2.2,(state.ownMood>0?state.ownMood:1)*1.02);
+      sfx.chime();
+      notice(`🏛 自社株 ${n.toLocaleString()}単元を ${yen(cost)} で買い戻しました。`
+        +(state.floatUnits?`外部の持ち分は ${Math.round(ownFloatRate()*100)}%になります。`:'外部の株はすべて自社に戻りました（配当はもう要りません）。'));
+      saveGame();render();
+    }
     /* 相手が消えたとき（他社に買われた／自社の仲間になった）の持株のしまつ */
     function settleCarrierShares(c,why){
       const u=carrierUnits(c);if(!u)return 0;
@@ -3417,6 +3550,9 @@
         if(a.length>STOCK_HIST_MAX)a.splice(0,a.length-STOCK_HIST_MAX);};
       Object.keys(stockCatalog).forEach(id=>put(state.stockHist,id,stockPx(id)));
       try{Object.keys(rivals).forEach(c=>{if(carrierTradable(c))put(state.carrierHist,c,carrierPx(c));});}catch(e){}
+      if(isListed()){if(!Array.isArray(state.ownHist))state.ownHist=[];
+        state.ownHist.push(ownPx());
+        if(state.ownHist.length>STOCK_HIST_MAX)state.ownHist.splice(0,state.ownHist.length-STOCK_HIST_MAX);}
     }
     /* イベントから株価を動かすための入口。
        あとから足すイベントも、ここを呼ぶだけで済むようにしておく。
@@ -3467,6 +3603,7 @@
         state.carrierPrev[c]=carrierPx(c);
         const m=carrierMood(c);
         state.carrierMood[c]=Math.max(0.55,Math.min(1.8,m*(1+(1-m)*0.10+(Math.random()*2-1)*0.045)));});}catch(e){}
+      moveOwnPrice();
       pushStockHist();}
     function buyStock(id,lots){const s=stockCatalog[id];if(!s)return;
       lots=Math.max(1,lots|0);const cost=stockLotCost(id,lots);
@@ -5043,7 +5180,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       document.body.appendChild(wrap);
       wrap.querySelectorAll('.diff-card').forEach(b=>b.addEventListener('click',()=>{
         const k=b.dataset.diff,d=difficulties[k];
-        state.difficulty=k;state.cash=d.cash;state.awareness=d.aware0;
+        state.difficulty=k;state.cash=d.cash;state.awareness=d.aware0;state.worth0=d.cash;
         initRegionAware(d.aware0);
         sfx.launch();wrap.remove();
         notice(`難易度「${d.name}」で開業。資金 ${yen(d.cash)}・${state.base?regionName(regionOf(state.base))+'での認知度':'認知度'} ${d.aware0} からのスタートです。`);
@@ -5218,6 +5355,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       base:[['🏢','管制塔','第2拠点、開設おめでとうございます！']],
       season:[['📅','管制塔','{name}に入ったよ。{note}'],['🗓️','管制塔','季節が動いた——{name}。{note}']],
       ally:[['🤝','社長','{name}と{what}！これで空が広がるぞ'],['🎊','管制塔','{name}との{what}が成立。乗継のお客さんが増えるよ']],
+      ipo:[['🔔','社長','上場だ！鐘を鳴らしてくる'],['📰','広報','初値 {px}円。明日の新聞に載りますよ'],['💼','経理','{cash}が入りました。使い道、考えてあります？']],
       chapter:[['🎉','管制塔','{name} クリア！次は{next}だね'],['🎊','社長','よくやった、{name}達成だ！']],
       win:[['👑','管制塔','やった——日本一だ！この空はあなたのものだよ']],
       weather:[['🌀','運航管理','{name}です。{note}'],['📻','管制塔','{name}の予報。無理せず安全第一でいこう']],
@@ -6203,6 +6341,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           ${cost('リース料',m.lease)}
           ${m.handling?row('地上業務受託',' +'+yen(m.handling)):''}
           ${m.divid?row('他社株の配当',' +'+yen(m.divid)):''}
+          ${cost('株主への配当',m.shDiv)}
           ${m.ally?row('提携先の取り分',sign(m.ally)):''}
           ${row('四半期の純益（現金の増減）',sign(m.net),'sum '+(m.net>=0?'pos':'neg'))}
           ${row('減価償却費','−'+yen(m.depr),'ind')}
@@ -6497,7 +6636,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       {const want=tutDestTarget();
        if(want&&name!==want&&stops.indexOf(name)<0){
          notice(`いまは ${want} 線をひく手順です。<b>${want}</b> を選んでください。ほかの行き先は、案内が終わってから自由にひけます。`);return;}}if(stops[stops.length-1]===name){stops.pop();}else{if(stops.length>=6){notice('経由地は最大6か所までです。');return;}stops.push(name);}sfx.snap();render();}
-    function reportHtml(){const r=state.lastWeekReport;if(!r)return '';const cls=r.net>=0?'profit':'loss';return `<section class="report${state._reportAnim?' fresh':''}"><h3 class="step-title">${(()=>{const c=calendarOf(r.week);return `${c.ic} ${c.year}年目 ${c.month} 第${c.weekOfMonth}週 の決算${c.event?`（${c.event}）`:''}`;})()}</h3><div class="report-total"><div>旅客数<b>${r.passengers.toLocaleString()}人</b></div><div>売上<b>${yen(r.revenue)}</b></div><div>運航費<b>−${yen(r.opcost)}</b></div><div>夜間格納<b>−${yen(r.night)}</b></div>${r.overhead?`<div>本社経費<b>−${yen(r.overhead)}</b></div>`:''}${r.handling?`<div>地上業務受託<b style="color:var(--green)">+${yen(r.handling)}</b></div>`:''}${r.divid?`<div>他社株の配当<b style="color:var(--green)">+${yen(r.divid)}</b></div>`:''}<div class="${cls}" style="grid-column:1/3">週次純益（現金）<b>${r.net>=0?'+':''}${yen(r.net)}</b></div></div>
+    function reportHtml(){const r=state.lastWeekReport;if(!r)return '';const cls=r.net>=0?'profit':'loss';return `<section class="report${state._reportAnim?' fresh':''}"><h3 class="step-title">${(()=>{const c=calendarOf(r.week);return `${c.ic} ${c.year}年目 ${c.month} 第${c.weekOfMonth}週 の決算${c.event?`（${c.event}）`:''}`;})()}</h3><div class="report-total"><div>旅客数<b>${r.passengers.toLocaleString()}人</b></div><div>売上<b>${yen(r.revenue)}</b></div><div>運航費<b>−${yen(r.opcost)}</b></div><div>夜間格納<b>−${yen(r.night)}</b></div>${r.overhead?`<div>本社経費<b>−${yen(r.overhead)}</b></div>`:''}${r.handling?`<div>地上業務受託<b style="color:var(--green)">+${yen(r.handling)}</b></div>`:''}${r.divid?`<div>他社株の配当<b style="color:var(--green)">+${yen(r.divid)}</b></div>`:''}${r.shDiv?`<div>株主への配当<b>−${yen(r.shDiv)}</b></div>`:''}<div class="${cls}" style="grid-column:1/3">週次純益（現金）<b>${r.net>=0?'+':''}${yen(r.net)}</b></div></div>
       ${r.depr!=null?`<div class="report-acct"><div class="ra-row"><span>現金の増減</span><b class="${r.net>=0?'pos':'neg'}">${r.net>=0?'+':''}${yen(r.net)}</b></div><div class="ra-row"><span>減価償却費（機体・設備の目減り）</span><b class="neg">−${yen(r.depr)}</b></div><div class="ra-row sum"><span>会計上の損益</span><b class="${r.profit>=0?'pos':'neg'}">${r.profit>=0?'+':''}${yen(r.profit)}</b></div><div class="ra-row worth"><span>純資産（現金＋資産−借入）</span><b>${yen(r.worth)}</b></div></div>`:''}
       ${outlookHtml()}${(()=>{if(r.fcNet==null)return '';const dif=r.net-r.fcNet,pct=Math.abs(r.fcNet)>1?Math.round(dif/Math.abs(r.fcNet)*100):0;
       const mood=r.mood>=1.05?['☀️','全国的に出足が良い週でした']:r.mood<=0.95?['🌧','全国的に出足の鈍い週でした']:['〰️','おおむね平年どおりの週でした'];
@@ -7353,10 +7492,12 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
     function renderFinWin(){
       const old=byId('finModal');
       if(!state.finWin){if(old)old.remove();return;}
-      const bank=state.finWin==='bank';
+      const k=state.finWin;
+      const head=k==='bank'?'🏦 銀行':k==='own'?'🏛 自社株':'📈 証券';
+      const body=k==='bank'?financeHtml():k==='own'?ownStockHtml():stockHtml();
       const html=`<div class="shop-modal" id="finModal"><div class="shop-win fin-win">
-        <div class="shop-head"><b>${bank?'🏦 銀行':'📈 証券'}</b><span class="shop-cash">所持金 ${yen(Math.round(state.cash))}</span><button class="shop-close" id="closeFinWin">✕ とじる</button></div>
-        <div class="shop-body">${bank?financeHtml():stockHtml()}</div></div></div>`;
+        <div class="shop-head"><b>${head}</b><span class="shop-cash">所持金 ${yen(Math.round(state.cash))}</span><button class="shop-close" id="closeFinWin">✕ とじる</button></div>
+        <div class="shop-body">${body}</div></div></div>`;
       /* 窓の根は作り直さない（作り直すと、押すたびに入場アニメが再生されてチラつく）。
          中の手は貼り替えるたびに結び直し、背景を押して閉じる手は作ったときだけ。 */
       paintModal('finModal',html,()=>{
@@ -7369,6 +7510,12 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           if(finTab()===b.dataset.fintab)return;state.finTab=b.dataset.fintab;sfx.tap();render();}));
         document.querySelectorAll('#finModal .stk-lotb').forEach(b=>b.addEventListener('click',()=>{
           const n=+b.dataset.lot;if(state.stockLot===n)return;state.stockLot=n;sfx.tap();render();}));
+        /* 上場は戻せないので、2度押しで確かめる（機体の売却と同じ作り） */
+        document.querySelectorAll('#finModal .ipo-btn').forEach(b=>b.addEventListener('click',()=>{
+          if(b.dataset.c!=='1'){b.dataset.c='1';b.innerHTML='<b>もう一度押すと上場します</b><i>'+b.querySelector('i').textContent+'</i><em>戻せません</em>';return;}
+          doIPO(+b.dataset.ipo);}));
+        document.querySelectorAll('#finModal .issue-btn').forEach(b=>b.addEventListener('click',()=>issueShares(+b.dataset.add)));
+        document.querySelectorAll('#finModal .back-btn').forEach(b=>b.addEventListener('click',()=>buyBackShares(+b.dataset.back)));
         document.querySelectorAll('#finModal .c-lotb').forEach(b=>b.addEventListener('click',()=>{
           const n=+b.dataset.clot;if(state.cLot===n)return;state.cLot=n;sfx.tap();render();}));
         document.querySelectorAll('#finModal .cst-btn').forEach(b=>b.addEventListener('click',()=>{
@@ -7382,6 +7529,49 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       },()=>{
         byId('finModal').addEventListener('click',e=>{if(e.target.id==='finModal')closeFinWin();});
       });
+    }
+    /* 🏛 自社株の窓。上場する前は「条件がどこまで揃っているか」、
+       上場したあとは「株価・持ち分・毎週の配当」と、増資／買い戻しの手を出す。 */
+    function ownStockHtml(){
+      const IPO_LOTS=[0.20,0.30,0.40],ADD_LOTS=[0.03,0.05,0.10],BACK_LOTS=[0.01,0.03,0.05];
+      if(!isListed()){
+        const r=ipoReady();
+        const px=Math.max(1,Math.round(netWorth()/(IPO_UNITS*STOCK_UNIT)*IPO_PREMIUM));
+        const line=(ok,lab,now)=>`<div class="ipo-cond${ok?' ok':''}"><span>${ok?'✓':'・'}</span><div><b>${lab}</b><small>${now}</small></div></div>`;
+        return `<div class="money-line"><span class="ml-ic">🏛</span><div><b>まだ上場していません</b><small>上場すると<b>返さなくていいお金</b>がまとまって入ります。かわりに、もうけの一部を毎週<b>株主へ配る</b>ことになります</small></div></div>
+        <div class="ipo-conds">
+          ${line(r.worth>=r.need,`純資産が開業のときの<b>2倍</b>（${yen(r.need)}）以上`,`いま ${yen(r.worth)}`)}
+          ${line(r.prof>=r.needProf,`直近12週のうち ${r.needProf}週以上が黒字`,`いま ${r.prof}週 / ${r.needProf}週（記録 ${r.weeks}週）`)}
+          ${line(r.routes>=r.needRoutes,`機体を載せた路線が ${r.needRoutes}本以上`,`いま ${r.routes}本`)}
+        </div>
+        <p class="stk-note">公開価格は<b>純資産 ÷ 発行済み株式 × 1.2</b>で決まります。いまなら <b>${px.toLocaleString()}円</b>／株（発行済み ${IPO_UNITS.toLocaleString()}単元）。<br>
+        <b>どれだけ市場に出すか</b>で、入るお金と、毎週の配当の重さが決まります。</p>
+        <div class="ipo-ops">${IPO_LOTS.map(p=>`<button class="mini-btn ipo-btn" data-ipo="${p}" ${r.ok?'':'disabled'}>
+          <b>${Math.round(p*100)}% 売り出す</b><i>${yen(px*STOCK_UNIT*Math.round(IPO_UNITS*p))} 入る</i><em>毎週の配当は黒字の ${Math.round(p*DIV_PAYOUT*100)}%</em></button>`).join('')}</div>
+        ${r.ok?'':'<p class="stk-note">条件がそろうと押せるようになります。</p>'}`;
+      }
+      const px=ownPx(),pv=ownPrevPx(),chg=pv?(px-pv)/pv*100:0;
+      const wait=ISSUE_COOLDOWN-(state.week-(state.lastIssueWeek!=null?state.lastIssueWeek:-999));
+      const r=state.lastWeekReport;
+      return `<div class="money-line"><span class="ml-ic">🏛</span><div><b>${px.toLocaleString()}円（前週比 ${chg>=0?'+':'−'}${Math.abs(chg).toFixed(1)}%）・時価総額 ${yen(ownMarketCap())}</b><small>株価＝<b>純資産 ÷ 発行済み株式 × 人気</b>。人気は<b>先週の利益率</b>とブランドで動きます</small></div></div>
+      ${sparkHtml(state.ownHist,state.ipoPx||0)}
+      <div class="fin-grid">
+        <div><span>発行済み</span><b>${(state.shareUnits||0).toLocaleString()}単元</b></div>
+        <div><span>自社の持ち分</span><b>${Math.round(ownSelfRate()*100)}%</b></div>
+        <div><span>市場の持ち分</span><b>${Math.round(ownFloatRate()*100)}%</b></div>
+        <div><span>先週の配当</span><b class="${r&&r.shDiv?'loss':''}">${r&&r.shDiv?'−'+yen(r.shDiv):'なし（赤字の週は配りません）'}</b></div>
+        <div><span>上場で集めた額</span><b>${yen(state.ipoRaised||0)}</b></div>
+        <div><span>公開価格</span><b>${(state.ipoPx||0).toLocaleString()}円（第${state.ipoWeek}週）</b></div>
+      </div>
+      <h4 class="stk-head">📄 新株を出す（増資）</h4>
+      <p class="stk-note" style="margin-top:0">返さなくていいお金が入りますが、<b>株数が増えたぶん1株の値打ちは薄まり</b>、毎週の配当も重くなります。${wait>0?`<br><b>あと${wait}週</b>は出せません（${ISSUE_COOLDOWN}週に1回まで）。`:''}</p>
+      <div class="ipo-ops">${ADD_LOTS.map(p=>{const n=Math.max(1,Math.round(state.shareUnits*p)),ip=Math.max(1,Math.round(px*ISSUE_DISC));
+        return `<button class="mini-btn issue-btn" data-add="${p}" ${wait>0?'disabled':''}><b>${Math.round(p*100)}% 増やす</b><i>${yen(ip*STOCK_UNIT*n)} 入る</i><em>${n.toLocaleString()}単元 × ${ip.toLocaleString()}円</em></button>`;}).join('')}</div>
+      <h4 class="stk-head">🏛 自社株を買い戻す</h4>
+      <p class="stk-note" style="margin-top:0">買い戻した株は消すので、<b>1株の値打ちが上がり、毎週の配当が軽くなります</b>。少し高く付きます（市場価格＋${Math.round((BUYBACK_PREM-1)*100)}%）。</p>
+      <div class="ipo-ops">${BACK_LOTS.map(p=>{const n=Math.min(state.floatUnits,Math.max(1,Math.round(state.shareUnits*p))),bp=Math.round(px*BUYBACK_PREM),cost=bp*STOCK_UNIT*n;
+        return `<button class="mini-btn back-btn" data-back="${p}" ${(!state.floatUnits||state.cash<cost)?'disabled':''}><b>${Math.round(p*100)}% 買い戻す</b><i>${yen(cost)} 払う</i><em>${n.toLocaleString()}単元 × ${bp.toLocaleString()}円</em></button>`;}).join('')}</div>
+      ${state.floatUnits?'':'<p class="stk-note">外部の株はすべて自社に戻りました。配当はもう要りません。</p>'}`;
     }
     /* ── 2026-10-28：証券の窓を2枚のタブにした ──
        「他社の株を買うと優待が付く」を足したので、この窓には
@@ -7671,6 +7861,11 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           const held=Object.keys(stockCatalog).filter(id=>stockUnits(id)>0).length
                     +Object.keys(rivals).filter(c=>carrierUnits(c)>0&&carrierTradable(c)).length;
           return (held?`株 ${held}銘柄・`:'')+(ownCo?`傘下 ${ownCo}社・`:'')+'株主優待と買収';})()}</small></button>
+        <button type="button" class="fin-card ipo" id="openOwn"><b>🏛 自社株</b><small>${(function(){
+          if(!isListed()){const r=ipoReady();const n=(r.worth>=r.need?1:0)+(r.prof>=r.needProf?1:0)+(r.routes>=r.needRoutes?1:0);
+            return `未上場・上場の条件 ${n}/3`;}
+          const d=ownPx()-ownPrevPx();
+          return `${ownPx().toLocaleString()}円（前週比 ${d>=0?'+':'−'}${Math.abs(ownPrevPx()?d/ownPrevPx()*100:0).toFixed(1)}%）・自社 ${Math.round(ownSelfRate()*100)}%`;})()}</small></button>
       </div>
       <p><b>知名度は地域ごとに違います。</b>飛んでいる地域では名前が広まり、飛んでいない地域では無名のままです。
       路線の集客に効くのは<b>両端の地域の知名度</b>——片方で知られていなければ、客は集まりません。</p>
@@ -8188,6 +8383,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       if(state.panelView==='promo'){byId('panel').innerHTML=promoHtml();document.querySelectorAll('.promo-btn').forEach(b=>b.addEventListener('click',()=>promoAction(b.dataset.act,b.dataset.r)));
         byId('openBank').addEventListener('click',()=>openFinWin('bank'));
         byId('openStock').addEventListener('click',()=>openFinWin('stock'));
+        byId('openOwn').addEventListener('click',()=>openFinWin('own'));
         return}
       if(state.panelView==='routes'){
         const d=state.draft,park=d.park||state.base,previewPlane=state.planes.find(p=>!p.assigned)||state.planes[0];
@@ -8897,7 +9093,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         revenue:Math.round(sum(weeks,'revenue')),opcost:Math.round(sum(weeks,'opcost')),
         night:Math.round(sum(weeks,'night')),lease:Math.round(sum(weeks,'lease')),
         interest:Math.round(sum(weeks,'interest')),overhead:Math.round(sum(weeks,'overhead')),
-        handling:Math.round(sum(weeks,'handling')),divid:Math.round(sum(weeks,'divid')),ally:Math.round(sum(weeks,'ally')),
+        handling:Math.round(sum(weeks,'handling')),divid:Math.round(sum(weeks,'divid')),shDiv:Math.round(sum(weeks,'shDiv')),ally:Math.round(sum(weeks,'ally')),
         passengers:Math.round(sum(weeks,'passengers')),
         load:loadDen?Math.round(loadNum/loadDen):0,
         net,depr,profit:net-depr,
@@ -8924,7 +9120,11 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       const overhead=overheadWeekly(revenue);   /* 売上比例分があるので、その週の実績売上で計算する */
       const handling=handlingTotal();   /* 航空以外の収入：他社便の地上業務受託 */
       const divid=dividendWeekly();     /* 他社株の配当（持株比率ぶんの取り分） */
-      const net=Math.round(revenue-opcost-night-lease-interest-overhead+ally+handling+divid);state.cash+=net;const asg=state.planes.filter(p=>p.assigned),avgQ=asg.length?asg.reduce((s,p)=>s+cabinConfig(p).quality,0)/asg.length:40,avgLoad=rows.length?rows.reduce((s,x)=>s+x.load,0)/rows.length:0,/* 運賃が読みやすい会社ほど信用される。全路線の安定度の平均で ±6 */
+      /* 2026-10-28：上場していれば、もうけの一部は外の株主のもの。
+         赤字の週は配らない（配当は利益から出すもの）ので、傷口は広がらない */
+      const gross=revenue-opcost-night-lease-interest-overhead+ally+handling+divid;
+      const shDiv=ownDividend(gross);
+      const net=Math.round(gross-shDiv);state.cash+=net;const asg=state.planes.filter(p=>p.assigned),avgQ=asg.length?asg.reduce((s,p)=>s+cabinConfig(p).quality,0)/asg.length:40,avgLoad=rows.length?rows.reduce((s,x)=>s+x.load,0)/rows.length:0,/* 運賃が読みやすい会社ほど信用される。全路線の安定度の平均で ±6 */
       flying2=state.routes.filter(r=>flying(r)),stead=flying2.length?flying2.reduce((s,r)=>s+fareSteadiness(r),0)/flying2.length:1,
       /* 顧客満足度。乗った人がどう感じたかを毎週ゆっくり積む（reputation を実体として使う） */
       sat=companySatisfaction(),
@@ -8946,7 +9146,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       /* 2026-10-28：株価は週が変わるときに動かす。
          いま見ている値段で買った直後に数字が変わるのを避ける */
       moveStockPrices();
-      state.lastWeekReport={week:w,revenue:Math.round(revenue),opcost:Math.round(opcost),night:Math.round(night),lease:Math.round(lease),interest,ally:Math.round(ally),cancelled,net,overhead,handling,divid,depr,profit:net-depr,worth:netWorth(),assets:tangibleAssets(),devNews,passengers:Math.round(passengers),reaction,mood:weekMood,fcNet:Math.round(fcNetTotal-night-lease-interest+ally),rows:rows.sort((a,b)=>b.net-a.net)};state.history.push({week:w,cash:Math.round(state.cash),net,worth:netWorth()});if(state.history.length>52)state.history.shift();if(state.cash<0)state.gameOver=true;
+      state.lastWeekReport={week:w,revenue:Math.round(revenue),opcost:Math.round(opcost),night:Math.round(night),lease:Math.round(lease),interest,ally:Math.round(ally),cancelled,net,overhead,handling,divid,shDiv,depr,profit:net-depr,worth:netWorth(),assets:tangibleAssets(),devNews,passengers:Math.round(passengers),reaction,mood:weekMood,fcNet:Math.round(fcNetTotal-night-lease-interest+ally),rows:rows.sort((a,b)=>b.net-a.net)};state.history.push({week:w,cash:Math.round(state.cash),net,worth:netWorth()});if(state.history.length>52)state.history.shift();if(state.cash<0)state.gameOver=true;
       accumulateQuarter(state.lastWeekReport);
       rows.forEach(x=>{const r=state.routes.find(y=>y.id===x.id);if(r)r.lossStreak=x.net<0?(r.lossStreak||0)+1:0;});
       advanceOutlook();                                 /* 今週の空模様が確定し、予報が1つ先へずれる */
@@ -9272,6 +9472,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       state.base=null;state.selected=null;state.secondBase=null;state.selectedBase=null;
       state.tutorialFilled=false;
       state.cash=T.cash;state.awareness=T.aware;initRegionAware(T.aware,T.base);
+      state.worth0=T.cash;   /* 上場の条件は「開業のときの倍」。案内は開業資金が別なので、ここで控える */
       state.tutorial={step:0,done:false};       /* 吹き出しの案内を使う（TUT_GUIDE） */
       state.research='none';farePolicy().mode='manual';
       invalidateInf();saveGame();render();
