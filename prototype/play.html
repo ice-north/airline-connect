@@ -1506,10 +1506,13 @@
     .fee-eg{margin-top:8px;font-size:12px;color:#405964}
     .fee-eg b{color:#17384a}
     /* 発着枠の棒グラフ */
-    .apd-card.wide{grid-column:1/-1}
-    /* 9枠を1行に並べたいが、板が狭いと1枠29pxになり「06〜08」(42px)が切れる。
-       入る幅があるときだけ1行、足りなければ折り返す（2026-10-22） */
-    .slotchart{display:grid;grid-template-columns:repeat(auto-fit,minmax(42px,1fr));gap:5px;align-items:end}
+    /* 凡例を右に置けるかどうかは画面幅では決まらない。同じ1440pxでも、
+       右パネルに出せば板は310pxしかない。板そのものの幅で切り替える（2026-10-28） */
+    .apd-card.wide{grid-column:1/-1;container-type:inline-size}
+    /* 9枠は必ず1行。auto-fit で折り返していたら、375pxでは5枠＋4枠の2段になり、
+       時刻が左から右へ流れるという棒グラフの前提そのものが壊れていた（2026-10-28）。
+       横軸を開始時刻だけにしたので1枠26pxで足り、狭い画面でも1行に収まる */
+    .slotchart{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;align-items:end}
     .sc-col{min-width:0;border:0;background:transparent;padding:0;font-family:inherit;cursor:pointer;
       border-radius:8px;transition:.1s}
     .sc-col:hover .sc-stack{background:#f3f9fc}
@@ -1524,19 +1527,20 @@
     .sc-pick .none b{color:#c0392b}
     .sc-pick.hint{color:#496572;background:#fff;border-style:dashed}
     /* グラフ本体と凡例を横に並べる。棒で板の幅を埋めずに、余りは凡例と空気に回す */
-    /* 棒は細くし、グラフ自体にも上限を置く。板いっぱいに引き伸ばさない。
-       目盛り「06〜08」は42px要るので、帯はそれより狭くしない（切れるくらいなら上限を広げる） */
-    .sc-wrap{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:flex-start}
-    /* min-width:0 が無いと、格子の最小幅（9帯ぶん418px）で突っぱねて狭い画面からはみ出す */
-    .sc-wrap .slotchart{flex:1 1 300px;max-width:430px;min-width:0}
+    /* 2026-10-28：430pxのグラフを635pxの板に左寄せしていたので、右に200pxの空白が残り
+       「板だけ横に広い」形になっていた。グラフは棒が詰まって見える330pxまでに抑え、
+       空いた右側には凡例を縦に積んで埋める。空白を空白のまま残さない */
+    .sc-wrap{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-start}
+    /* min-width:0 が無いと、格子の最小幅で突っぱねて狭い画面からはみ出す */
+    .sc-wrap .slotchart{flex:1 1 290px;max-width:330px;min-width:0}
     .sc-stack{position:relative;height:118px;display:block;
       border-bottom:1px solid #d8e6ee}   /* 基線は実線のヘアライン1本 */
     /* さばける回数は「箱」ではなく基準線。実線の細い線1本で足りる */
     .sc-capline{position:absolute;left:0;right:0;height:1px;background:#b9d0dd}
     .sc-capline::after{content:'';position:absolute;right:0;top:-2px;width:5px;height:5px;
       border-radius:50%;background:#b9d0dd}
-    /* 棒は20px固定（上限24px）。帯の余りは空気として残す */
-    .sc-used{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:20px;
+    /* 棒は20pxまで。帯が26pxを切る狭い画面では帯の72%にして、棒どうしがくっつくのを防ぐ */
+    .sc-used{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:72%;max-width:20px;
       border-radius:4px 4px 0 0;display:flex;align-items:flex-start;justify-content:center}
     /* 自社ぶんは同じ色の濃い段。地色の2pxの隙間で他社ぶんと分ける（枠線は引かない） */
     .sc-used u{display:block;width:100%;min-height:3px;border-radius:4px 4px 0 0;text-decoration:none;
@@ -1550,19 +1554,29 @@
     /* 数字は全部には付けない（いちばん混む枠・いちばん空く枠・選んだ枠だけ） */
     .sc-val{position:absolute;left:0;right:0;margin-bottom:3px;text-align:center;font-size:12px;
       font-weight:700;color:#405964;font-variant-numeric:tabular-nums;line-height:1}
-    .sc-shut{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:12px;color:#547482}
+    .sc-shut{position:absolute;left:-2px;right:-2px;bottom:6px;text-align:center;font-size:12px;
+      color:#547482;white-space:nowrap}
     .sc-col.shut .sc-stack{background:repeating-linear-gradient(135deg,#f7fafb,#f7fafb 5px,#eef3f6 5px,#eef3f6 10px)}
     .sc-lab{display:block;margin-top:6px;text-align:center;font-size:12px;color:#547482;
       font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .sc-legend{flex:1 1 100%;min-width:0;display:flex;align-items:center;gap:5px 12px;
-      flex-wrap:wrap;font-size:12px;color:#496572}
+    /* 凡例はグラフの右に縦積み。横1行だと板の下にもう1段増え、
+       グラフは小さいのに板だけ背が高くなっていた（2026-10-28） */
+    .sc-legend{flex:1 1 168px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;
+      gap:5px;font-size:12px;color:#496572}
+    .sc-lgh{display:block;font-weight:500;color:#2a4a5a}
     .sc-legend .k{display:inline-flex;align-items:center;gap:5px;color:#405964;white-space:nowrap}
     .sc-legend .k::before{content:'';width:9px;height:9px;border-radius:2px;background:#43b06e;flex:0 0 auto}
     .sc-legend .tight::before{background:#e0ab20}
     .sc-legend .full::before{background:#d4573c}
     .sc-legend .mine::before{background:#1f7a46}
     .sc-legend .capk::before{width:14px;height:1px;border-radius:0;background:#b9d0dd}
-    .sc-legend em{font-style:normal;flex:1 1 100%;min-width:0;color:#496572}
+    .sc-legend em{font-style:normal;min-width:0;color:#496572;line-height:1.55}
+    /* グラフ(290px)＋凡例(168px)＋間(16px)が入らない板では、凡例はグラフの下に寝かせる。
+       無理に右へ置くと、グラフが260px台まで潰れて棒の隙間が4pxになる */
+    @container (max-width:474px){
+      .sc-legend{flex-direction:row;flex-wrap:wrap;align-items:center;gap:5px 12px}
+      .sc-lgh,.sc-legend em{flex:1 1 100%}
+    }
     /* グラフを読まなくても動けるように、結論を1行で */
     .sc-advice{margin:-2px 0 9px;font-size:12px;color:#2a6b45;background:#f1fbf5;
       border:1.5px solid #cbe9d8;border-radius:10px;padding:6px 9px}
@@ -1658,7 +1672,7 @@
       border-radius:10px;padding:7px 9px}
     @media(max-width:760px){
       .slotchart{gap:4px}
-      .sc-stack{height:84px}
+      .sc-stack{height:92px}
       .apd-kpis b{font-size:18px}
       /* 会社名（ジェットスター・ソラシドエア）は詰めると切れる。幅はそのまま、棒を細くして収める */
       .apb>i{flex-basis:38px}
@@ -2784,9 +2798,12 @@
     function slotRange(i){const a=(SLOT_FIRST+i*SLOT_H)*60;return [a,a+SLOT_H*60];}
     function slotName(i){const[a,b]=slotRange(i);return `${hhmm(a)}〜${b>=1440?'24:00':hhmm(b)}`;}
     /* 2026-10-16：枠の見出しは「06」ではなく「06〜08」。
-       2時間の帯であることが、説明を読まなくても分かるようにする */
-    function slotLabel(i){const p=n=>String(n).padStart(2,'0');
-      return `${p(SLOT_FIRST+i*SLOT_H)}〜${p(Math.min(24,SLOT_FIRST+(i+1)*SLOT_H))}`;}
+       2時間の帯であることが、説明を読まなくても分かるようにする
+       2026-10-28：横軸は開始時刻だけに戻した。「06〜08」は42px要るので、
+       9枠を1行に並べると帯も42px以上になり、棒20pxに対して隙間が倍以上あいた。
+       グラフが横に間延びする原因がこの見出しだった。
+       2時間ごとであることは板の見出しに書き、押したときは「06:00〜08:00」と出す */
+    function slotTick(i){return String(SLOT_FIRST+i*SLOT_H);}
     /* 生の分（0起点、日をまたぐと1440を超える）を枠番号に。
        2026-10-20：以前は %1440 で丸めてから 0 で下限を切っていたので、
        00:55 着のような深夜の発着が「06〜08の枠を使った」ことになっていた。
@@ -4680,7 +4697,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       if(typeof state.slotPick==='number')marked.add(state.slotPick);
       const pc=function(v){return Math.max(0,Math.min(100,v/maxCap*100));};
       const bars=band.map(function(b){
-        if(!b.cap)return `<button type="button" class="sc-col shut" data-slot="${b.i}" title="${slotName(b.i)}／この時間は閉港"><span class="sc-stack"><span class="sc-shut">閉港</span></span><span class="sc-lab">${slotLabel(b.i)}</span></button>`;
+        if(!b.cap)return `<button type="button" class="sc-col shut" data-slot="${b.i}" title="${slotName(b.i)}／この時間は閉港"><span class="sc-stack"><span class="sc-shut">閉港</span></span><span class="sc-lab">${slotTick(b.i)}</span></button>`;
         const u=b.used/b.cap;
         return `<button type="button" class="sc-col ${u>=1?'full':u>=0.8?'tight':'ok'}${state.slotPick===b.i?' picked':''}" data-slot="${b.i}" title="${slotName(b.i)}／さばける ${b.cap}回・他社 ${Math.round(b.others)}回・自社 ${Math.round(b.mine)}回・空き ${Math.round(b.free)}回">
           <span class="sc-stack">
@@ -4688,7 +4705,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
             <span class="sc-capline" style="bottom:${pc(b.cap)}%"></span>
             <span class="sc-used" style="height:${pc(b.used)}%">${b.mine>0?`<u style="height:${Math.round(b.mine/b.used*100)}%"></u>`:''}</span>
           </span>
-          <span class="sc-lab">${slotLabel(b.i)}</span></button>`;}).join('');
+          <span class="sc-lab">${slotTick(b.i)}</span></button>`;}).join('');
       /* 2026-10-21：内訳は吹き出し（title）にしか無く、触る端末では読めなかった。
          棒を押したら、その時間帯の中身をグラフの下に文字で出す。 */
       const pick=(typeof state.slotPick==='number')?state.slotPick:null;
@@ -4712,13 +4729,14 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         ?`🟢 いちばん空いているのは <b>${slotName(best.i)}</b>（あと ${Math.round(best.f)}回 入ります）${fullN?`／<span class="bad">満杯は ${fullN}枠</span>`:''}`
         :'🔴 どの時間帯も満杯です。この空港に新しい便は入れられません'}</div>`;
       const slots=`<div class="apd-card wide">
-        <h4>🕐 発着枠（2時間ごと・滑走路${rc}本）<small>棒＝いま発着している便数／細い枠＝さばける回数</small></h4>
+        <h4>🕐 発着枠<small>2時間ごと・滑走路${rc}本</small></h4>
         ${advice}
         <div class="sc-wrap">
           <div class="slotchart">${bars}</div>
-          <div class="sc-legend"><span class="k ok">空き</span><span class="k tight">混雑</span><span class="k full">満杯</span>
+          <div class="sc-legend"><b class="sc-lgh">棒＝いま発着している便数</b>
+            <span class="k ok">空き</span><span class="k tight">混雑</span><span class="k full">満杯</span>
             <span class="k mine">うち自社</span><span class="k capk">さばける回数</span>
-            <em>混むほど着陸料が上がります（いま ×${cong.toFixed(2)}）。空いている時間帯なら、枠も料金も有利です。</em></div>
+            <em>横軸は時刻。混むほど着陸料が上がります（いま ×${cong.toFixed(2)}）。空いている時間帯なら、枠も料金も有利です。</em></div>
         </div>
         ${pickLine||'<div class="sc-pick hint">棒を押すと、その時間帯の<b>さばける回数・他社・自社・空き</b>が出ます。</div>'}
       </div>`;
