@@ -1909,6 +1909,13 @@
        2026-10-28：`.stk-row .al-info span span{display:inline}`（中の<span>を行に戻す規則）に
        負けて効いていなかった。span.stk-hold と書いて、そちらより強くする。 */
     .stk-row .al-info span.stk-hold{white-space:nowrap;display:inline-block}
+    /* 値動きの線。横幅いっぱいに伸ばし、上下は30pxに収める */
+    .stk-spark{margin:4px 0 2px}
+    .stk-spark svg{display:block;width:100%;height:30px;overflow:visible}
+    .stk-spark svg.up{color:#1f7a3d}
+    .stk-spark svg.down{color:#c0392b}
+    .stk-spark i{display:block;font-style:normal;font-size:12px;color:#8697a0;margin-top:1px}
+    .stk-spark.none{font-size:12px;color:#8697a0;margin:4px 0 2px}
     /* 他社の株の見出しと、便数の札 */
     .stk-head{font-size:13px;color:#2a4657;margin:16px 0 8px;padding-top:12px;border-top:2px solid #e3edf3}
     .al-b.freq{background:#c2d2da;color:#2a4657}
@@ -2636,7 +2643,7 @@
       if(kind==='lounge')return buildLounge(name);
       if(kind==='handling')return startHandling(name);
     }
-    const state={base:null,secondBase:null,selectedBase:null,selected:null,panelView:'airport',cash:400000000,day:1,week:1,reputation:70,brand:35,awareness:20,regionAware:null,tutorialFilled:false,tutPos:null,draftOpen:false,openRoute:{},loan:0,history:[],rivalAdds:[],alliances:{},suggestions:null,shares:{},stockPx:{},stockPrev:{},stockLot:1,finTab:'shares',cShares:{},carrierMood:{},carrierPrev:{},cLot:10,chapter:0,cleared:[],won:false,moneyFmt:'sen',
+    const state={base:null,secondBase:null,selectedBase:null,selected:null,panelView:'airport',cash:400000000,day:1,week:1,reputation:70,brand:35,awareness:20,regionAware:null,tutorialFilled:false,tutPos:null,draftOpen:false,openRoute:{},loan:0,history:[],rivalAdds:[],alliances:{},suggestions:null,shares:{},stockPx:{},stockPrev:{},stockLot:1,finTab:'shares',cShares:{},carrierMood:{},carrierPrev:{},cLot:10,stockHist:{},carrierHist:{},chapter:0,cleared:[],won:false,moneyFmt:'sen',
       /* 四半期の収支：qAcc はその期に入った週の決算、lastQuarterReport は締めたあとの集計 */
       qAcc:[],lastQuarterReport:null,pendingQuarter:false,airline:{name:'あおぞら航空',code:'AOZ'},difficulty:'normal',weather:null,wxNext:[],rivalNew:[],rivalGone:[],rivalMerged:{},rivalAllies:[],worldLog:[],tutorial:{step:0,done:(()=>{try{return localStorage.getItem('am_tut_done')==='1'}catch(e){return false}})()},gameOver:false,equipment:[],facilities:[],airportDev:{},shopTab:'air',shopSort:'class',shopRev:false,shopOpenItem:{},routeSort:'net',routeView:'card',openSect:{},pickFor:null,fleetSetup:null,fleetDraft:null,planes:[],routes:[],draft:{stops:[],park:null,frequency:7,fare:'普通',timeBand:1,season:'all',days:[0,1,2,3,4,5,6],trips:1},lastReport:null,activeFlights:[],currentFlight:null,operationQueue:[],simulating:false,simulationSpeed:1};
     // 初期状態の控え。セーブに無い項目はここから埋める（古いセーブでも壊れないように）
@@ -2661,6 +2668,7 @@
       if(!state.stockLot)state.stockLot=1;if(!state.finTab)state.finTab='shares';
       if(!state.cShares)state.cShares={};if(!state.carrierMood)state.carrierMood={};if(!state.carrierPrev)state.carrierPrev={};
       if(!state.cLot)state.cLot=10;
+      if(!state.stockHist)state.stockHist={};if(!state.carrierHist)state.carrierHist={};
       ensureStockPx();
       syncAssign();ensureOutlook();if(d.view){mainView.lat=d.view.lat;mainView.lng=d.view.lng;mainView.z=clampZ(d.view.z);zoomTarget=mainView.z;}return true;}catch(e){return false;}}
     function resetGame(){try{localStorage.removeItem(SAVE_KEY);}catch(e){}const fmt=state.moneyFmt;applyState(null);state.moneyFmt=fmt||'sen';   /* 表示の好みは進行ではないのでやり直しても残す */mainView.lat=35.8;mainView.lng=138.7;mainView.z=MAP_Z0;zoomTarget=mainView.z;invalidateInf();render();}
@@ -3392,8 +3400,56 @@
     function buildPrice(base){return Math.round(base*companyMods().buildCostMult);}
     function adPrice(base){return Math.round(base*companyMods().adCostMult);}
     function ensureStockPx(){if(!state.stockPx)state.stockPx={};if(!state.stockPrev)state.stockPrev={};
+      if(!state.stockHist)state.stockHist={};if(!state.carrierHist)state.carrierHist={};
       Object.keys(stockCatalog).forEach(id=>{if(!(state.stockPx[id]>0))state.stockPx[id]=stockCatalog[id].px;
-        if(!(state.stockPrev[id]>0))state.stockPrev[id]=state.stockPx[id];});}
+        if(!(state.stockPrev[id]>0))state.stockPrev[id]=state.stockPx[id];
+        if(!Array.isArray(state.stockHist[id]))state.stockHist[id]=[state.stockPx[id]];});
+      /* 他社のほうも同じ数だけ点を持たせておく。片方だけ線が出て、
+         もう片方が「まだありません」だと、壊れているように見える */
+      try{Object.keys(rivals).forEach(c=>{if(!Array.isArray(state.carrierHist[c]))state.carrierHist[c]=[carrierPx(c)];});}catch(e){}}
+    /* ── 2026-10-28：値動きの記録（グラフ用）──
+       1週に1点ずつ、1年ぶん（52点）だけ残す。これ以上ためても線は読めず、
+       セーブが太るだけ。記録は値段を動かしたあとに取る。 */
+    const STOCK_HIST_MAX=52;
+    function pushStockHist(){
+      if(!state.stockHist)state.stockHist={};if(!state.carrierHist)state.carrierHist={};
+      const put=(bag,k,v)=>{const a=Array.isArray(bag[k])?bag[k]:(bag[k]=[]);a.push(v);
+        if(a.length>STOCK_HIST_MAX)a.splice(0,a.length-STOCK_HIST_MAX);};
+      Object.keys(stockCatalog).forEach(id=>put(state.stockHist,id,stockPx(id)));
+      try{Object.keys(rivals).forEach(c=>{if(carrierTradable(c))put(state.carrierHist,c,carrierPx(c));});}catch(e){}
+    }
+    /* イベントから株価を動かすための入口。
+       あとから足すイベントも、ここを呼ぶだけで済むようにしておく。
+         sup … {銘柄id:倍率}
+         car … 数（航空会社ぜんぶに同じ倍率）か {会社名:倍率}
+       取引先は値段そのものを、航空会社は「人気」の係数を動かす
+       （航空会社の値段の土台は便数なので、そこは触らない）。 */
+    function shockStocks(sup,car,label){
+      ensureStockPx();
+      const moved=[];
+      Object.keys(sup||{}).forEach(id=>{
+        const s=stockCatalog[id];if(!s)return;
+        const was=stockPx(id),now=Math.max(Math.round(s.px*0.35),Math.min(Math.round(s.px*3.2),Math.round(was*sup[id])));
+        state.stockPx[id]=now;
+        if(stockUnits(id)>0)moved.push({n:s.n,ic:s.ic,d:(now-was)*STOCK_UNIT*stockUnits(id)});
+      });
+      if(car!=null){
+        if(!state.carrierMood)state.carrierMood={};
+        try{Object.keys(rivals).forEach(c=>{
+          const m=(typeof car==='number')?car:car[c];
+          if(!(m>0)||!carrierTradable(c))return;
+          const was=carrierPx(c);
+          state.carrierMood[c]=Math.max(0.55,Math.min(1.8,carrierMood(c)*m));
+          if(carrierUnits(c)>0)moved.push({n:c,ic:'✈',d:(carrierPx(c)-was)*STOCK_UNIT*carrierUnits(c)});
+        });}catch(e){}
+      }
+      /* 自分が持っている銘柄だけ知らせる。持っていない銘柄の上下まで流すと、
+         ただの数字の行列になって誰も読まなくなる */
+      const sum=moved.reduce((a,x)=>a+x.d,0);
+      if(moved.length)setTimeout(()=>notice(
+        `${label}：${moved.map(x=>x.ic+' '+x.n).join('・')}の持ち株が ${sum>=0?'+':'−'}${yen(Math.abs(sum))}。`),420);
+      return sum;
+    }
     /* 1週ぶんの値動き。毎週ゆるく上下し、初期値から離れるほど戻ろうとする
        （放っておくと際限なく上がり続けて「買って待つだけ」になるため） */
     function moveStockPrices(){ensureStockPx();
@@ -3410,7 +3466,8 @@
       try{Object.keys(rivals).forEach(c=>{
         state.carrierPrev[c]=carrierPx(c);
         const m=carrierMood(c);
-        state.carrierMood[c]=Math.max(0.55,Math.min(1.8,m*(1+(1-m)*0.10+(Math.random()*2-1)*0.045)));});}catch(e){}}
+        state.carrierMood[c]=Math.max(0.55,Math.min(1.8,m*(1+(1-m)*0.10+(Math.random()*2-1)*0.045)));});}catch(e){}
+      pushStockHist();}
     function buyStock(id,lots){const s=stockCatalog[id];if(!s)return;
       lots=Math.max(1,lots|0);const cost=stockLotCost(id,lots);
       if(state.cash<cost)return notice(`${s.n} を${lots}単元買うには ${yen(cost)} 必要です（あと ${yen(cost-state.cash)}）。`);
@@ -6108,14 +6165,12 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       {ic:'🌸',good:true,title:'桜シーズンで観光客増',desc:'行楽需要でどの便もにぎやか。',run(){state.cash+=3500000;}},
       {ic:'😴',good:false,title:'機長が寝坊…1便欠航',desc:'払い戻し対応で少し出費。次は目覚まし2個で。',run(){state.cash-=2000000;}},
       {ic:'🌀',good:false,title:'台風が接近',desc:'一部の便が運休。減収となった。',run(){state.cash-=3000000;}},
-      /* 2026-10-28：原油高は「石油株の値上がり」でもある。南西石油を持っていれば
-         この損を評価額で相殺できる——という読みが成り立つように、株価も上げる */
-      {ic:'⛽',good:false,title:'燃料価格が高騰',desc:'今週の運航費がかさんでしまった。石油株は値上がりしている。',run(){
+      /* 2026-10-28：原油高は「石油株の値上がり」であり、同時に「航空会社の株安」でもある。
+         南西石油を持っていれば損を評価額で相殺できる——という読みが成り立つようにした。
+         値動きは shockStocks に任せてある。これから足すイベントも、同じ呼び方でつなげる。 */
+      {ic:'⛽',good:false,title:'燃料価格が高騰',desc:'今週の運航費がかさんだ。石油株は上がり、航空会社の株は売られている。',run(){
         state.cash-=Math.round(1500000+state.planes.filter(p=>p.assigned).length*600000);
-        ensureStockPx();const was=stockPx('oil');
-        state.stockPx.oil=Math.min(Math.round(stockCatalog.oil.px*3.2),Math.round(was*(1.14+Math.random()*0.10)));
-        const u=stockUnits('oil');
-        if(u>0)setTimeout(()=>notice(`🛢 南西石油 ${was.toLocaleString()}円 → ${stockPx('oil').toLocaleString()}円。保有${u}単元の評価額が +${yen((stockPx('oil')-was)*STOCK_UNIT*u)}。`),400);}},
+        shockStocks({oil:1.14+Math.random()*0.10},0.94-Math.random()*0.04,'⛽ 原油高');}},
       {ic:'🛠️',good:false,title:'1機が臨時整備でドック入り',desc:'安全第一。整備費が発生した。',run(){state.cash-=2500000;}}
     ];
     const choiceEvents=[
@@ -7344,6 +7399,28 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         <button type="button" class="fin-tab${t==='carrier'?' on':''}" data-fintab="carrier">✈ 航空会社</button></div>`
         +(t==='shares'?sharesHtml():carrierHtml());
     }
+    /* ── 2026-10-28：値動きの線 ──
+       数字だけだと「上がっているのか下がっているのか」が読めない。
+       preserveAspectRatio="none" で横に伸ばすので、線の太さは
+       vector-effect="non-scaling-stroke" で保つ（でないと潰れて細くなる）。
+       base を渡すと、初値の高さに点線を引く——いまが高いのか安いのかが一目で分かる。 */
+    function sparkHtml(series,base){
+      const a=(series||[]).filter(v=>v>0).slice(-STOCK_HIST_MAX);
+      if(a.length<2)return '<div class="stk-spark none">値動きはまだありません（1週ごとに記録します）</div>';
+      const W=240,H=30,pad=3;
+      let mn=Math.min.apply(null,a),mx=Math.max.apply(null,a);
+      if(base>0){mn=Math.min(mn,base);mx=Math.max(mx,base);}
+      const rng=(mx-mn)||1;
+      const xf=i=>pad+i/(a.length-1)*(W-2*pad),yf=v=>H-pad-(v-mn)/rng*(H-2*pad);
+      const pts=a.map((v,i)=>xf(i).toFixed(1)+','+yf(v).toFixed(1)).join(' ');
+      const up=a[a.length-1]>=a[0];
+      return `<div class="stk-spark"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="${up?'up':'down'}">`
+        +(base>0?`<line x1="0" y1="${yf(base).toFixed(1)}" x2="${W}" y2="${yf(base).toFixed(1)}" stroke="#c6d4dc" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`:'')
+        +`<polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`
+        /* 単位の「円」は上の行で言っているので、ここでは繰り返さない。
+           入れると行が折り返して「円」だけが次の行に落ちる */
+        +`<i>直近${a.length}週　高 ${mx.toLocaleString()} ／ 安 ${mn.toLocaleString()}${base>0?` ／ 点線＝初値 ${base.toLocaleString()}`:''}</i></div>`;
+    }
     /* 株式のタブ。1単元＝1,000株で、1／5／20単元の3段で優待が上がる。
        値段より**段**を見せる——いくら払ったかよりも「次の段まであと何単元か」の方が、
        プレイヤーがいま決めたいことだから。 */
@@ -7364,6 +7441,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         return `<div class="al-row stk-row"><div class="al-ic stk-ic">${s.ic}</div>
           <div class="al-info"><b>${s.n}<span class="al-b cd stk-sec">${s.sec}</span></b>
           <span><b class="stk-px">${px.toLocaleString()}円</b> <i class="${chg>=0?'up':'down'}">前週比 ${chg>=0?'+':'−'}${Math.abs(chg).toFixed(1)}%</i>${u?`<span class="stk-hold">　保有 <b>${u}単元</b></span><span class="stk-hold">（${yen(u*STOCK_UNIT*px)}）</span>`:''}</span>
+          ${sparkHtml((state.stockHist||{})[id],s.px)}
           <span class="stk-yu">${yu}</span><span class="stk-tx">${s.tx}</span></div>
           <div class="al-btns"><button class="mini-btn stk-btn" data-stk="${id}" data-kind="buy" ${state.cash>=cost?'':'disabled'} title="${lot}単元＝${(STOCK_UNIT*lot).toLocaleString()}株">買う ${yen(cost)}</button>
           <button class="mini-btn stk-btn" data-stk="${id}" data-kind="sell" ${u?'':'disabled'}>売る ${sellN?yen(stockLotCost(id,sellN)):''}</button></div></div>`;}).join('');
@@ -7400,6 +7478,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         return `<div class="al-row stk-row"><div class="al-ic stk-ic" style="background:${rivals[c].color}22;color:${rivals[c].color}">✈</div>
           <div class="al-info"><b>${c}${badge}<span class="al-b freq">${f}往復/日</span></b>
           <span><b class="stk-px">${px.toLocaleString()}円</b> <i class="${chg>=0?'up':'down'}">前週比 ${chg>=0?'+':'−'}${Math.abs(chg).toFixed(1)}%</i>${u?`<span class="stk-hold">　持株 <b>${pct(u).toFixed(1)}%</b></span><span class="stk-hold">（${yen(u*STOCK_UNIT*px)}）</span>`:''}</span>
+          ${own?'':sparkHtml((state.carrierHist||{})[c],0)}
           <span class="stk-yu">${info}</span></div>
           <div class="al-btns">${own?'<span class="al-done">仲間です</span>'
             :`<button class="mini-btn cst-btn" data-car="${c}" data-kind="buy" ${state.cash>=cost&&u<carrierMaxUnits()?'':'disabled'}>買う ${yen(cost)}</button>
