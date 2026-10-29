@@ -300,7 +300,12 @@
     .slot-seg .seg-btn{display:block;min-width:0;padding:5px 8px;
       font-size:13px;font-variant-numeric:tabular-nums;text-align:left;line-height:1.25}
     .slot-seg .seg-btn em{font-style:normal;font-size:12px;font-weight:500;margin-left:4px;opacity:.75}
-    .slot-seg .seg-btn small{display:block;font-size:11px;margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    /* 2026-10-28：…で切らずに折り返す。倍率は4文字で収まったが、人数と席数は
+       「需要412名／405席・空124」のように伸びるので、狭い板では2行になる */
+    .slot-seg .seg-btn small{display:block;font-size:11px;margin-top:0;white-space:normal;line-height:1.3}
+    /* 3つのかたまりの「あいだ」でだけ折り返す。中で折れると「席」だけが次の行に残る */
+    .slot-seg .seg-btn small b,.slot-seg .seg-btn small i,.slot-seg .seg-btn small span{white-space:nowrap}
+    .slot-seg .seg-btn small i{font-style:normal}
     .slot-seg .seg-btn small b{font-weight:500;color:#405964}
     .slot-seg .seg-btn small b.hi{color:#1f7a3d}.slot-seg .seg-btn small b.lo{color:#a0450a}
     .slot-seg .seg-btn.on small b,.slot-seg .seg-btn.on small{color:#05202b}
@@ -504,6 +509,7 @@
     .shop-win .shop-item>.specbars{grid-column:2;margin:0}
     .shop-win .shop-item>.pay-cmp{grid-column:3}
     /* 全幅で下に敷くもの。並び順は HTML の順そのまま */
+    .shop-win .shop-item>.cash-warn,
     .shop-win .shop-item>.nofit-note,
     .shop-win .shop-item>.pi-foot{grid-column:1/-1}
     /* 性能バーは2列×3行。縦1列だと6本で116px になり、支払欄より高くなる */
@@ -1337,6 +1343,12 @@
     .shop-item .buy-plane:disabled{opacity:.55;}
     /* 案内の最中、いまは選べない買い方。押すと理由が出るので、押せるままにしてある */
     .pc-col.tut-off{opacity:.42;filter:grayscale(.7)}
+    /* 運転資金が残らない買い方の注意書きと、1度止めたボタン（2026-10-28） */
+    .cash-warn{margin:6px 0 0;padding:7px 10px;border:1.5px solid #f3cfc6;border-radius:10px;
+      background:#fff4f1;color:#9a3326;font-size:12px;line-height:1.5}
+    .cash-warn b{color:#7d2a1e;font-weight:700}
+    .mini-btn.danger-again{background:#c0392b !important;color:#fff !important;
+      border-color:#a33327 !important;font-weight:700}
     .shop-group{margin:12px 0 2px;font-size:12px;font-weight:500;color:#1273a2;letter-spacing:.04em;}
     /* 地図の下の一覧の先頭に置く「＋ 航路をつくる」。ここがいちばん目に入る場所 */
     .rl-make{width:100%;margin:2px 0 10px;padding:12px 14px;line-height:1.35}
@@ -1545,11 +1557,15 @@
     /* 自社ぶんは同じ色の濃い段。地色の2pxの隙間で他社ぶんと分ける（枠線は引かない） */
     .sc-used u{display:block;width:100%;min-height:3px;border-radius:4px 4px 0 0;text-decoration:none;
       border-bottom:2px solid #fff}
-    .sc-col.ok .sc-used{background:#43b06e}
-    .sc-col.tight .sc-used{background:#e0ab20}
+    /* 2026-10-28：白地に対する明暗の差が 空き2.74／混雑2.10 しかなく、
+       文字でない要素の目安（3:1）に届いていなかった。薄い画面だと棒の輪郭が沈む。
+       色みは残したまま、3:1 を超えるところまで落とした（空き3.03／混雑3.22／満杯4.02）。
+       自社の濃い段も、混雑の段と見分けがつく明るさまで下げている */
+    .sc-col.ok .sc-used{background:#3da767}
+    .sc-col.tight .sc-used{background:#b88714}
     .sc-col.full .sc-used{background:#d4573c}
     .sc-col.ok .sc-used u{background:#1f7a46}
-    .sc-col.tight .sc-used u{background:#9c7310}
+    .sc-col.tight .sc-used u{background:#7f5f0c}
     .sc-col.full .sc-used u{background:#93341f}
     /* 数字は全部には付けない（いちばん混む枠・いちばん空く枠・選んだ枠だけ） */
     .sc-val{position:absolute;left:0;right:0;margin-bottom:3px;text-align:center;font-size:12px;
@@ -1565,8 +1581,8 @@
       gap:5px;font-size:12px;color:#496572}
     .sc-lgh{display:block;font-weight:500;color:#2a4a5a}
     .sc-legend .k{display:inline-flex;align-items:center;gap:5px;color:#405964;white-space:nowrap}
-    .sc-legend .k::before{content:'';width:9px;height:9px;border-radius:2px;background:#43b06e;flex:0 0 auto}
-    .sc-legend .tight::before{background:#e0ab20}
+    .sc-legend .k::before{content:'';width:9px;height:9px;border-radius:2px;background:#3da767;flex:0 0 auto}
+    .sc-legend .tight::before{background:#b88714}
     .sc-legend .full::before{background:#d4573c}
     .sc-legend .mine::before{background:#1f7a46}
     .sc-legend .capk::before{width:14px;height:1px;border-radius:0;background:#b9d0dd}
@@ -1593,7 +1609,7 @@
     .apg-n{grid-column:1;grid-row:1;font-size:12px;font-weight:500;color:#2a4657;
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .apg-bar{grid-column:2;grid-row:1;height:9px;border-radius:5px;background:#eef4f7;overflow:hidden}
-    .apg-bar u{display:block;height:100%;background:#43b06e;text-decoration:none}
+    .apg-bar u{display:block;height:100%;background:#3da767;text-decoration:none}
     .apg.loss .apg-bar u{background:#e08a7a}
     .apg-net{grid-column:3;grid-row:1;font-size:12px;font-weight:700;color:#1f7a3d;
       font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -1619,7 +1635,7 @@
       border:1.2px solid #b8e5cb;border-radius:999px;padding:0 5px;margin-left:4px}
     .apb>i{flex:1 1 56px;min-width:0;height:9px;border-radius:5px;background:#eef4f7;overflow:hidden}
     .apb>i u{display:block;height:100%;background:#8fbed8;text-decoration:none}
-    .apb.mine>i u{background:#43b06e}
+    .apb.mine>i u{background:#3da767}
     .apb>b{flex:0 0 auto;font-size:12px;font-weight:500;color:#17384a;font-variant-numeric:tabular-nums}
     .apb>b em{font-style:normal;font-weight:500;color:#496572;margin-left:2px}
     .apb-p{flex:0 0 auto;font-size:12px;color:#496572;white-space:nowrap}
@@ -1718,7 +1734,14 @@
     /* 諸元は会社タブだと「標準／ドリンク｜実36席・品質46」と長い。
        機体欄は168px固定なので、この行だけ折り返させる（…で切ると席数が消える） */
     .fl-id .fl-spec{color:#496572;white-space:normal;line-height:1.3}
-    .fl-id .lease-tag{font-style:normal}
+    /* 2026-10-28：機種名も同じ扱いにした。絵58px＋間8pxを引くと文字に使えるのは102pxで、
+       「DHC-6-400 ツインオッター」は150px、「BN-2 アイランダー」は105px。
+       23機種のうちこの2つが「DHC-6-400 ツイ…」と切れており、しかもどちらも
+       いちばん最初に使う小型機だった。…で切るより、2行に落とすほうがいい */
+    /* keep-all ＝ カタカナの途中で折らない。これが無いと「ツイ／ンオッター」「アイランダ／ー」と
+       読みづらいところで切れる。収まらないほど長い連なりだけ break-word で逃がす */
+    .fl-id .fl-model{white-space:normal;line-height:1.3;word-break:keep-all;overflow-wrap:break-word}
+    .fl-id .lease-tag{font-style:normal;white-space:nowrap}   /* 「リ／ース」と割れないように */
     .fl-duties{min-width:0}
     /* 2026-10-26：一覧の行に「いまの設定」と⚙を1行足す。
        .fl-row は 168px+1fr の2列なので、両列にまたがらせる。 */
@@ -2680,8 +2703,10 @@
     const state={base:null,secondBase:null,selectedBase:null,selected:null,panelView:'airport',cash:400000000,day:1,week:1,reputation:70,brand:35,awareness:20,regionAware:null,tutorialFilled:false,tutPos:null,draftOpen:false,openRoute:{},loan:0,history:[],rivalAdds:[],alliances:{},suggestions:null,shares:{},stockPx:{},stockPrev:{},stockLot:1,finTab:'shares',cShares:{},carrierMood:{},carrierPrev:{},cLot:10,stockHist:{},carrierHist:{},
       listed:false,shareUnits:0,floatUnits:0,ownMood:1,ownPrev:0,ownHist:[],ipoWeek:null,ipoPx:0,ipoRaised:0,lastIssueWeek:-999,worth0:0,ownMood0:1,chapter:0,cleared:[],won:false,moneyFmt:'sen',
       /* 四半期の収支：qAcc はその期に入った週の決算、lastQuarterReport は締めたあとの集計 */
-      qAcc:[],lastQuarterReport:null,pendingQuarter:false,airline:{name:'あおぞら航空',code:'AOZ'},difficulty:'normal',weather:null,wxNext:[],rivalNew:[],rivalGone:[],rivalMerged:{},rivalAllies:[],worldLog:[],tutorial:{step:0,done:(()=>{try{return localStorage.getItem('am_tut_done')==='1'}catch(e){return false}})()},gameOver:false,equipment:[],facilities:[],airportDev:{},shopTab:'air',shopSort:'class',shopRev:false,shopOpenItem:{},routeSort:'net',routeView:'card',openSect:{},pickFor:null,fleetSetup:null,fleetDraft:null,planes:[],routes:[],draft:{stops:[],park:null,frequency:7,fare:'普通',timeBand:1,season:'all',days:[0,1,2,3,4,5,6],trips:1},lastReport:null,activeFlights:[],currentFlight:null,operationQueue:[],simulating:false,simulationSpeed:1};
+      qAcc:[],lastQuarterReport:null,pendingQuarter:false,airline:{name:'あおぞら航空',code:'AOZ'},difficulty:'normal',weather:null,wxNext:[],rivalNew:[],rivalGone:[],rivalMerged:{},rivalAllies:[],worldLog:[],tutorial:{step:0,done:(()=>{try{return localStorage.getItem('am_tut_done')==='1'}catch(e){return false}})()},gameOver:false,equipment:[],facilities:[],airportDev:{},shopOpen:false,shopTab:'air',shopSort:'class',shopRev:false,shopOpenItem:{},routeSort:'net',routeView:'card',openSect:{},pickFor:null,fleetSetup:null,fleetDraft:null,planes:[],routes:[],draft:{stops:[],park:null,frequency:7,fare:'普通',timeBand:1,season:'all',days:[0,1,2,3,4,5,6],trips:1},lastReport:null,activeFlights:[],currentFlight:null,operationQueue:[],simulating:false,simulationSpeed:1};
     // 初期状態の控え。セーブに無い項目はここから埋める（古いセーブでも壊れないように）
+    /* state の初期リテラルの写し。applyState() がセーブを読むとき、まずこれを敷く。
+       ＝新しい欄は state の宣言に足しさえすれば、古いセーブでも自動で埋まる（2026-10-28） */
     const DEFAULT_STATE=JSON.parse(JSON.stringify(state));
     // ── セーブ＆つづきから ──
     const SAVE_KEY='am_save_v1';
@@ -2698,17 +2723,20 @@
       /* 2026-10-26：開いている窓も「いま触っている最中」なので、読むたびに閉じる。
          設定の窓を開けたまま保存すると、つづきから始めた瞬間に窓が出てしまう。 */
       state.fleetSetup=null;state.fleetDraft=null;state.shopOpen=false;state.finWin=null;
-      /* 2026-10-27：古いセーブには株の欄が無い。無ければ作って、株価は初期値から始める */
-      if(!state.shares)state.shares={};if(!state.stockPx)state.stockPx={};if(!state.stockPrev)state.stockPrev={};
-      if(!state.stockLot)state.stockLot=1;if(!state.finTab)state.finTab='shares';
-      if(!state.cShares)state.cShares={};if(!state.carrierMood)state.carrierMood={};if(!state.carrierPrev)state.carrierPrev={};
-      if(!state.cLot)state.cLot=10;
-      if(!state.stockHist)state.stockHist={};if(!state.carrierHist)state.carrierHist={};
-      if(!Array.isArray(state.ownHist))state.ownHist=[];
-      if(!(state.ownMood>0))state.ownMood=1;if(!(state.ownMood0>0))state.ownMood0=state.ownMood;
+      /* ── 2026-10-28：「古いセーブに欄が無い」ための穴埋めを15行外した ──
+         applyState() が DEFAULT_STATE を先に敷くので、欄が無いセーブでも
+         state の初期リテラルの値が必ず入る。shares／stockPx／stockLot／finTab／
+         cShares／carrierMood／cLot／stockHist／carrierHist／ownHist／ownMood／
+         ownMood0／lastIssueWeek は、どれも初期リテラルに同じ値があり、
+         `if(!state.shares)state.shares={}` の類は一度も真にならない死にコードだった。
+         気をつけるのは逆向きのほう——新しい欄をここだけに足して
+         state の初期リテラルに足し忘れると、新規ゲームで undefined になる。
+         新しい欄は必ず state の宣言に足すこと（prototype/check.js が見張っている）。
+
+         残してあるのは、欄どうしの辻褄を合わせる2つだけ。 */
+      /* 発行済みが無いのに「上場している」状態は作れない */
       if(!(state.shareUnits>0)){state.listed=false;state.shareUnits=0;state.floatUnits=0;}
-      if(state.lastIssueWeek==null)state.lastIssueWeek=-999;
-      /* 古いセーブには開業時の値打ちが無い。いまの値打ちを基準にする
+      /* 開業時の値打ちは静的な初期値では決まらない。無ければいまの値打ちを基準にする
          （そのぶん条件は厳しくなるが、勝手に上場できてしまうよりはいい） */
       if(!(state.worth0>0))state.worth0=Math.max(1,netWorth());
       ensureStockPx();
@@ -3658,24 +3686,51 @@
     }
     /* 他社の便が1日のどこに集まるか。朝夕のピークは枠の取り分（1/9≒0.11）を超えるので先に埋まる */
     const SLOT_DEMAND=[0.095,0.155,0.135,0.115,0.115,0.135,0.125,0.085,0.040];
-    /* その空港に他社が1日何回発着するか。路線表を毎回なめると重いので描画ごとに覚える */
-    let _rivMov={};
-    function rivalMovements(name){
-      if(_rivMov[name]!=null)return _rivMov[name];
+    /* その空港に他社が1日何回発着したいか。枠に収まるかどうかは別で見る。
+       路線表を毎回なめると重いので描画ごとに覚える */
+    let _rivRaw={};
+    function rivalDemand(name){
+      if(_rivRaw[name]!=null)return _rivRaw[name];
       let d=0;
       rivalRoutes.forEach(r=>{if(!isOwned(r.carrier)&&(r.from===name||r.to===name))d+=r.frequency;});
       (state.rivalAdds||[]).forEach(a=>{if(a.from===name||a.to===name)d+=a.frequency;});
-      /* 難易度で他社の押さえ具合が変わる。ただし1日ぶんを使い切らせない。
-         占有率が100%に達すると「どの時刻も取れない」崖になるので、必ず隙間を残す */
-      let cap=0;for(let j=0;j<SLOT_N;j++)cap+=slotCapacity(name,j);
-      return _rivMov[name]=Math.min(d*2*difficultyOf().rivalSlot,cap*0.95);
+      return _rivRaw[name]=d*2*difficultyOf().rivalSlot;   /* 難易度で他社の押さえ具合が変わる */
     }
-    function rivalSlots(name,i){
-      const f=SLOT_DEMAND[i]*slotOpenFrac(name,i);
-      if(f<=0)return 0;
+    /* ── 2026-10-28：他社の便が、枠の処理能力を超えて入っていた ──
+       以前は SLOT_DEMAND の比のまま配り、上限は「1日の合計を処理能力の95%まで」だけだった。
+       合計で抑えてもピークの枠（0.155）は溢れるので、実測すると
+         羽田 08〜10　他社208／さばける178（117%）
+         福岡 08〜10　他社107／さばける89
+         新千歳 08〜10 他社 90／さばける89
+       の3空港7枠で「空きが負」になっていた。画面は Math.max(0,…) を通すので
+       「空き0」としか出ず、どれだけ足りないのかも分からない。
+       新規路線の時間帯の初期値は 1＝朝便なので、この3空港を拠点にすると
+       初手は必ず「枠が満杯です」で弾かれていた。
+
+       上限は枠ごとに持たせる。入りきらなかった便は飛んでいないものとして捨てる。
+       空いている枠へ配り直す案も試したが、羽田も福岡も全枠が上限に貼りついて
+       「朝夕は混む・昼は空く」という、この仕組みの土台そのものが消えた（実測：
+       福岡は 85/89 が8枠そろい踏み）。入れない便は飛ばない、のほうが筋も通る。 */
+    const RIVAL_SLOT_MAX=0.92;   /* どの枠にも必ず8%は空きが残る */
+    let _rivSlot={};
+    function rivalSlotArray(name){
+      if(_rivSlot[name])return _rivSlot[name];
+      const want=rivalDemand(name),out=[];
       /* 閉まっている時間に他社便は居ない。開いている枠だけで配分しなおす */
       let tot=0;for(let j=0;j<SLOT_N;j++)tot+=SLOT_DEMAND[j]*slotOpenFrac(name,j);
-      return rivalMovements(name)*f/(tot||1);
+      for(let i=0;i<SLOT_N;i++){
+        const f=SLOT_DEMAND[i]*slotOpenFrac(name,i);
+        out[i]=f<=0?0:Math.min(want*f/(tot||1),slotCapacity(name,i)*RIVAL_SLOT_MAX);
+      }
+      return _rivSlot[name]=out;
+    }
+    function rivalSlots(name,i){return rivalSlotArray(name)[i]||0;}
+    /* 実際に入れた回数の合計。受託収入も空港の表示もこれを使うので、
+       枠ごとの数字を足した値と、見出しの「他社○発着/日」が必ず一致する */
+    let _rivMov={};
+    function rivalMovements(name){
+      if(_rivMov[name]!=null)return _rivMov[name];
+      return _rivMov[name]=rivalSlotArray(name).reduce((s,v)=>s+v,0);
     }
     /* 自社便は「実際の時刻」で数える。離陸1回・着陸1回がそれぞれ1枠を食う。
        win を渡すと「その期間に重なる自社便」だけを数える。季節がずれていれば枠は取り合わない */
@@ -4450,7 +4505,7 @@
     ];
     function distGeo(la1,ln1,la2,ln2){const rad=Math.PI/180,a=Math.sin((la2-la1)*rad/2)**2+Math.cos(la1*rad)*Math.cos(la2*rad)*Math.sin((ln2-ln1)*rad/2)**2;return 6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
     let _movCache=null,_pullCache=null,_infCache=null,_attrCache=null;
-    function invalidateInf(){_infCache={};_movCache={};_pullCache={};_attrCache=null;_spreadCache={};_ltCache={};_rivMov={};_apRankCache=null;}
+    function invalidateInf(){_infCache={};_movCache={};_pullCache={};_attrCache=null;_spreadCache={};_ltCache={};_rivMov={};_rivRaw={};_rivSlot={};_apRankCache=null;}
     /* 「642発着/日」が大きいのか小さいのかは、他の93空港を知らないと分からない。
        数字のとなりに全国順位を添えるために、3つの指標で順位表を作る。
        発着数は便の増減で動くので、invalidateInf() と同じときに作り直す。 */
@@ -5009,7 +5064,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       const legTimeMult=(i,from,to,freq)=>{let s=0,n=0;
         for(let k=i;k<tt.length;k+=nLeg){s+=timeMult(tt[k].dep,from,to,freq);n++;}
         return n?s/n:1;};
-      let km=0,passengers=0,revenue=0,cost=0,loadSum=0,fuelT=0,feesT=0,crewT=0,maintT=0,svcT=0,blockT=0;
+      let km=0,passengers=0,revenue=0,cost=0,loadSum=0,fuelT=0,feesT=0,crewT=0,maintT=0,svcT=0,blockT=0,demandT=0;
       const legRows=legs.map(([from,to],legIx)=>{
         const legKm=distanceKm(from,to),market=routeMarket(from,to);
         /* 市場規模は重力型：両端の人口の「相乗平均」で決まる。
@@ -5030,7 +5085,10 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         const tiers=up>0?[{d:days.filter(x=>!isWeekend(x)),f:baseFare},{d:days.filter(isWeekend),f:round100(baseFare*(1+up))}]
                         :[{d:days,f:baseFare}];
         const mix=segmentMix(from,to),lng=loungeBonus(from,to),ownDaily=(route.frequency||7)/7;
-        let pax=0,rev=0,shareAcc=0,nf=0,segPax={biz:0,leis:0,price:0};
+        /* demAcc は「席で頭打ちにする前」の、乗りに来る人数。
+           pax は min(seats,…) を通したあとなので、満席の便では必ず席数で止まり、
+           「席が足りていないのか、ちょうどなのか」が外から見えなかった（2026-10-28） */
+        let pax=0,rev=0,shareAcc=0,nf=0,demAcc=0,segPax={biz:0,leis:0,price:0};
         tiers.forEach(tier=>{
           if(!tier.d.length)return;
           const ratio=tier.f/std;                              /* 標準運賃に対する高さ */
@@ -5063,7 +5121,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
                  これで満席の路線でも「どの曜日に飛ばすか」が効く。
                  伸びは +28% に漸近させて、際限なく儲からないようにしている。 */
               const yq=peakYield(per/Math.max(1,seats)-1);
-              pax+=p;rev+=p*tier.f*yq;nf++;
+              pax+=p;rev+=p*tier.f*yq;nf++;demAcc+=per*SHOW_RATE;
               /* 席が埋まりきったときは、客層も同じ比率で削れる */
               const cut=per>0?raw/per:1;
               seg.forEach(x=>{segPax[x.k]+=(bySeg[x.k]||0)*cut*SHOW_RATE;});
@@ -5074,6 +5132,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         /* 1便あたりに均す。以降の計算はこれまでどおり「1便ぶん」で進む */
         const flights=Math.max(1,nf);
         pax=Math.round(pax/flights);
+        const demand=demAcc/flights;   /* 1便あたり、乗りに来る人数（席で切る前） */
         const share=shareAcc/Math.max(1,days.length);
         const load=seats?pax/seats:0;
         const ticketRev=rev/flights;                          /* 付帯収入を足す前の、運賃だけの売上 */
@@ -5108,16 +5167,18 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         const nav=Math.round(legKm*seats*varSeatKmOf(ptype)*0.58*mods.opCostMult);
         /* 2026-10-27：製菓会社の優待（svcCostMult）はここに効く */
         const svc=Math.round(pax*cfg.serviceCostPerSeat*mods.svcCostMult),c=fuel+fees+crew+maintenance+nav+svc;
-        km+=legKm;passengers+=pax;revenue+=rev;cost+=c;loadSum+=load;fuelT+=fuel;feesT+=fees+nav;crewT+=crew;maintT+=maintenance;svcT+=svc;blockT+=block;
+        km+=legKm;passengers+=pax;revenue+=rev;cost+=c;loadSum+=load;fuelT+=fuel;feesT+=fees+nav;crewT+=crew;maintT+=maintenance;svcT+=svc;blockT+=block;demandT+=demand;
         const segTot=segPax.biz+segPax.leis+segPax.price||1;
-        return{from,to,km:legKm,block,pax,load:Math.round(load*100),share:Math.round(share*100),revenue:rev,cost:c,market,fare:baseFare,std,
+        return{from,to,km:legKm,block,pax,demand:Math.round(demand),load:Math.round(load*100),share:Math.round(share*100),revenue:rev,cost:c,market,fare:baseFare,std,
           mix,lounge:lng,segShare:{biz:segPax.biz/segTot,leis:segPax.leis/segTot,price:segPax.price/segTot}};
       });
       const load=legs.length?Math.round(loadSum/legs.length*100):0;
       const park=route.park||state.base;
       const dayNight=plane?nightCost(plane,park):0;
       const market=routeMarket(route.from||park,routeStops(route).slice(-1)[0]||park);
-      return{km,block:blockT,passengers,revenue,cost,profit:revenue-cost,load,aircraft,seats,quality,market,legRows,park,dayNight,fuel:fuelT,fees:feesT,crew:crewT,maint:maintT,svc:svcT};
+      /* demand は「席で切る前の、1便あたり乗りに来る人数」。区間の平均で見せる。
+         これと seats を並べると、その時間帯が席に対して厚いのか薄いのかが分かる */
+      return{km,block:blockT,passengers,demand:Math.round(demandT/(legs.length||1)),revenue,cost,profit:revenue-cost,load,aircraft,seats,quality,market,legRows,park,dayNight,fuel:fuelT,fees:feesT,crew:crewT,maint:maintT,svc:svcT};
     }
     function world(lat,lng,z){const n=256*2**z,s=Math.sin(lat*Math.PI/180);return{x:(lng+180)/360*n,y:(.5-Math.log((1+s)/(1-s))/(4*Math.PI))*n}}
     function unworld(x,y,z){const n=256*2**z;return{lng:x/n*360-180,lat:Math.atan(Math.sinh(Math.PI*(1-2*y/n)))*180/Math.PI}}
@@ -6742,7 +6803,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           return `<div class="fl-row">
             <div class="fl-plane">
               <div class="fl-art">${planeArt(p.type,m)}</div>
-              <div class="fl-id"><b>${p.id}</b><span>${m.name}</span><span class="fl-spec">${cfg.effSeats}席・品質${cfg.quality}${p.leased?'・<i class="lease-tag">リース</i>':''}</span></div>
+              <div class="fl-id"><b>${p.id}</b><span class="fl-model">${m.name}</span><span class="fl-spec">${cfg.effSeats}席・品質${cfg.quality}${p.leased?'・<i class="lease-tag">リース</i>':''}</span></div>
             </div>
             <div class="fl-duties">${fleetDutyRows(p)}</div>
             ${/* 2026-10-26：一覧には「いまどう設定してあるか」だけを出し、
@@ -6909,12 +6970,29 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       document.querySelectorAll('#shopModal .shop-tab').forEach(b=>b.addEventListener('click',()=>{state.shopTab=b.dataset.shop;sfx.tap();render();}));
       /* 案内の最中は、指していない買い方を押せても断る（理由を出す）。
          押せなくしてしまうと、なぜ駄目なのかが伝わらないので、押せるままにしてある */
+      /* 2026-10-28：運転資金が残らない買い方は、1度押しただけでは通さない。
+         札には先に理由が出ているので、ここは「本当にいいか」を確かめるだけ。
+         render() を挟むと押した札ごと作り直されてしまうので、ボタンの表示だけ変える */
+      const confirmSpend=function(btn,risk,run){
+        if(!risk||btn.dataset.c==='1'){run();return;}
+        btn.dataset.c='1';btn.dataset.t=btn.textContent;btn.textContent='⚠ それでも買う';
+        btn.classList.add('danger-again');sfx.tap();
+        notice(`残りは ${yen(risk.after)}。${risk.weeks<=0?'次の決算で資金が尽きます':`約${risk.weeks}週で資金が尽きます`}。もう一度押すと進みます。`);
+        setTimeout(function(){if(btn.isConnected&&btn.dataset.c==='1'){
+          btn.dataset.c='';btn.textContent=btn.dataset.t;btn.classList.remove('danger-again');}},8000);
+      };
       document.querySelectorAll('#shopModal .buy-plane').forEach(b=>b.addEventListener('click',()=>{
-        const w=tutBlockBuy(b.dataset.id,'cash');if(w)return notice(w);buyPlaneById(b.dataset.id);}));
+        const w=tutBlockBuy(b.dataset.id,'cash');if(w)return notice(w);
+        const m=aircraftCatalog[b.dataset.id];if(!m)return;
+        confirmSpend(b,spendRisk(m.cost,{type:b.dataset.id}),()=>buyPlaneById(b.dataset.id));}));
       document.querySelectorAll('#shopModal .buy-loan').forEach(b=>b.addEventListener('click',()=>{
-        const w=tutBlockBuy(b.dataset.id,'loan');if(w)return notice(w);financePlaneById(b.dataset.id);}));
+        const w=tutBlockBuy(b.dataset.id,'loan');if(w)return notice(w);
+        const m=aircraftCatalog[b.dataset.id];if(!m)return;const down=Math.round(m.cost*DOWN_RATE);
+        confirmSpend(b,spendRisk(down,{type:b.dataset.id,loan:m.cost-down}),()=>financePlaneById(b.dataset.id));}));
       document.querySelectorAll('#shopModal .buy-lease').forEach(b=>b.addEventListener('click',()=>{
-        const w=tutBlockBuy(b.dataset.id,'lease');if(w)return notice(w);leasePlaneById(b.dataset.id);}));
+        const w=tutBlockBuy(b.dataset.id,'lease');if(w)return notice(w);
+        const id=b.dataset.id;
+        confirmSpend(b,spendRisk(leaseDepositOf(id),{type:id,leaseFee:leaseFeeOf(id)}),()=>leasePlaneById(id));}));
       document.querySelectorAll('#shopModal .buy-item').forEach(b=>b.addEventListener('click',()=>buyUpgrade(b.dataset.kind,b.dataset.id)));
       {const ss=byId('shopSortSel');if(ss)ss.addEventListener('change',()=>setShopSort(ss.value));}
       /* 2026-10-21：「くわしく」の折りたたみは廃止した。
@@ -7118,6 +7196,16 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           <div class="pc-col lease${tutBlockBuy(id,'lease')?' tut-off':''}"><span class="pc-h">📄 リース</span><b>${yenBr(dep)}<i>＋週 ${yenBr(fee)}</i></b>
             <button class="mini-btn buy-lease" data-id="${id}" ${state.cash>=dep?'':'disabled'}>${state.cash>=dep?'借りる':'資金不足'}</button></div>
         </div>`;})()
+      /* 2026-10-28：運転資金が残らない買い方は、押す前に名指しで言う。
+         3つとも危ないことは滅多に無いので、危ない買い方だけを並べる */
+      +(()=>{const down=Math.round(m.cost*DOWN_RATE);
+        const ways=[
+          {how:'現金で買う',r:afford?spendRisk(m.cost,{type:id}):null},
+          {how:'ローンで買う',r:state.cash>=down?spendRisk(down,{type:id,loan:m.cost-down}):null},
+          {how:'リースで借りる',r:state.cash>=dep?spendRisk(dep,{type:id,leaseFee:fee}):null}
+        ].filter(x=>x.r);
+        if(!ways.length)return '';
+        return `<div class="cash-warn">⚠ ${ways.map(x=>riskText(x.r,x.how)).join('<br>')}</div>`;})()
       +(fits?'':`<div class="nofit-note">⚠ 拠点 ${state.base}（${baseRw.toLocaleString()}m）には降りられません</div>`)
       /* 解説・使いどころ・実機の相場・寸法は、たたまずに1ブロックで下に敷く。
          2行に収まる長さ（説明 平均54字／使いどころ 平均47字） */
@@ -7384,12 +7472,48 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       u+=Object.keys(state.handling||{}).length*0.8;         /* 地上業務受託（人員と機材を常駐させる） */
       return u;
     }
+    /* 売上に関係なくかかるぶん。units を渡すと「もし○単位だったら」で測れる
+       （1機増やしたときの経費を、買う前に見積もるのに使う） */
+    function overheadFixed(units){
+      return OVERHEAD_BASE+OVERHEAD_UNIT*Math.pow(Math.max(0,units==null?overheadUnits():units),OVERHEAD_EXP);
+    }
     /* rev を渡すと売上比例分も含めた実額。省くと「いま運航している路線の見込み売上」で推定する */
     function overheadWeekly(rev){
-      const fixed=(OVERHEAD_BASE+OVERHEAD_UNIT*Math.pow(Math.max(0,overheadUnits()),OVERHEAD_EXP));
       const r=(rev==null)?estimatedWeeklyRevenue():Math.max(0,rev);
       /* 2026-10-27：電力会社の優待（overheadMult）はここ。本社・整備場の電気代ぶん */
-      return Math.round((fixed+r*OVERHEAD_SGA)*(difficultyOf().ohMult||1)*companyMods().overheadMult);
+      return Math.round((overheadFixed()+r*OVERHEAD_SGA)*(difficultyOf().ohMult||1)*companyMods().overheadMult);
+    }
+    /* ── 2026-10-28：運転資金が残らない買い物を、黙って通していた ──
+       開業資金 ¥400,000千 で買える機体は23機種中2つだけ。そのうちサーブ340Bは
+       ちょうど ¥400,000千 なので、買うと残高0。路線が1本も無くても
+       本社経費＋夜間格納費で毎週 ¥744,772千 出ていき、第2週の決算で
+       資金がマイナス＝即倒産する。しかも案内は「まず飛行機を1機買おう」と言う。
+       買えなくはしない（選べる道として残す）が、何が起きるかは先に言う。 */
+    /* 路線が1本も飛ばなくても、毎週かならず出ていくお金。
+       add＝{type,leaseFee,loan} を渡すと、その1機を入れたあとの額になる */
+    function weeklyFixedCost(add){
+      let night=state.planes.reduce((s,p)=>s+nightCost(p,planePark(p))*7,0);
+      let lease=state.planes.reduce((s,p)=>s+(p.leased?p.leaseFee:0),0);
+      let units=overheadUnits(),loan=state.loan;
+      if(add){
+        night+=nightCost({type:add.type},state.base)*7;
+        lease+=add.leaseFee||0;
+        units+=1.4;                      /* overheadUnits() が機体1機に積む分と同じ */
+        loan+=add.loan||0;
+      }
+      const oh=overheadFixed(units)*(difficultyOf().ohMult||1)*companyMods().overheadMult;
+      return Math.round(oh+night+lease+Math.round(loan*loanRate()));
+    }
+    const SAFE_WEEKS=4;   /* 1か月ぶんの運転資金は残しておきたい、という目安 */
+    /* その買い方をしたとき、残る現金が何週もつか。足りていれば null */
+    function spendRisk(outlay,add){
+      const after=Math.round(state.cash-outlay),fx=weeklyFixedCost(add);
+      if(fx<=0||after>=fx*SAFE_WEEKS)return null;
+      return {after,fx,weeks:Math.floor(Math.max(0,after)/fx)};
+    }
+    function riskText(r,how){
+      return `${how}と残りは <b>${yen(r.after)}</b>。路線が無くても毎週 <b>${yen(r.fx)}</b> 出ていくので、`
+        +(r.weeks<=0?'<b>次の決算で資金が尽きます</b>':`<b>約${r.weeks}週</b>で資金が尽きます`)+'。';
     }
     /* 画面に出すときの見込み売上。決算そのものは実績の売上を渡す */
     function estimatedWeeklyRevenue(){
@@ -7943,7 +8067,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
             const model=aircraftCatalog[p.type],cfg=cabinConfig(p);
             return `<div class="fl-row">
               <div class="fl-plane"><div class="fl-art">${planeArt(p.type,model)}</div>
-                <div class="fl-id"><b>${p.id}</b><span>${model.name}</span><span class="fl-spec">${densityPresets[p.density||'std'].label}／${svcLabelOf(p)}｜実${cfg.effSeats}席・品質${cfg.quality}</span></div></div>
+                <div class="fl-id"><b>${p.id}</b><span class="fl-model">${model.name}</span><span class="fl-spec">${densityPresets[p.density||'std'].label}／${svcLabelOf(p)}｜実${cfg.effSeats}席・品質${cfg.quality}</span></div></div>
               <div class="fl-duties">${fleetDutyRows(p)}</div></div>`;}).join('')}</div>`
         :'<div class="asset-empty">まだ飛行機がありません（「機材」タブ → お買い物）</div>';
       /* 2026-10-18：折りたたみ9段をやめ、左に見出し・右に中身へ。
@@ -8240,6 +8364,16 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       catch(e){return null;}
       finally{const i=state.planes.findIndex(p=>p.id===id);if(i>=0)state.planes.splice(i,1);}
     }
+    /* その時間帯に出したとき、1便あたり何人が乗りに来て、席はいくつあるか。
+       機体が決まっていれば、その機体の座席配置（高密度／ゆったり）のまま測る。
+       決まっていなければ既定の配置で仮に1機置いて測る（estimateWithType と同じ手） */
+    function bandEstimate(base,band,plane,type){
+      const r={...base,timeBand:band};
+      let e=null;
+      if(plane){try{e=estimateOperation({...r,aircraftId:plane.id});}catch(x){e=null;}}
+      else{const w=estimateWithType(r,type);e=w?w.perDay:null;}
+      return e?{dem:Math.round(e.demand||0),seats:e.seats||0}:null;
+    }
     /* その路線にいま最も効く機種の入れ替え。無ければ null */
     /* 機体代を、その路線の伸びだけで回収するのに掛かる時間。
        2026-10-21：測ってみると 8年〜190年で、1年以内に収まる機体は1つも無かった。
@@ -8468,22 +8602,33 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
             const on=bandIndex(d.timeBand)===t.k;
             const head=`${hhmm(t.dep)}<em>${t.name}</em>`;
             if(!d.stops.length)return `<button type="button" class="seg-btn${on?' on':''}" data-seg="time" data-v="${t.k}">${head}<small>${t.sub}</small></button>`;
-            const base={park,stops:d.stops,season:d.season||'all',days:routeDays(d),frequency:d.frequency,timeBand:t.k};
+            /* 2026-10-28：運賃・1日の往復・片道を渡していなかった。
+               倍率を出すだけなら効かなかったが、人数で出すなら「その運賃で何人来るか」なので
+               作ろうとしている運用と同じ条件にしないと数字が合わない */
+            const base={park,stops:d.stops,season:d.season||'all',days:routeDays(d),frequency:d.frequency,
+              fare:d.fare,trips:Math.max(1,Math.min(2,d.trips||1)),oneWay:!!d.oneWay,timeBand:t.k};
             const type=previewPlane?previewPlane.type:'ATR42';
             /* 運用時間に収まらない時刻は選べない（夕方に閉まる空港へ夜便は飛ばせない） */
             const iss=scheduleIssues(base,type);
             if(iss.length)return `<button type="button" class="seg-btn" data-seg="time" data-v="${t.k}" disabled>${head}<small>${slotIssueWhy(iss[0])}</small></button>`;
             const sc=slotCheck(base,t.k,d.frequency,null);
             if(!sc.ok)return `<button type="button" class="seg-btn" data-seg="time" data-v="${t.k}" disabled>${head}<small>${sc.airport} ${slotName(sc.slot).split('〜')[0]}が満杯</small></button>`;
-            /* その時刻の需要と、いちばん詰まっている空港の空き枠を出す */
-            const dm=routeLegs(base).map(([f,g])=>timeMult(t.dep,f,g,d.frequency)).reduce((a,b)=>a+b,0)/Math.max(1,routeLegs(base).length);
+            /* ── 2026-10-28：倍率をやめ、人数と席数で出す ──
+               「需要×1.12」は、何と比べて1.12倍なのかが画面のどこにも無かった。
+               倍率どうしを見比べれば「朝のほうが濃い」までは分かるが、
+               肝心の「その機体の席が埋まるのか」には答えていない。
+               乗りに来る人数（席で切る前）と、積んでいる席数を並べる。 */
+            const be=bandEstimate(base,t.k,previewPlane,type);
+            const dem=be?be.dem:0,seat=be?be.seats:0;
             const nd=slotNeeds(base,t.k,type);let tight=99,tap='';
             for(const key in nd){const j=key.lastIndexOf('|'),ap=key.slice(0,j),i=Number(key.slice(j+1));
               const fr=slotFree(ap,i,null,routeWindow(base));if(fr<tight){tight=fr;tap=ap;}}
-            return `<button type="button" class="seg-btn${on?' on':''}" data-seg="time" data-v="${t.k}" title="${t.sub}／いちばん詰まるのは ${tap} の ${slotName(slotIndexOf(t.dep))}（空き ${Math.round(tight)}）">${head}<small><b class="${dm>=1.15?'hi':dm<=0.85?'lo':''}">需要×${dm.toFixed(2)}</b>・空${Math.round(Math.max(0,tight))}</small></button>`;
+            /* 席に対して厚い＝満席が狙える／薄い＝空席が出る。色はその2つだけに付ける */
+            const lv=seat?(dem>=seat?'hi':dem<=seat*0.6?'lo':''):'';
+            return `<button type="button" class="seg-btn${on?' on':''}" data-seg="time" data-v="${t.k}" title="${t.sub}／1便あたり約${dem}名が乗りに来ます（席${seat}）。いちばん詰まるのは ${tap} の ${slotName(slotIndexOf(t.dep))}（空き ${Math.round(tight)}）">${head}<small><b class="${lv}">需要${dem}名</b><i>／${seat}席</i><span>・空${Math.round(Math.max(0,tight))}</span></small></button>`;
           }).join('')}</div>`;
         /* 2026-10-26：下にあった解説の帯（需要は時刻そのもので決まる…）を外した。
-           同じことは各マスの「需要×1.07・空12」が数字で言っている。 */
+           同じことは各マスの「需要36名／36席・空12」が数字で言っている。 */
         const cfgRest=`<div class="field"><label>運航する期間（季節便）</label>${seg('season',seasonWindows.map(s=>{
             let sub=s.sub;
             if(d.stops.length){const legs=routeLegs({park,stops:d.stops});const ws=[];for(let w=1;w<=52;w++)if(inWindow(w,s.win))ws.push(w);
