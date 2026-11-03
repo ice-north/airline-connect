@@ -170,6 +170,47 @@ const SCAN = () => {
        切れていないことは上の「文字の切れ」が見ている。ここは覚え書きとして出す */
     check('機体名　1行に収まらない機種（折り返して表示）', true, names.join(' / ') || 'なし');
 
+    /* 1機が1日に何本持てるか。2026-11-03 に「季節か曜日がずれていれば」から
+       「1日のうち拘束している時間が重ならなければ」に変えた。
+       帰ってきて折返せば、その日のうちにもう一度飛べる */
+    const multi = await page.evaluate(() => {
+      const names = Object.keys(airports), out = {};
+      const mk = (dest, band, days) => {
+        state.draft = { stops: [names.find(x => x.includes(dest))], park: state.base, frequency: days.length,
+                        fare: '普通', timeBand: band, season: 'all', days: [...days], trips: 1, planeId: null, pick: null };
+        const before = state.routes.length;
+        createRoute();
+        if (state.routes.length === before) return null;      /* 同じ組み合わせがすでにある */
+        const r = state.routes[state.routes.length - 1];
+        assignRoute(state.planes[0].id, r.id);
+        return r;
+      };
+      const reset = () => { state.routes.length = 0; state.planes.length = 0; state.cash = 9e9; leasePlaneById('Q400'); };
+      const all = [0, 1, 2, 3, 4, 5, 6];
+
+      reset(); [0, 2, 4, 6].forEach(k => mk('福岡', k, all));
+      out.bands = planeRoutes(state.planes[0]).length;        /* 時間帯ちがいで何本 */
+
+      reset(); for (let d = 0; d < 7; d++) mk('福岡', 1, [d]);
+      out.days = planeRoutes(state.planes[0]).length;         /* 曜日ちがいで何本 */
+
+      /* 時間が重なる2本は共存できない（あとから載せたほうが前のを押し出す） */
+      reset(); mk('福岡', 0, all); mk('福岡', 1, all);
+      out.overlap = planeRoutes(state.planes[0]).length;
+
+      /* 夜間格納費は1機ぶん。路線カードの合計が会社の決算と合うか */
+      reset(); [0, 2, 4, 6].forEach(k => mk('福岡', k, all));
+      const pl = state.planes[0];
+      out.nightRows = Math.round(planeRoutes(pl).reduce((s, r) => s + nightCostOf(pl, r) * 7, 0));
+      out.nightCo = Math.round(nightCost(pl, planePark(pl)) * 7);
+      return out;
+    });
+    check('1機　時間帯をずらせば同じ日に何本も積める', multi.bands >= 4, multi.bands + '本（06:30/10:30/14:30/18:30）');
+    check('1機　曜日をずらせば7本まで積める', multi.days === 7, multi.days + '本');
+    check('1機　時間が重なる2本は共存しない', multi.overlap === 1, multi.overlap + '本になった');
+    check('夜間格納費　路線カードの合計が会社の決算と合う', multi.nightRows === multi.nightCo,
+      '路線 ' + multi.nightRows.toLocaleString() + '／会社 ' + multi.nightCo.toLocaleString());
+
     /* 買い物：運転資金が残らない買い方に警告が出るか */
     const warn = await page.evaluate(() => {
       const names = Object.keys(airports);

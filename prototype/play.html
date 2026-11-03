@@ -3322,14 +3322,37 @@
     function windowsOverlap(a,b){if(!a||!b)return true;for(let w=1;w<=52;w++)if(inWindow(w,a)&&inWindow(w,b))return true;return false;}
     /* 曜日がぶつかるか。月水金と火木土なら、同じ機体で両方飛べる */
     function daysOverlap(a,b){const x=routeDays(a),y=routeDays(b);return x.some(d=>y.includes(d));}
-    /* 2つの路線が1機を取り合うか。
-       季節がずれていれば共存でき、季節が重なっても曜日がずれていれば共存できる。
-       離島路線を1機で曜日ごとに回すのは、実際の地方航空の基本形。 */
-    function routesClash(a,b){
-      if(!a||!b)return false;
-      if(!windowsOverlap(routeWindow(a),routeWindow(b)))return false;
-      return daysOverlap(a,b);
+    /* その運用が、1日のうち機体を拘束している時間。出発から、帰ってきて折返しが済むまで */
+    function routeDayWindow(route,type){
+      const ts=routeLegTimes(route,type||'ATR42');
+      if(!ts.length)return null;
+      return [ts[0].dep,ts[ts.length-1].arr+TURN_MIN];
     }
+    function planeTypeOfRoute(r){const p=r&&r.aircraftId&&state.planes.find(x=>x.id===r.aircraftId);return p?p.type:null;}
+    /* ── 2026-11-03：1機は1日1路線、をやめた ──
+       それまでは「季節がずれているか、曜日がずれていれば共存できる」だけで、
+       同じ曜日に時間帯だけ変えた2本目を載せると、1本目が黙って外れていた。
+       実際の機体は、帰ってきて折返せばその日のうちに何度でも出られる。
+       朝の福岡便・昼の那覇便・夕の福岡便を1機で回すのが、むしろ地方航空のふつうの姿。
+       ぶつかるかどうかは、1日のうちの「拘束している時間」が重なるかで決める。
+       飛行時間は機体の速さで変わるので、積む機体の型で測る。
+
+       時間を見るまでもなく共存できない2つだけ、先に弾く：
+       ・駐機地がちがう　… 機体は同じ日に2か所から飛び立てない
+       ・どちらかが片道　… 向こうで夜を明かすので、その日はもう帰ってこない */
+    function routesClash(a,b,type){
+      if(!a||!b)return false;
+      if(!windowsOverlap(routeWindow(a),routeWindow(b)))return false;   /* 季節がずれていれば共存 */
+      if(!daysOverlap(a,b))return false;                                /* 曜日がずれていれば共存 */
+      if((a.park||state.base)!==(b.park||state.base))return true;
+      if(isOneWay(a)||isOneWay(b))return true;
+      const ty=type||planeTypeOfRoute(a)||planeTypeOfRoute(b)||'ATR42';
+      const x=routeDayWindow(a,ty),y=routeDayWindow(b,ty);
+      if(!x||!y)return true;
+      return x[0]<y[1]&&y[0]<x[1];
+    }
+    /* 掛け持ちの説明に使う呼び方。「月木の08:30便」 */
+    function routeWhen(r){return `${daysLabel(r)}の${hhmm(slotDef(r&&r.timeBand).dep)}便`;}
     function seasonDefOf(r){return seasonWindows.find(x=>x.id===((r&&r.season)||'all'))||seasonWindows[0];}
     function routeWindow(r){return seasonDefOf(r).win;}
     function routeActive(r,week){return inWindow(weekOfYear(week===undefined?simWeek():week),routeWindow(r));}
@@ -6028,7 +6051,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
        tx:'ここが大事。<b>月と木は対馬便が使っている</b>。<br>同じ曜日のままだと1機を取り合ってしまうから、<b>火と金</b>に変えよう。<br><small style="color:#496572">いらない曜日を押して消す → 火と金を押して足す</small>',
        done:()=>(tutDraftDays()<=2&&!tutDraftClashes())||tutRouteTo('福江')},
       {sel:['#planeModal .pw-use','.plane-slot'],ic:'✈',who:'管制塔カンセ',
-       tx:'空きマスを押して、<b>1本目と同じ機体</b>をえらぼう。<br>曜日が空いているから<b>「月木便と掛け持ち」</b>と出ているはず。<br>これで1機が週に4日はたらくよ。',
+       tx:'空きマスを押して、<b>1本目と同じ機体</b>をえらぼう。<br>曜日が空いているから<b>「掛け持ち」</b>と出ているはず。<br>これで1機が週に4日はたらくよ。<br><small style="color:#496572">※曜日だけじゃなく、<b>時間帯をずらして</b>も掛け持ちできる。帰ってきて折返せば、その日のうちにもう一度飛べるからね。</small>',
        done:()=>!!state.draft.planeId||tutRouteTo('福江')},
       {sel:'#commitRoute',ic:'✅',who:'管制塔カンセ',
        tx:'もう一度<b>「✔ この内容で就航する（OK）」</b>。<br>これで2本目も航路一覧に入るよ。',
@@ -6728,13 +6751,14 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
          return notice(`${x.ap} は ${hoursLabel(x.ap)} の運用です。この便は ${hhmm(x.time)} ${x.kind}になり収まりません。${esc}`);}}
       {const sc=slotCheck(route,route.timeBand,route.frequency,route.id);
        if(!sc.ok){state.pickFor=null;return notice(`${sc.airport} の ${slotName(sc.slot)} の枠が満杯です（空き ${sc.free.toFixed(1)}／必要 ${sc.need.toFixed(1)}）。出発時刻をずらすか、便数を減らしてください。`);}}
-      /* いまこの機体が持っている路線のうち、期間が重なるものだけ外す。ずれていれば1機で掛け持ちできる */
-      const keep=planeRoutes(plane).filter(r=>r.id!==route.id&&!routesClash(r,route));
+      /* いまこの機体が持っている路線のうち、取り合うものだけ外す。
+         季節・曜日・時間帯のどれかがずれていれば、1機で掛け持ちできる */
+      const keep=planeRoutes(plane).filter(r=>r.id!==route.id&&!routesClash(r,route,plane.type));
       planeRoutes(plane).forEach(r=>{if(r.id!==route.id&&keep.indexOf(r)<0)r.aircraftId=null;});
       const prevOnRoute=state.planes.find(p=>p.id===route.aircraftId&&p.id!==planeId);
       route.aircraftId=planeId;state.pickFor=null;syncAssign();if(prevOnRoute)syncAssign();
       const sd=seasonDefOf(route);
-      notice(keep.length?`${planeId} に ${routeName(route)}（${sd.label}）を追加。${keep.map(r=>`${routeName(r)}（${seasonDefOf(r).label}）`).join('・')} と季節で分け合います。`
+      notice(keep.length?`${planeId} に ${routeWhen(route)}（${routeName(route)}）を追加。${keep.map(r=>routeWhen(r)).join('・')} と掛け持ちします（1機で週${planeRoutes(plane).reduce((s,r)=>s+(r.frequency||0),0)}便）。`
                         :`${planeId} に ${routeName(route)} を搭載${route.season&&route.season!=='all'?`（${sd.label}・${sd.sub}）`:''}`);
       sfx.launch();radio('launch',{home:route.park||state.base,route:routeName(route)});render();}
     function unassignRoute(planeId,routeId){const plane=state.planes.find(p=>p.id===planeId);if(!plane)return;
@@ -7026,7 +7050,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
                 speed:Math.max(...Object.keys(aircraftCatalog).map(cruiseOf))};
       const cards=here.map(p=>{
         const m=aircraftCatalog[p.type],cfg=cabinConfig(p),suit=planeSuitsDraft(p);
-        const held=planeRoutes(p),clash=held.filter(r=>routesClash(r,draftRoute));
+        const held=planeRoutes(p),clash=held.filter(r=>routesClash(r,draftRoute,p.type));
         const wk=suit.ok?atWeek(pvWeek,()=>weeklyEstimate({...draftRoute,from:state.base},p)):null;
         const on=d.planeId===p.id;
         /* ── 2026-10-25：カードを292px → 150px前後に詰めた ──
@@ -7037,7 +7061,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
            ・見込みは5行の表 → 1行の並び
            ・いまの仕事は箇条書き → 1行 */
         const jobs=held.length
-          ? held.map(r=>`<span class="pw-job${clash.indexOf(r)>=0?' clash':''}">${daysLabel(r)}　${routeName(r)}${clash.indexOf(r)>=0?'<em>→ この便から外れます</em>':''}</span>`).join('')
+          ? held.map(r=>`<span class="pw-job${clash.indexOf(r)>=0?' clash':''}">${routeWhen(r)}　${routeName(r)}${clash.indexOf(r)>=0?'<em>→ この便から外れます</em>':''}</span>`).join('')
           : '<span class="pw-job free">仕事なし（遊休機）</span>';
         return `<div class="pw-card${on?' on':''}${suit.ok?'':' bad'}">
           <div class="pw-top">
@@ -8174,12 +8198,13 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       const pw=previewWeek(r);
       const rows=state.planes.map(p=>{
         const suit=planeSuitsRoute(p,r);
-        const held=planeRoutes(p).filter(x=>x.id!==r.id),clash=held.filter(x=>routesClash(x,r));
+        const held=planeRoutes(p).filter(x=>x.id!==r.id),clash=held.filter(x=>routesClash(x,r,p.type));
         const wk=suit.ok?atWeek(pw,()=>weeklyEstimate(r,p)):null;
         const cfg=cabinConfig(p),on=cur&&cur.id===p.id;
+        /* 2026-11-03：曜日しか出していなかったので、時間帯をずらせば載ると分からなかった */
         const note=on?'いま積んでいます'
-          :clash.length?`${clash.map(x=>daysLabel(x)).join('/')}便と重なる→載せ替え`
-          :held.length?`${held.map(x=>daysLabel(x)).join('/')}便と掛け持ち`:'空いています';
+          :clash.length?`${clash.map(x=>routeWhen(x)).join('/')}と重なる→載せ替え`
+          :held.length?`${held.map(x=>routeWhen(x)).join('/')}と掛け持ち`:'空いています';
         return `<button type="button" class="pick-plane${suit.ok?'':' bad'}${on?' on':''}" data-rp="${r.id}" data-plane="${p.id}" ${suit.ok||on?'':'disabled'}>
           <span class="pp-ic">${on?'✅':'✈'}</span>
           <span class="pp-main"><b>${p.id}　${aircraftCatalog[p.type].name}</b><span>${cfg.effSeats}席・品質${cfg.quality}・${note}</span></span>
@@ -8863,12 +8888,19 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
     function nightCostOf(plane,route){
       if(!plane)return 0;
       const park=route.park||state.base;
-      if(!isOneWay(route))return nightCost(plane,park);
-      const far=routeStops(route)[routeStops(route).length-1]||park;
-      return Math.round((nightCost(plane,park)+nightCost(plane,far))/2);
+      let v;
+      if(!isOneWay(route))v=nightCost(plane,park);
+      else{const far=routeStops(route)[routeStops(route).length-1]||park;
+        v=Math.round((nightCost(plane,park)+nightCost(plane,far))/2);}
+      /* 2026-11-03：1機が同じ週に何本も飛べるようになったので、頭数で割る。
+         夜間格納費は「機体を1晩とめる」費用で、会社の決算では1機につき1回しか出ない。
+         路線カードにそれぞれ丸ごと乗せると、朝昼夕の3本で3倍に見えてしまう */
+      const n=planeRoutes(plane).filter(r=>routeActive(r)).length;
+      return n>1?Math.round(v/n):v;
     }
     function weeklyEstimate(route,plane){const est=estimateOperation({...route,aircraftId:plane?.id}),freq=route.frequency||7,revenue=est.revenue*freq,opcost=est.cost*freq,night=nightCostOf(plane,route)*7;return{revenue,opcost,night,net:revenue-opcost-night,passengers:est.passengers*freq,perDay:est,freq,fuel:est.fuel*freq,fees:est.fees*freq,crew:est.crew*freq,maint:est.maint*freq,svc:est.svc*freq};}
-    function makeDraftRoute(){const d=state.draft;if(!d.stops.length){notice('経由地を1つ以上追加してください。');return null;}const park=d.park||state.base,stops=[...d.stops],band=bandIndex(d.timeBand),season=d.season||'all',sig=JSON.stringify([park,band,season,!!d.oneWay,...stops]);if(state.routes.some(r=>JSON.stringify([r.park||state.base,bandIndex(r.timeBand),r.season||'all',isOneWay(r),...routeStops(r)])===sig)){notice('同じ経路・同じ時間帯・同じ期間の運用がすでにあります。時間帯か運航期間を変えると別便にできます。');return null;}return {id:newRouteId(),from:state.base,to:stops[stops.length-1],stops,park,frequency:d.frequency,fare:initialFareFor(d,stops,park),timeBand:band,season,days:routeDays(d),trips:Math.max(1,Math.min(2,d.trips||1)),oneWay:!!d.oneWay,aircraftId:null,
+    function makeDraftRoute(){const d=state.draft;if(!d.stops.length){notice('経由地を1つ以上追加してください。');return null;}const park=d.park||state.base,stops=[...d.stops],band=bandIndex(d.timeBand),season=d.season||'all',sig=JSON.stringify([park,band,season,!!d.oneWay,routeDays(d).join(''),...stops]);/* 2026-11-03：曜日を入れていなかったので、同じ経路・同じ時間帯で曜日だけ変えた便が作れなかった。
+       「日曜便・月曜便…」と7本に分けて別々の運賃や機体をあてる、という組み方ができない */if(state.routes.some(r=>JSON.stringify([r.park||state.base,bandIndex(r.timeBand),r.season||'all',isOneWay(r),routeDays(r).join(''),...routeStops(r)])===sig)){notice('同じ経路・同じ時間帯・同じ曜日・同じ期間の運用がすでにあります。時間帯か曜日か運航期間を変えると別便にできます。');return null;}return {id:newRouteId(),from:state.base,to:stops[stops.length-1],stops,park,frequency:d.frequency,fare:initialFareFor(d,stops,park),timeBand:band,season,days:routeDays(d),trips:Math.max(1,Math.min(2,d.trips||1)),oneWay:!!d.oneWay,aircraftId:null,
       /* 就航前に宣伝していれば、その週数ぶん育った状態で飛び始められる */
       matWeeks:Math.max.apply(null,[0].concat(stops.map(function(s){return preAdHeadStart(s);})))};}
     /* 新しい路線の初期運賃。
@@ -8890,24 +8922,32 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
     function planeSuitsDraft(plane){const model=aircraftCatalog[plane.type],tmp={from:state.base,stops:state.draft.stops,park:state.draft.park||state.base},legs=routeLegs(tmp),maxLeg=Math.max(0,...legs.map(([f,t])=>distanceKm(f,t)));if(maxLeg>model.range)return{ok:false,reason:`航続不足(最長${maxLeg}km)`};const needRW=reqRunway(plane.type),shortAp=[...new Set(routePath(tmp))].find(ap=>parseRunway(ap)<needRW);if(shortAp)return{ok:false,reason:`${shortAp}の滑走路不足(要${needRW}m)`};return{ok:true};}
     function createRoute(){const route=makeDraftRoute();if(!route)return;state.routes.push(route);state.draft={stops:[],park:null,frequency:state.draft.frequency,fare:state.draft.fare,timeBand:route.timeBand,season:route.season||'all',days:[...routeDays(route)],trips:tripsPerDay(route),oneWay:!!route.oneWay,planeId:null,pick:null};state.draftOpen=false;/* 2026-10-23：就航したら作成欄を閉じ、右を空に戻す */notice(`${routeKindLabel(route)}：${routeName(route)} をブロック化。機材ボードで搭載できます。`);render();}
     function createRouteWithPlane(planeId){const plane=state.planes.find(p=>p.id===planeId);if(!plane)return;const suit=planeSuitsDraft(plane);if(!suit.ok)return notice(`${aircraftCatalog[plane.type].name}：${suit.reason}`);const route=makeDraftRoute();if(!route)return;state.routes.push(route);state.draft={stops:[],park:null,frequency:state.draft.frequency,fare:state.draft.fare,timeBand:route.timeBand,season:route.season||'all',days:[...routeDays(route)],trips:tripsPerDay(route),oneWay:!!route.oneWay,planeId:null,pick:null};state.draftOpen=false;/* 2026-10-23：就航したら作成欄を閉じ、右を空に戻す */assignRoute(planeId,route.id);}
-    /* ── 2026-10-21：1機は1日に1路線しか飛べない、を就航後も守る ──
+    /* ── 2026-10-21：1機が同じ時間に2か所を飛ぶのを、就航後も止める ──
        assignRoute では routesClash で見ていたが、就航後の増便・曜日変更では見ていなかった。
        1機のSF340に 対馬(月木)・福江(火金) を持たせ、対馬の増便を3回押すと
        対馬が月火水木金になり、福江(火金)と火・金がかぶる。
        それでも両方とも就航したまま、両方の売上が立っていた。
-       案内の15手順目で「同じ曜日のままだと1機を取り合う」と教えている規則なので、
-       ここで破れると教えたことが嘘になる。 */
-    function dayClashOf(route,days){
+       2026-11-03：ぶつかる条件が「同じ曜日」から「同じ曜日の、重なる時間」に変わったので、
+       どの便と重なるのかを時刻つきで言う。 */
+    function dayClashOf(route,days,trips){
       if(!route.aircraftId)return null;
-      const probe=Object.assign({},route,{days});
-      const other=state.routes.find(r=>r.id!==route.id&&r.aircraftId===route.aircraftId&&routesClash(r,probe));
+      const pl=state.planes.find(p=>p.id===route.aircraftId);
+      /* 2026-11-03：1日の往復を増やすと機体を拘束する時間も伸びるので、
+         便数と往復回数まで入れ替えて測る。days だけ差し替えていたころは、
+         tripsPerDay() が古い frequency から往復回数を割り出すので、
+         「1往復のままの時間」で判定して、2往復目のぶんを見落としていた */
+      const tp=Math.max(1,trips||tripsPerDay(route));
+      const dd=days||routeDays(route);
+      const probe=Object.assign({},route,{days:dd,trips:tp,frequency:dd.length*tp});
+      const other=state.routes.find(r=>r.id!==route.id&&r.aircraftId===route.aircraftId&&routesClash(r,probe,pl&&pl.type));
       if(!other)return null;
       const dup=(days||[]).filter(d=>routeDays(other).indexOf(d)>=0);
       return {route:other,days:dup};
     }
     function dayClashMsg(cl){
-      return `${cl.days.map(d=>DOW[d]).join('・')}曜は ${routeName(cl.route)} が同じ機体を使っています。`
-        +`その路線の曜日をずらすか、機体をもう1機ふやしてください。`;
+      /* 7日ぜんぶ並べると「日・月・火・水・木・金・土曜」と長いので、毎日／平日とまとめる */
+      return `${daysLabel({days:cl.days})}の同じ時間に ${routeName(cl.route)}（${routeWhen(cl.route)}）が同じ機体を使っています。`
+        +`時間帯をずらすか、曜日をずらすか、機体をもう1機ふやしてください。`;
     }
     const freqSteps=[1,2,3,7,14];
     /* 増便＝まず運航日を増やし、毎日になったら1日2往復へ。減便はその逆 */
@@ -8923,7 +8963,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         else return notice('これ以上は減便できません。');
       }
       const nf=days.length*trips;
-      if(dir>0){const cl=dayClashOf(r,days);
+      if(dir>0){const cl=dayClashOf(r,days,trips);
         if(cl)return notice(`増便できません。${dayClashMsg(cl)}`);
         const sc=slotCheck(r,r.timeBand,nf,r.id);
         if(!sc.ok)return notice(`${sc.airport} の発着枠が足りず増便できません（空き ${sc.free.toFixed(1)}）。時間帯を変えると空きがあるかもしれません。`);}
@@ -9146,7 +9186,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       for(let k=1;k<=ids.length;k++){
         const nid=ids[(cur+k)%ids.length];if(nid===old)break;
         r.season=nid;
-        const other=planeRoutes(r.aircraftId).find(x=>x.id!==r.id&&routesClash(x,r));
+        const other=planeRoutes(r.aircraftId).find(x=>x.id!==r.id&&routesClash(x,r,(state.planes.find(p=>p.id===r.aircraftId)||{}).type));
         const sc=r.aircraftId?slotCheck(r,r.timeBand,r.frequency,r.id):{ok:true};
         if(!other&&sc.ok){const sd=seasonDefOf(r);sfx.tap();
           notice(`${routeName(r)} の運航期間を「${sd.label}（${sd.sub}）」に。${sd.note}`);syncAssign();render();return;}
