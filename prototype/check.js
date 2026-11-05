@@ -175,23 +175,43 @@ const SCAN = () => {
        帰ってきて折返せば、その日のうちにもう一度飛べる */
     const multi = await page.evaluate(() => {
       const names = Object.keys(airports), out = {};
-      const mk = (dest, band, days) => {
+      /* 路線をつくるだけ（機体はまだ載せない） */
+      const draft = (dest, band, days) => {
         state.draft = { stops: [names.find(x => x.includes(dest))], park: state.base, frequency: days.length,
                         fare: '普通', timeBand: band, season: 'all', days: [...days], trips: 1, planeId: null, pick: null };
         const before = state.routes.length;
         createRoute();
         if (state.routes.length === before) return null;      /* 同じ組み合わせがすでにある */
-        const r = state.routes[state.routes.length - 1];
-        assignRoute(state.planes[0].id, r.id);
+        return state.routes[state.routes.length - 1];
+      };
+      const mk = (dest, band, days) => {
+        const r = draft(dest, band, days);
+        if (r) assignRoute(state.planes[0].id, r.id);
         return r;
       };
+      const drop = r => { state.routes = state.routes.filter(x => x.id !== r.id); };
       const reset = () => { state.routes.length = 0; state.planes.length = 0; state.cash = 9e9; leasePlaneById('Q400'); };
       const all = [0, 1, 2, 3, 4, 5, 6];
+      /* マスの刻みを変えても通るように、ぶつからないマスだけを順に詰めていく。
+         assignRoute はぶつかる便を押し出すので、載せる前に確かめること */
+      const fill = () => {
+        const pl = state.planes[0];
+        DEP_SLOTS.forEach(t => {
+          const r = draft('福岡', t.k, all);
+          if (!r) return;
+          if (planeRoutes(pl).some(x => routesClash(x, r, pl.type))) { drop(r); return; }
+          assignRoute(pl.id, r.id);
+          if (!r.aircraftId) drop(r);                          /* 枠や運用時間で断られた */
+        });
+        return planeRoutes(pl).length;
+      };
 
-      reset(); [0, 2, 4, 6].forEach(k => mk('福岡', k, all));
-      out.bands = planeRoutes(state.planes[0]).length;        /* 時間帯ちがいで何本 */
+      reset(); out.bands = fill();                            /* 時間帯ちがいで何本 */
+      out.when = planeRoutes(state.planes[0]).slice()
+        .sort((a, b) => slotDef(a.timeBand).dep - slotDef(b.timeBand).dep)
+        .map(r => hhmm(slotDef(r.timeBand).dep)).join('/');
 
-      reset(); for (let d = 0; d < 7; d++) mk('福岡', 1, [d]);
+      reset(); for (let d = 0; d < 7; d++) mk('福岡', 2, [d]);
       out.days = planeRoutes(state.planes[0]).length;         /* 曜日ちがいで何本 */
 
       /* 時間が重なる2本は共存できない（あとから載せたほうが前のを押し出す） */
@@ -199,17 +219,40 @@ const SCAN = () => {
       out.overlap = planeRoutes(state.planes[0]).length;
 
       /* 夜間格納費は1機ぶん。路線カードの合計が会社の決算と合うか */
-      reset(); [0, 2, 4, 6].forEach(k => mk('福岡', k, all));
+      reset(); out.nightRoutes = fill();
       const pl = state.planes[0];
       out.nightRows = Math.round(planeRoutes(pl).reduce((s, r) => s + nightCostOf(pl, r) * 7, 0));
       out.nightCo = Math.round(nightCost(pl, planePark(pl)) * 7);
       return out;
     });
-    check('1機　時間帯をずらせば同じ日に何本も積める', multi.bands >= 4, multi.bands + '本（06:30/10:30/14:30/18:30）');
+    check('1機　時間帯をずらせば同じ日に何本も積める', multi.bands >= 4, multi.bands + '本（' + multi.when + '）');
     check('1機　曜日をずらせば7本まで積める', multi.days === 7, multi.days + '本');
     check('1機　時間が重なる2本は共存しない', multi.overlap === 1, multi.overlap + '本になった');
-    check('夜間格納費　路線カードの合計が会社の決算と合う', multi.nightRows === multi.nightCo,
-      '路線 ' + multi.nightRows.toLocaleString() + '／会社 ' + multi.nightCo.toLocaleString());
+    /* ぶつかる時間帯を選んだとき、押す前に警告が出るか（16マスでは隣とぶつかりやすい） */
+    const collide = await page.evaluate(() => {
+      const names = Object.keys(airports);
+      resetGame();
+      state.selectedBase = names.find(x => x.includes('松山')); startGame(); state.cash = 9e9;
+      leasePlaneById('Q400'); const pl = state.planes[0];
+      const mk = band => { state.draft = { stops: [names.find(x => x.includes('福岡'))], park: state.base,
+        frequency: 7, fare: '普通', timeBand: band, season: 'all', days: [0,1,2,3,4,5,6],
+        trips: 1, planeId: pl.id, pick: null }; };
+      mk(0); createRoute(); assignRoute(pl.id, state.routes[0].id);
+      mk(2);                                    /* 08:30 は 06:30便とぶつかる */
+      state.panelView = 'routes'; state.draftOpen = true; render();
+      const before = !!document.querySelector('.mk-warn');
+      createRouteWithPlane(pl.id);
+      const t = document.querySelector('.toast');
+      const after = /機材なしに戻りました/.test(t ? t.textContent : '');
+      return { before, after, orphan: state.routes.filter(r => !r.aircraftId).length };
+    });
+    check('ぶつかる時間帯　押す前に警告が出る', collide.before, collide.before ? '' : '出ていない');
+    check('ぶつかる時間帯　外れた便を知らせで名指しする', collide.after && collide.orphan === 1,
+      collide.after ? '' : '知らせに出ていない');
+
+    check('夜間格納費　路線カードの合計が会社の決算と合う',
+      multi.nightRoutes >= 2 && multi.nightRows === multi.nightCo,
+      multi.nightRoutes + '本で 路線 ' + multi.nightRows.toLocaleString() + '／会社 ' + multi.nightCo.toLocaleString());
 
     /* 買い物：運転資金が残らない買い方に警告が出るか */
     const warn = await page.evaluate(() => {
@@ -275,6 +318,37 @@ const SCAN = () => {
       '週' + loaded.week + '／機材' + loaded.planes + '／路線' + loaded.routes);
     check('セーブ　読んだあとに undefined の欄がない', loaded.undef.length === 0, loaded.undef.join(','));
     check('セーブ　読んだあとに全タブが描ける', loaded.drew, loaded.why);
+
+    /* 2026-11-05：出発時刻を8マス（2時間おき）から16マス（1時間おき）に変えた。
+       timeBand は「何番目のマスか」なので、版を上げずに読むと全路線のダイヤがずれる */
+    const oldGrid = await page.evaluate(() => {
+      const names = Object.keys(airports);
+      resetGame();
+      state.selectedBase = names.find(x => x.includes('松山')); startGame(); state.cash = 9e9;
+      leasePlaneById('Q400');
+      [0, 2, 4, 6].forEach(k => {                      /* 8マス時代の 0/2/4/6 と同じ時刻 */
+        state.draft = { stops: [names.find(x => x.includes('福岡'))], park: state.base, frequency: 7,
+                        fare: '普通', timeBand: k * 2, season: 'all', days: [0,1,2,3,4,5,6],
+                        trips: 1, planeId: null, pick: null };
+        createRoute();
+      });
+      const want = state.routes.map(r => hhmm(slotDef(r.timeBand).dep)).join(' ');
+      saveGame();
+      const d = JSON.parse(localStorage.getItem('am_save_v1'));
+      d.v = 1;                                          /* 旧版のふりをさせる */
+      d.state.routes.forEach((r, i) => { r.timeBand = [0, 2, 4, 6][i]; });
+      localStorage.setItem('am_save_v1', JSON.stringify(d));
+      return want;
+    });
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(900);
+    const migrated = await page.evaluate(() => {
+      loadGame();
+      return state.routes.map(r => hhmm(slotDef(r.timeBand).dep)).join(' ');
+    });
+    check('セーブ　8マス時代のセーブでもダイヤがずれない', migrated === oldGrid,
+      '旧 ' + oldGrid + ' → 新 ' + migrated);
+
     await ctx.close();
   }
 

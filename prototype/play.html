@@ -294,8 +294,13 @@
        10-25に2列を捨てた理由（時刻が左右に飛ぶ）は**行優先**で並べたからで、
        `grid-auto-flow:column` にすれば左の列が午前・右の列が午後と、
        どちらの列も上から下へ時間が流れる。
-       1行に収まらなくなるので、時刻と中身を2段に積む。 */
-    .slot-seg{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(4,auto);
+       1行に収まらなくなるので、時刻と中身を2段に積む。
+       ── 2026-11-05：1時間おきの16マスにしたので、2列8行（384px）になった ──
+       3列6行も試したが、1マス129pxだと「需要44名／74席・空7」が2行に折れて
+       1マス45px→59pxに伸び、全体では373pxとほとんど縮まなかった。
+       この文字が1行に収まるには1マス150px要り、3列なら板が458px以上。
+       右パネルは clamp(340px,30vw,470px) なので、その幅にはならない。2列のままにする。 */
+    .slot-seg{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(8,auto);
       grid-auto-flow:column;gap:4px}
     .slot-seg .seg-btn{display:block;min-width:0;padding:5px 8px;
       font-size:13px;font-variant-numeric:tabular-nums;text-align:left;line-height:1.25}
@@ -1387,6 +1392,9 @@
     /* 5項目を決めたあとの確認とOK（2026-10-22） */
     .mk-ok{margin:10px 0 2px;padding:11px 12px;border:2px solid #cfe6f1;border-radius:14px;background:#f3fafd}
     .mk-sum{font-size:12px;font-weight:500;color:#17384a;line-height:1.4}
+    .mk-warn{margin-top:6px;padding:7px 10px;border:1.5px solid #f3cfc6;border-radius:10px;
+      background:#fff4f1;color:#9a3326;font-size:12px;line-height:1.5}
+    .mk-warn b{color:#7d2a1e;font-weight:700}
     .mk-sum small{display:block;margin-top:2px;font-size:12px;font-weight:500;color:#496572}
     .mk-net{margin:7px 0 2px;font-size:12px;color:#496572}
     .mk-net b{font-size:13px;font-weight:700}
@@ -2703,19 +2711,30 @@
     const state={base:null,secondBase:null,selectedBase:null,selected:null,panelView:'airport',cash:400000000,day:1,week:1,reputation:70,brand:35,awareness:20,regionAware:null,tutorialFilled:false,tutPos:null,draftOpen:false,openRoute:{},loan:0,history:[],rivalAdds:[],alliances:{},suggestions:null,shares:{},stockPx:{},stockPrev:{},stockLot:1,finTab:'shares',cShares:{},carrierMood:{},carrierPrev:{},cLot:10,stockHist:{},carrierHist:{},
       listed:false,shareUnits:0,floatUnits:0,ownMood:1,ownPrev:0,ownHist:[],ipoWeek:null,ipoPx:0,ipoRaised:0,lastIssueWeek:-999,worth0:0,ownMood0:1,chapter:0,cleared:[],won:false,moneyFmt:'sen',
       /* 四半期の収支：qAcc はその期に入った週の決算、lastQuarterReport は締めたあとの集計 */
-      qAcc:[],lastQuarterReport:null,pendingQuarter:false,airline:{name:'あおぞら航空',code:'AOZ'},difficulty:'normal',weather:null,wxNext:[],rivalNew:[],rivalGone:[],rivalMerged:{},rivalAllies:[],worldLog:[],tutorial:{step:0,done:(()=>{try{return localStorage.getItem('am_tut_done')==='1'}catch(e){return false}})()},gameOver:false,equipment:[],facilities:[],airportDev:{},shopOpen:false,shopTab:'air',shopSort:'class',shopRev:false,shopOpenItem:{},routeSort:'net',routeView:'card',openSect:{},pickFor:null,fleetSetup:null,fleetDraft:null,planes:[],routes:[],draft:{stops:[],park:null,frequency:7,fare:'普通',timeBand:1,season:'all',days:[0,1,2,3,4,5,6],trips:1},lastReport:null,activeFlights:[],currentFlight:null,operationQueue:[],simulating:false,simulationSpeed:1};
+      qAcc:[],lastQuarterReport:null,pendingQuarter:false,airline:{name:'あおぞら航空',code:'AOZ'},difficulty:'normal',weather:null,wxNext:[],rivalNew:[],rivalGone:[],rivalMerged:{},rivalAllies:[],worldLog:[],tutorial:{step:0,done:(()=>{try{return localStorage.getItem('am_tut_done')==='1'}catch(e){return false}})()},gameOver:false,equipment:[],facilities:[],airportDev:{},shopOpen:false,shopTab:'air',shopSort:'class',shopRev:false,shopOpenItem:{},routeSort:'net',routeView:'card',openSect:{},pickFor:null,fleetSetup:null,fleetDraft:null,planes:[],routes:[],draft:{stops:[],park:null,frequency:7,fare:'普通',timeBand:2,season:'all',days:[0,1,2,3,4,5,6],trips:1},lastReport:null,activeFlights:[],currentFlight:null,operationQueue:[],simulating:false,simulationSpeed:1};
     // 初期状態の控え。セーブに無い項目はここから埋める（古いセーブでも壊れないように）
     /* state の初期リテラルの写し。applyState() がセーブを読むとき、まずこれを敷く。
        ＝新しい欄は state の宣言に足しさえすれば、古いセーブでも自動で埋まる（2026-10-28） */
     const DEFAULT_STATE=JSON.parse(JSON.stringify(state));
     // ── セーブ＆つづきから ──
     const SAVE_KEY='am_save_v1';
+    /* 2026-11-05：出発時刻を2時間おき8マスから1時間おき16マスに変えた。
+       timeBand は「何番目のマスか」なので、版を上げずに読むと
+       旧セーブの 6（＝18:30 夜便）が 12:30 昼便に化ける。全路線のダイヤがずれる。 */
+    const SAVE_V=2;
     let saveTimer=null;
-    function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,t:Date.now(),state:state,view:{lat:mainView.lat,lng:mainView.lng,z:mainView.z}}));}catch(e){}}
+    function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:SAVE_V,t:Date.now(),state:state,view:{lat:mainView.lat,lng:mainView.lng,z:mainView.z}}));}catch(e){}}
     function scheduleSave(){if(saveTimer||!state.base)return;saveTimer=setTimeout(()=>{saveTimer=null;saveGame();},1500);}
     function readSave(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return null;const d=JSON.parse(raw);return (d&&d.state&&d.state.base)?d:null;}catch(e){return null;}}
     function applyState(src){Object.keys(state).forEach(k=>{delete state[k];});Object.assign(state,JSON.parse(JSON.stringify(DEFAULT_STATE)),src||{});}
     function loadGame(){const d=readSave();if(!d)return false;try{applyState(d.state);
+      /* 2026-11-05：8マス時代のセーブは、マス番号を倍にすると同じ時刻になる
+         （旧1＝08:30 → 新2＝08:30。旧7＝20:30 → 新14＝20:30） */
+      if(!(d.v>=2)){
+        state.routes.forEach(r=>{if(typeof r.timeBand==='number')r.timeBand=Math.min(BAND_N-1,r.timeBand*2);});
+        if(state.draft&&typeof state.draft.timeBand==='number')
+          state.draft.timeBand=Math.min(BAND_N-1,state.draft.timeBand*2);
+      }
       /* 2026-10-23：作図中かどうかは「いま触っている最中」の状態で、進行ではない。
          保存されたまま読み込むと、続きから始めた瞬間に
          右の「運用を組む」が開いた状態で出てしまう。読むたびに畳む。 */
@@ -2791,10 +2810,10 @@
     function servedItems(p){const b=planeBlockMin(p);
       return svcItemsOf(p).filter(k=>SERVICE_ITEMS[k]&&b>=SERVICE_ITEMS[k].minBlock);}
     // ── 時刻の枠：1日を06:00〜24:00の2時間ごと9枠に割る ──
-    // 出発として選べるのは枠0〜7（06:30〜20:30）。枠8（22〜24時）は到着専用。
+    // 出発として選べるのは 06:30〜21:30（DEP_SLOTS の16マス）。深夜の到着はこの格子の尾に入る。
     /* ── 発着枠の「1日」の定義 ──
        いまは 06:00〜24:00 の18時間を2時間ずつ9枠に割っている。
-       プレイヤーが選べる出発時刻（DEP_SLOTS）が 06:30〜20:30 なので、
+       プレイヤーが選べる出発時刻（DEP_SLOTS）が 06:30〜21:30 なので、
        それより前後の時間は枠として出しても押せず、空いて見えるだけになるため。
        2026-10-20：国内線だけならこれでよいが、羽田・中部・那覇・関西・北九州の5空港は
        実際には24時間運用で、00:00〜06:00 がこの格子の外にある。
@@ -2804,22 +2823,40 @@
     const SLOT_FIRST=6,SLOT_H=2,SLOT_N=9;
     const SLOT_DAY_H=SLOT_H*SLOT_N;          /* 格子が覆う時間数。いまは18 */
     const SLOT_LAST_MIN=(SLOT_FIRST+SLOT_DAY_H)*60;   /* 格子の終わり（分） */
+    /* ── 2026-11-05：出発時刻を2時間おき8マスから1時間おき16マスにした ──
+       2時間グリッドだと、松山⇄福岡（片道46分）の1往復は2時間12分＋折返し40分＝2時間52分。
+       隣のマスは2時間後なので入らず、1つ飛ばしで1日4往復が上限になっていた。
+       実機は着いて40分で折り返してまた出るので、短い路線ほどレグ数が伸びる
+       （羽田ベースのJAL 737-800で1日5〜6レグ。ターボプロップの目安は1日6〜8ブロックアワー）。
+       測ったら、この4往復のあいだ機体は8時間も地上で待っていた。
+       1時間おきにすると 06:30→09:30→12:30→15:30→18:30 と5往復、
+       もっと短い松山⇄高知（37分）なら6往復まで入る。
+       マスが倍になるので、時間の欄は2列4行から2列8行になる（高さは約2倍）。 */
     const DEP_SLOTS=[
-      {k:0,dep:390, name:'早朝便',sub:'始発。枠は空く'},
-      {k:1,dep:510, name:'朝便',  sub:'出張の往路ピーク'},
-      {k:2,dep:630, name:'午前便',sub:'観光が動き出す'},
-      {k:3,dep:750, name:'昼便',  sub:'観光・私用の山'},
-      {k:4,dep:870, name:'午後便',sub:'全体に凪'},
-      {k:5,dep:990, name:'夕便',  sub:'復路が動き出す'},
-      {k:6,dep:1110,name:'夜便',  sub:'出張の復路ピーク'},
-      {k:7,dep:1230,name:'最終便',sub:'空くが客も薄い'}
+      {k:0, dep:390, name:'始発便',  sub:'枠はいちばん空く'},
+      {k:1, dep:450, name:'早朝便',  sub:'出張の往路が動き出す'},
+      {k:2, dep:510, name:'朝便',    sub:'出張の往路ピーク'},
+      {k:3, dep:570, name:'朝遅便',  sub:'往路ピークの終わり'},
+      {k:4, dep:630, name:'午前便',  sub:'観光が動き出す'},
+      {k:5, dep:690, name:'昼前便',  sub:'観光・私用が増える'},
+      {k:6, dep:750, name:'昼便',    sub:'観光・私用の山'},
+      {k:7, dep:810, name:'昼過便',  sub:'昼の山の後半'},
+      {k:8, dep:870, name:'午後便',  sub:'全体に凪'},
+      {k:9, dep:930, name:'午後遅便',sub:'凪の終わり'},
+      {k:10,dep:990, name:'夕便',    sub:'復路が動き出す'},
+      {k:11,dep:1050,name:'夕方便',  sub:'復路が増える'},
+      {k:12,dep:1110,name:'夜便',    sub:'出張の復路ピーク'},
+      {k:13,dep:1170,name:'夜遅便',  sub:'復路ピークの終わり'},
+      {k:14,dep:1230,name:'最終便',  sub:'空くが客も薄い'},
+      {k:15,dep:1290,name:'深夜便',  sub:'24時間空港だけ。客はごく薄い'}
     ];
+    const BAND_N=DEP_SLOTS.length;
     /* 旧セーブは 'morning'/'day'/'evening' を持っているので、近い枠へ読み替える */
-    const LEGACY_BAND={morning:1,day:3,evening:6};
+    const LEGACY_BAND={morning:2,day:6,evening:12};
     function bandIndex(v){
-      if(typeof v==='number')return Math.max(0,Math.min(7,Math.round(v)));
+      if(typeof v==='number')return Math.max(0,Math.min(BAND_N-1,Math.round(v)));
       if(LEGACY_BAND[v]!=null)return LEGACY_BAND[v];
-      const n=Number(v);return isFinite(n)?Math.max(0,Math.min(7,Math.round(n))):1;
+      const n=Number(v);return isFinite(n)?Math.max(0,Math.min(BAND_N-1,Math.round(n))):2;
     }
     function slotDef(v){return DEP_SLOTS[bandIndex(v)];}
     function bandName(r){return slotDef(r&&r.timeBand).name;}
@@ -5600,7 +5637,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
        どの帯にも入らないなら、その提案自体を出さない。 */
     function feasibleBand(route,planeId){
       const pl=state.planes.find(p=>p.id===planeId);if(!pl)return null;
-      const order=[bandIndex(route.timeBand),0,1,2,3,4,5,6,7];const seen={};
+      const order=[bandIndex(route.timeBand)].concat(DEP_SLOTS.map(t=>t.k));const seen={};
       for(let i=0;i<order.length;i++){const b=order[i];
         if(seen[b])continue;seen[b]=1;
         const probe=Object.assign({},route,{timeBand:b,aircraftId:planeId});
@@ -5689,7 +5726,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       for(let i=0;i<idles.length&&!pair;i++)for(let j=0;j<frees.length&&!pair;j++){
         const b=feasibleBand(frees[j],idles[i].id);if(b!=null)pair={p:idles[i],f:frees[j],b};}
       if(idle&&!frees.length){const b=bestNewDest(idle);
-        if(b){const probe={id:'__nr__',from:state.base,to:b.d,stops:[b.d],park:state.base,frequency:7,fare:'普通',timeBand:1,season:'all',aircraftId:null,matWeeks:0};
+        if(b){const probe={id:'__nr__',from:state.base,to:b.d,stops:[b.d],park:state.base,frequency:7,fare:'普通',timeBand:2,season:'all',aircraftId:null,matWeeks:0};
           const bd=feasibleBand(probe,idle.id);
           if(bd!=null)out.push({t:'newroute_to',p:idle.id,d:b.d,b:bd,ic:'🗺️',title:`${idle.id} で ${b.d} 線を開く`,
             sub:`いま一番おいしい空白です（就航初期で週 ${b.net>=0?'+':''}${yen(Math.round(b.net))}・搭乗${b.load}%）`,score:1400000});}}
@@ -6754,12 +6791,16 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       /* いまこの機体が持っている路線のうち、取り合うものだけ外す。
          季節・曜日・時間帯のどれかがずれていれば、1機で掛け持ちできる */
       const keep=planeRoutes(plane).filter(r=>r.id!==route.id&&!routesClash(r,route,plane.type));
+      /* 外す便は、知らせで名指しする。黙って機材なしに戻すと、
+         翌週の決算で売上が消えて初めて気づくことになる（2026-11-05） */
+      const dropped=planeRoutes(plane).filter(r=>r.id!==route.id&&keep.indexOf(r)<0);
       planeRoutes(plane).forEach(r=>{if(r.id!==route.id&&keep.indexOf(r)<0)r.aircraftId=null;});
       const prevOnRoute=state.planes.find(p=>p.id===route.aircraftId&&p.id!==planeId);
       route.aircraftId=planeId;state.pickFor=null;syncAssign();if(prevOnRoute)syncAssign();
       const sd=seasonDefOf(route);
-      notice(keep.length?`${planeId} に ${routeWhen(route)}（${routeName(route)}）を追加。${keep.map(r=>routeWhen(r)).join('・')} と掛け持ちします（1機で週${planeRoutes(plane).reduce((s,r)=>s+(r.frequency||0),0)}便）。`
-                        :`${planeId} に ${routeName(route)} を搭載${route.season&&route.season!=='all'?`（${sd.label}・${sd.sub}）`:''}`);
+      const dropMsg=dropped.length?`　⚠ ${dropped.map(r=>`${routeWhen(r)}（${routeName(r)}）`).join('・')} は時間が重なるので機材なしに戻りました。`:'';
+      notice((keep.length?`${planeId} に ${routeWhen(route)}（${routeName(route)}）を追加。${keep.map(r=>routeWhen(r)).join('・')} と掛け持ちします（1機で週${planeRoutes(plane).reduce((s,r)=>s+(r.frequency||0),0)}便）。`
+                        :`${planeId} に ${routeName(route)} を搭載${route.season&&route.season!=='all'?`（${sd.label}・${sd.sub}）`:''}`)+dropMsg);
       sfx.launch();radio('launch',{home:route.park||state.base,route:routeName(route)});render();}
     function unassignRoute(planeId,routeId){const plane=state.planes.find(p=>p.id===planeId);if(!plane)return;
       const list=routeId?planeRoutes(plane).filter(r=>r.id===routeId):planeRoutes(plane);
@@ -8780,6 +8821,12 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           const w=pl?atWeek(pvWeek,()=>weeklyEstimate({...draftRoute,from:state.base},pl)):null;
           return `<div class="mk-ok">
             <div class="mk-sum">${park} → ${d.stops.join(' → ')}${isOneWay(d)?'（片道）':` → ${park}`}<small>${slotDef(d.timeBand).name} ${hhmm(slotDef(d.timeBand).dep)}発・${dowLetters(d)} 週${d.frequency}便${pl?`・${aircraftCatalog[pl.type].name}`:''}</small></div>
+            ${/* 2026-11-05：出発時刻が1時間おきの16マスになり、隣のマスとぶつかることが増えた。
+                  ぶつかる便は assignRoute が黙って機材から外すので、押す前に名指しで言う。 */''}
+            ${(()=>{if(!pl)return '';
+              const cl=planeRoutes(pl).filter(r=>routesClash(r,draftRoute,pl.type));
+              return cl.length?`<div class="mk-warn">⚠ ${pl.id} は <b>${cl.map(r=>routeWhen(r)).join('・')}</b> と時間が重なります。`
+                +`このまま就航すると、その便は<b>機材なし</b>に戻ります。時間帯をずらすか、別の機体にしてください。</div>`:'';})()}
             ${w?`<div class="mk-net ${w.net>=0?'ok':'loss'}">就航初期の見込み <b>${w.net>=0?'+':''}${yen(Math.round(w.net))}/週</b>　搭乗${w.perDay.load}%</div>`:''}
             <button class="btn" id="commitRoute" ${pl?'':'disabled'}>${pl?'✔ この内容で就航する（OK）':'使う飛行機を選んでください'}</button>
             ${/* 2026-10-26：「（ブロックだけ作る）」を外した。2行に折り返して72pxあり、
