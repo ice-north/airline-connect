@@ -250,6 +250,32 @@ const SCAN = () => {
     check('ぶつかる時間帯　外れた便を知らせで名指しする', collide.after && collide.orphan === 1,
       collide.after ? '' : '知らせに出ていない');
 
+    /* 案内を終えた直後の1機は朝がぜんぶ埋まっている。
+       置ける時刻だけが押せて、塞がっている時刻は理由つきで塞がれているか */
+    const busy = await page.evaluate(() => {
+      try { localStorage.removeItem('am_tut_done'); } catch (e) {}
+      startTutorial(); state.selectedBase = TUTORIAL.base; startGame();
+      const pl = state.planes[0] || (leasePlaneById(TUTORIAL.plane), state.planes[0]);
+      const mk = (dest, band, days) => {
+        state.draft = { stops: [dest], park: state.base, frequency: days.length, fare: '普通',
+                        timeBand: band, season: 'all', days: [...days], trips: 1, planeId: null, pick: null };
+        createRoute(); assignRoute(pl.id, state.routes[state.routes.length - 1].id);
+      };
+      mk('対馬', 2, [1, 4]); mk('福江', 2, [2, 5]); tutFillRest();
+      state.panelView = 'routes'; state.draftOpen = true;
+      state.draft = { stops: ['屋久島'], park: state.base, frequency: 7, fare: '普通', timeBand: 14,
+                      season: 'all', days: [0,1,2,3,4,5,6], trips: 1, planeId: pl.id, pick: null };
+      render();
+      const cells = [...document.querySelectorAll('.slot-seg .seg-btn')];
+      return { n: cells.length,
+               marked: cells.filter(e => e.classList.contains('busy')).length,
+               open: cells.filter(e => !e.disabled).length,
+               ghost: cells.filter(e => e.classList.contains('busy') && !e.disabled).length };
+    });
+    check('案内の直後　機体が飛んでいる時刻はマスごと塞がれる', busy.marked >= 5 && busy.ghost === 0,
+      busy.n + 'マス中 塞がり' + busy.marked + '・置ける' + busy.open);
+    check('案内の直後　3本目を置ける時刻が残っている', busy.open >= 1, busy.open + 'マス');
+
     check('夜間格納費　路線カードの合計が会社の決算と合う',
       multi.nightRoutes >= 2 && multi.nightRows === multi.nightCo,
       multi.nightRoutes + '本で 路線 ' + multi.nightRows.toLocaleString() + '／会社 ' + multi.nightCo.toLocaleString());

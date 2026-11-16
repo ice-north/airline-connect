@@ -309,6 +309,9 @@
        「需要412名／405席・空124」のように伸びるので、狭い板では2行になる */
     .slot-seg .seg-btn small{display:block;font-size:11px;margin-top:0;white-space:normal;line-height:1.3}
     /* 3つのかたまりの「あいだ」でだけ折り返す。中で折れると「席」だけが次の行に残る */
+    /* 自分の機体が飛んでいて置けないマス。空港が満杯なのとは理由がちがうので別の色 */
+    .slot-seg .seg-btn.busy{background:#f4f7f9;border-color:#dbe6ec}
+    .slot-seg .seg-btn.busy small{color:#7a6a3a}
     .slot-seg .seg-btn small b,.slot-seg .seg-btn small i,.slot-seg .seg-btn small span{white-space:nowrap}
     .slot-seg .seg-btn small i{font-style:normal}
     .slot-seg .seg-btn small b{font-weight:500;color:#405964}
@@ -6434,13 +6437,16 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       else if(above>=ch+24)put('top');
       else put(below>=above?'bottom':'top');          /* どちらも狭ければ、まだ広いほう */
     }
-    // ── ⑤ コミカルなランダムイベント ──
+    /* ── ⑤ コミカルなランダムイベント ──
+       2026-11-16：「機長が寝坊…1便欠航」を外した。乗務員の落ち度で便が飛ばない、
+       という筋書きだけが毛色がちがっていて、笑って流せるたぐいの話ではなかった。
+       残した悪いほうは、台風（天気）・燃料高騰（相場）・臨時整備（安全のための手順）で、
+       どれも会社の外から来るか、やって当たり前のこと。人のしくじりを笑う札は置かない。 */
     const gameEvents=[
       {ic:'🐻',good:true,title:'ご当地ゆるキャラが搭乗！',desc:'SNSで話題に。地元での認知度が上がり、臨時収入も入った。',run(){bumpAware(state.base?regionOf(state.base):null,3);state.cash+=3000000;}},
       {ic:'📺',good:true,title:'路線がTVで特集された！',desc:'問い合わせ殺到で、会社の認知度がアップ。',run(){bumpAware(null,3);}},
       {ic:'🎒',good:true,title:'修学旅行シーズン到来',desc:'団体予約でにぎわい、臨時収入を得た。',run(){state.cash+=4000000;}},
       {ic:'🌸',good:true,title:'桜シーズンで観光客増',desc:'行楽需要でどの便もにぎやか。',run(){state.cash+=3500000;}},
-      {ic:'😴',good:false,title:'機長が寝坊…1便欠航',desc:'払い戻し対応で少し出費。次は目覚まし2個で。',run(){state.cash-=2000000;}},
       {ic:'🌀',good:false,title:'台風が接近',desc:'一部の便が運休。減収となった。',run(){state.cash-=3000000;}},
       /* 2026-10-28：原油高は「石油株の値上がり」であり、同時に「航空会社の株安」でもある。
          南西石油を持っていれば損を評価額で相殺できる——という読みが成り立つようにした。
@@ -8664,6 +8670,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         /* 出発時刻は「つくる5項目」の1つなので、こまかい設定から出して本文に置く（2026-10-21）
            2026-10-25：ここも空きマス式に。1列8行にしたぶん437pxあり、
            作成欄1,295pxのうち34%を占めて〔OK〕を画面の外へ追い出していた */
+        const pickedPlane=d.planeId?state.planes.find(x=>x.id===d.planeId):null;
         const timeField=`<div class="seg slot-seg">${DEP_SLOTS.map(t=>{
             const on=bandIndex(d.timeBand)===t.k;
             const head=`${hhmm(t.dep)}<em>${t.name}</em>`;
@@ -8674,11 +8681,24 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
             const base={park,stops:d.stops,season:d.season||'all',days:routeDays(d),frequency:d.frequency,
               fare:d.fare,trips:Math.max(1,Math.min(2,d.trips||1)),oneWay:!!d.oneWay,timeBand:t.k};
             const type=previewPlane?previewPlane.type:'ATR42';
+            /* previewPlane は「まだ決めていないときに仮で見積もる機体」。
+               塞がり判定に使うのは、プレイヤーが実際に選んだ機体だけ */
             /* 運用時間に収まらない時刻は選べない（夕方に閉まる空港へ夜便は飛ばせない） */
             const iss=scheduleIssues(base,type);
             if(iss.length)return `<button type="button" class="seg-btn" data-seg="time" data-v="${t.k}" disabled>${head}<small>${slotIssueWhy(iss[0])}</small></button>`;
             const sc=slotCheck(base,t.k,d.frequency,null);
             if(!sc.ok)return `<button type="button" class="seg-btn" data-seg="time" data-v="${t.k}" disabled>${head}<small>${sc.airport} ${slotName(sc.slot).split('〜')[0]}が満杯</small></button>`;
+            /* ── 2026-11-16：選んだ機体がすでに飛んでいる時間を、マスの上で塞ぐ ──
+               案内を終えた直後の1機は、対馬便（日月木 08:30〜11:12）と
+               福江便（火水金土 08:30〜13:30・1日2往復）で朝がぜんぶ埋まっている。
+               なのにマスは16個とも押せる顔をしていて、押して〔OK〕まで進むと
+               既存の便が黙って機材なしに戻る。「1機に2航路しか作れない」と見えるのはこれ。
+               置けるのは実際には14:30〜16:30の3マスだけなので、そう見せる。 */
+            if(pickedPlane){
+              const busy=planeRoutes(pickedPlane).filter(r=>routesClash(r,base,pickedPlane.type));   /* 作成欄は常に新しい便なので、自分自身を除く必要はない */
+              if(busy.length)return `<button type="button" class="seg-btn busy" data-seg="time" data-v="${t.k}" disabled
+                title="${pickedPlane.id} は ${busy.map(r=>`${routeWhen(r)}（${routeName(r)}）`).join('・')} を飛んでいます">${head}<small>${pickedPlane.id} は${busy.map(r=>routeName(r).replace(park+' → ','').replace(' → '+park,'')).join('・')}便で塞がり</small></button>`;
+            }
             /* ── 2026-10-28：倍率をやめ、人数と席数で出す ──
                「需要×1.12」は、何と比べて1.12倍なのかが画面のどこにも無かった。
                倍率どうしを見比べれば「朝のほうが濃い」までは分かるが、
