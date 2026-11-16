@@ -600,6 +600,14 @@
     #wide .rl-list>.rl-row{min-width:0}
     @media(max-width:900px){
       .layout>#mainMap,.layout>#panel,.layout>#wide{grid-column:1;grid-row:auto}
+      /* ── 2026-11-16：企画タブだけ、狭い画面で並びを入れ替える ──
+         1列になると 地図 → #panel（中身）→ #wide（選択肢）の順になり、
+         793px で測ると選択肢は 1,764px 下、1,079px ぶんの中身の**下**に回り込んでいた。
+         「下で選んで右で読む」は横に2列あってこその形で、1列では選べない。
+         1列のときは 地図 → 選択肢 → 中身 の順にする。 */
+      .layout.pick-first>#mainMap{order:1}
+      .layout.pick-first>#wide{order:2}
+      .layout.pick-first>#panel{order:3}
       .layout>#panel{position:static;max-height:none;overflow:visible}
       /* 2026-10-25：1列に積むと、列の幅は中でいちばん縮まない物で決まる。
          会社タブの「社名とコード」の欄が 380px を要求していて、375pxの画面で
@@ -8607,6 +8615,10 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
     function renderPanelInner(){
       const target=state.selected;
       byId('wide').innerHTML='';   /* 使うタブだけが地図の下を埋める */
+      /* 企画タブは「選択肢（#wide）→ 中身（#panel）」の順で読ませたい。
+         1列になる狭い画面でだけ並びを入れ替える（CSS の .pick-first） */
+      {const ly=document.querySelector('.layout');
+       if(ly)ly.classList.toggle('pick-first',state.panelView==='promo');}
       if(!target){byId('panel').innerHTML='<h2>本社を選ぶ</h2><p>地図上の空港・飛行場をクリックすると、人口圏と市場特性を確認できます。</p>';return}
       const a=airports[target];
       if(!state.base){

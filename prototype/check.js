@@ -316,6 +316,23 @@ const SCAN = () => {
     check('企画タブ　押すと右の欄に中身が出る', promo.bodies.every(x => x.includes('✓')),
       promo.bodies.join(' / '));
 
+    /* 1列になる狭い画面では、選択肢が中身より先に来ていないと選べない */
+    for (const w of [900, 793, 375]) {
+      const page2 = await browser.newPage({ viewport: { width: w, height: 900 } });
+      await page2.goto(url, { waitUntil: 'domcontentloaded' });
+      await page2.waitForTimeout(900);
+      const ord = await page2.evaluate(() => {
+        document.querySelectorAll('.title-screen,#tutorial,.tut-restore').forEach(e => e.style.display = 'none');
+        state.selectedBase = Object.keys(airports)[0]; startGame();
+        state.panelView = 'promo'; render();
+        const y = id => Math.round(document.getElementById(id).getBoundingClientRect().top + scrollY);
+        return { wide: y('wide'), panel: y('panel') };
+      });
+      check(`企画タブ　${w}px で選択肢が中身より上にある`, ord.wide < ord.panel,
+        '選択肢 ' + ord.wide + 'px / 中身 ' + ord.panel + 'px');
+      await page2.close();
+    }
+
     /* 買い物：運転資金が残らない買い方に警告が出るか */
     const warn = await page.evaluate(() => {
       const names = Object.keys(airports);
