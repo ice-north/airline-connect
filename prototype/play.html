@@ -1941,7 +1941,6 @@
     .fin-ops .fin-btn{flex:1;width:auto;padding:8px 4px;}
     /* ── 2026-10-27：企画タブに置く「銀行・証券」の入口 ──
        お金の話（借入・買収）が会社タブの2か所に散っていたので、入口をここに集めた */
-    .fin-entry{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
     .fin-card{display:block;width:100%;text-align:left;padding:11px 12px;border-radius:12px;
       border:2px solid #cfe6f3;background:#f6fbfe;color:#17384a;font-family:inherit;cursor:pointer;min-height:58px}
     .fin-card:hover{background:#eaf6fd;border-color:#9fd3ee}
@@ -1953,8 +1952,6 @@
     /* 2026-10-28：自社株で3枚になった。1枚あたり150px前後では「銀行」の
        長い添え書きが入らないので、狭いときだけ縦に積む */
     .fin-card.ipo{border-color:#e4d7c2;background:#fdfaf3}
-    .fin-entry{grid-template-columns:repeat(3,1fr)}
-    @media(max-width:520px){.fin-entry{grid-template-columns:1fr}}
     /* 上場の条件と、売り出し／増資／買い戻しのボタン */
     .ipo-conds{display:grid;gap:5px;margin:0 0 9px}
     .ipo-cond{display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-radius:10px;
@@ -2747,6 +2744,11 @@
        ＝新しい欄は state の宣言に足しさえすれば、古いセーブでも自動で埋まる（2026-10-28） */
     const DEFAULT_STATE=JSON.parse(JSON.stringify(state));
     // ── セーブ＆つづきから ──
+    /* 2026-11-16：どの版を開いているのかが分からないと、
+       「直したはずなのに直っていない」がキャッシュなのか不具合なのか切り分けられない。
+       開いたときにコンソールへ出し、会社タブの「表示設定・セーブ」にも出す。 */
+    const BUILD='2026-11-16';
+    try{console.info('エアラインコネクト　版 '+BUILD);}catch(e){}
     const SAVE_KEY='am_save_v1';
     /* 2026-11-05：出発時刻を2時間おき8マスから1時間おき16マスに変えた。
        timeBand は「何番目のマスか」なので、版を上げずに読むと
@@ -6602,7 +6604,13 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           <span class="mi-tx"><span class="mi-top"><b>${x.label}</b></span>
             ${x.sub?`<small>${x.sub}</small>`:''}</span>
         </button>`).join('')}</div>`;
-      return {list,body:(typeof sel.body==='function'?sel.body():sel.body),sel};
+      /* 中身の組み立てで転んでも、選択肢そのものは出す。
+         そうしないと「押しても何も出ない」になって、どれが悪いのかも分からない */
+      let body='';
+      try{body=(typeof sel.body==='function'?sel.body():sel.body);}
+      catch(e){console.error('masterSplit body',sel.k,e);
+        body=`<p class="tap-hint">この項目を出せませんでした。ほかの項目は使えます。<br><b>${String((e&&e.message)||e).replace(/[<>&]/g,'')}</b></p>`;}
+      return {list,body,sel};
     }
     function bindMasterDetail(){
       document.querySelectorAll('[data-md]').forEach(b=>b.addEventListener('click',()=>{
@@ -8143,7 +8151,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       ${masterDetail('coSide',[
         {k:'sys',ic:'⚙️',label:'表示設定・セーブ',sub:'自動保存',body:()=>
           `<div class="field"><label>金額の表示</label><div class="seg">${Object.keys(moneyFormats).map(k=>`<button type="button" class="seg-btn${(state.moneyFmt||'sen')===k?' on':''}" data-money="${k}">${moneyFormats[k]}<small>${(function(){const f=state.moneyFmt;state.moneyFmt=k;const s=yen(123456789);state.moneyFmt=f;return s;})()}</small></button>`).join('')}</div></div>`
-          +`<p style="font-size:14px;color:var(--muted);margin:10px 2px 8px">進行は<b>自動保存</b>されます。次に開くと「コンティニュー」で再開できます。</p>`
+          +`<p style="font-size:14px;color:var(--muted);margin:10px 2px 8px">進行は<b>自動保存</b>されます。次に開くと「コンティニュー」で再開できます。<br>版 <b>${BUILD}</b>（古い版が出ているときは、Ctrl＋F5 で読み直してください）</p>`
           +`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="mini-btn" id="replayTutBtn" style="width:auto;padding:8px 14px">🗼 案内をもう一度見る</button><button class="mini-btn" id="toTitleBtn" style="width:auto;padding:8px 14px">🏠 タイトルへ戻る</button><button class="mini-btn" id="resetGameBtn" style="width:auto;padding:8px 14px">最初からやり直す</button></div>`}
       ],{narrow:true})}
       `;
@@ -8582,7 +8590,21 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       document.querySelectorAll('.fl-setup').forEach(b=>b.addEventListener('click',()=>openFleetSetup(b.dataset.plane)));
       /* 2026-10-17：行先ブロックのドラッグ＆ドロップは廃止。
          路線に積む機材は、路線のカード（航路タブ）で選ぶ。 */}
+    /* ── 2026-11-16：タブが転んだときに白紙にしない ──
+       renderPanel は最初に #wide を空にしてから、タブごとの分岐で #panel と #wide を埋める。
+       途中で例外が出ると #wide は空のまま（`#wide:empty` で消える）、#panel は前の中身のまま残る。
+       航路タブは #panel を空にするので、「航路 → 別のタブ」の順で転ぶと画面から何も出なくなる。
+       黙って白紙にせず、何が起きたかをその場に出す。 */
     function renderPanel(){
+      try{renderPanelInner();}
+      catch(e){
+        console.error('renderPanel',e);
+        byId('panel').innerHTML=`<h2>この画面を出せませんでした</h2>`
+          +`<p class="tap-hint">「${state.panelView}」タブの描画でエラーが起きました。ほかのタブは使えます。<br>`
+          +`<b>${String((e&&e.message)||e).replace(/[<>&]/g,'')}</b></p>`;
+      }
+    }
+    function renderPanelInner(){
       const target=state.selected;
       byId('wide').innerHTML='';   /* 使うタブだけが地図の下を埋める */
       if(!target){byId('panel').innerHTML='<h2>本社を選ぶ</h2><p>地図上の空港・飛行場をクリックすると、人口圏と市場特性を確認できます。</p>';return}
