@@ -75,7 +75,8 @@ const SCAN = () => {
     const cs = getComputedStyle(e), r = e.getBoundingClientRect();
     if (r.width < 1 || r.height < 1 || cs.visibility === 'hidden') return;
     /* overflow:hidden の中で文字がはみ出している＝「…」で切れている */
-    if (/hidden|clip/.test(cs.overflowX) && e.clientWidth > 0 && e.scrollWidth > e.clientWidth + 1) {
+    if (/hidden|clip/.test(cs.overflowX) && e.clientWidth > 0 && e.scrollWidth > e.clientWidth + 1
+        && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.tagName)) {   /* 入力欄は値が長ければ横に流れるのが普通 */
       const t = (e.textContent || '').trim().slice(0, 24);
       if (t) out.clip.push(t + '（枠' + e.clientWidth + ' < 中身' + e.scrollWidth + '）');
     }
@@ -93,7 +94,11 @@ const SCAN = () => {
   const TABS = ['airport', 'fleet', 'routes', 'company', 'promo'];
 
   /* ───── 画面：広い幅と狭い幅で、全タブを見る ───── */
-  for (const vp of [{ w: 1440, h: 1200, tag: 'PC 1440px' }, { w: 375, h: 900, tag: 'スマホ 375px' }]) {
+  /* 1024px を足した（2026-11-16）。「画面は広いが右の板は狭い」幅で、
+     画面幅のメディアクエリが効かず文字が切れる型の不具合が2度続けて出たため。
+     320px は、いちばん狭い端末での下限確認 */
+  for (const vp of [{ w: 1440, h: 1200, tag: 'PC 1440px' }, { w: 1024, h: 900, tag: 'タブレット 1024px' },
+                    { w: 375, h: 900, tag: 'スマホ 375px' }, { w: 320, h: 900, tag: 'スマホ 320px' }]) {
     const page = await browser.newPage({ viewport: { width: vp.w, height: vp.h } });
     const errs = [];
     page.on('pageerror', e => errs.push(e.message));

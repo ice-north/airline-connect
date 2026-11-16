@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>エアラインコネクト</title>
   <style>
-    :root{--bg:#061827;--panel:#0c2739;--line:#ffffff20;--ink:#ecfbff;--muted:#9fc0cb;--cyan:#71e4ec;--green:#64e6a6;--amber:#ffd268;--red:#ff8191}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 75% -15%,#1f708d80,transparent 40%),var(--bg);font-family:Arial,'Yu Gothic',sans-serif;color:var(--ink)}button,select{font:inherit}.top{height:68px;padding:0 4vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#04131fee}.logo{font-weight:900;letter-spacing:.16em}.logo b{color:var(--cyan-ink)}.tag{font-size:12px;color:var(--muted);letter-spacing:.12em}.stats{display:flex;gap:22px;font-size:12px;color:var(--muted)}.stats strong{display:block;color:#fff;font-size:15px}.layout{max-width:1480px;margin:auto;padding:22px 4vw;display:grid;grid-template-columns:minmax(0,1fr) clamp(340px,30vw,470px);gap:16px}.card{border:1px solid var(--line);border-radius:15px;background:#0b2638df;box-shadow:0 18px 40px #0003}.map{height:650px;position:relative;overflow:hidden;background:#19394a}.gsi-tiles{position:absolute;inset:0;overflow:hidden;filter:saturate(.8) contrast(1.06) brightness(.78)}.gsi-tiles img{position:absolute;width:256px;height:256px;pointer-events:none;user-select:none}.gsi-tiles .photo-tile{z-index:1}.map:before,.picker-map:before{content:'';position:absolute;z-index:1;inset:0;background:repeating-linear-gradient(90deg,transparent 0 48px,#95dfe810 49px),repeating-linear-gradient(0deg,transparent 0 48px,#95dfe810 49px);pointer-events:none}.map-title{position:absolute;z-index:4;top:15px;left:15px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#061827d9}.map-title h1{font-size:16px;margin:0}.map-title p{font-size:12px;color:var(--muted);margin:4px 0 0}.airport,.picker-airport{position:absolute;z-index:5;transform:translate(-50%,-50%);border:0;background:transparent;color:#effcff;font-weight:bold;font-size:12px;text-shadow:0 1px 4px #000;cursor:pointer;touch-action:manipulation}.airport:before,.picker-airport:before{content:'';display:block;width:12px;height:12px;margin:auto;border:3px solid var(--cyan);border-radius:50%;background:#fff;box-shadow:0 0 0 4px #72e4ed28,0 0 13px #72e4ed}.airport.active:before,.airport:hover:before,.picker-airport.active:before,.picker-airport:hover:before{background:var(--cyan);transform:scale(1.2)}.airport small{display:block;font-size:12px;color:#9fc7d0;margin-top:4px}.airport.compact{font-size:0}.airport.compact:before{width:8px;height:8px;border-width:2px}.airport.compact small{display:none}.route{position:absolute;height:2px;transform-origin:0 50%;background:linear-gradient(90deg,var(--cyan),#7286ff);box-shadow:0 0 8px var(--cyan);z-index:3}.plane{position:absolute;z-index:4;font-size:16px;text-shadow:0 0 10px var(--cyan)}.side{padding:16px}.side h2{font-size:18px;margin:0}.side p{color:var(--muted);font-size:12px;line-height:1.6}.market,.fleet-row,.route-row{padding:10px;border:1px solid var(--line);border-radius:10px;background:#061b2a9a;margin:11px 0;font-size:12px}.market b{color:var(--green)}.field{margin-top:12px}.field label{display:block;font-size:12px;font-weight:500;color:#b4d3dc;margin-bottom:5px}.field select{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:#061827;color:#fff}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{width:100%;margin-top:12px;padding:11px;border:0;border-radius:8px;cursor:pointer;background:var(--cyan);color:#05202b;font-weight:bold}.btn.secondary{color:#e8faff;background:#ffffff0d;border:1px solid var(--line)}.btn:disabled{opacity:.4;cursor:not-allowed}.route-row b,.fleet-row b{display:block}.route-row span,.fleet-row span{display:block;margin-top:4px;color:var(--muted);font-size:12px}.modal{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:20px;background:#020d16e8}.modal.hidden{display:none}.picker{width:min(980px,96vw);padding:26px}.picker h1{margin:0;font-size:28px}.picker h1 b{color:var(--cyan-ink)}.picker>p{color:var(--muted);font-size:13px}.picker-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(270px,.8fr);gap:16px;margin-top:18px}.picker-map{height:440px;position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#19394a}.picker-map-title{position:absolute;z-index:4;top:14px;left:14px;font-size:12px;color:#b7edf2;letter-spacing:.12em}.picker-info{padding:18px;border:1px solid var(--line);border-radius:12px;background:#061d2d}.picker-info .eyebrow{font-size:12px;color:var(--cyan-ink);letter-spacing:.12em}.picker-info h2{margin:8px 0 3px;font-size:24px}.picker-info p{min-height:98px;color:var(--muted);font-size:12px;line-height:1.7}.picker-info dl{font-size:12px}.picker-info dt{color:#9fc4cf;margin-top:12px}.picker-info dd{margin:4px 0;color:#fff}.empty{padding-top:42px}.toast{position:fixed;right:18px;bottom:18px;z-index:20;opacity:0;transition:.2s;transform:translateY(8px);padding:11px;border:1px solid #71e4ecaa;border-radius:9px;background:#0d3c4d;font-size:12px}.toast.show{opacity:1;transform:none}@media(max-width:900px){.layout{grid-template-columns:1fr}.map{height:520px}.picker-grid{grid-template-columns:1fr}.picker-map{height:370px}.stats{gap:10px}}@media(max-width:600px){.top{padding:0 16px}.stats{font-size:12px}.layout{padding:15px}.picker{padding:20px}.picker h1{font-size:23px}}
+    :root{--bg:#061827;--panel:#0c2739;--line:#ffffff20;--ink:#ecfbff;--muted:#9fc0cb;--cyan:#71e4ec;--green:#64e6a6;--amber:#ffd268;--red:#ff8191}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 75% -15%,#1f708d80,transparent 40%),var(--bg);font-family:Arial,'Yu Gothic',sans-serif;color:var(--ink)}button,select{font:inherit}.top{height:68px;padding:0 4vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#04131fee}.logo{font-weight:900;letter-spacing:.16em}.logo b{color:var(--cyan-ink)}.tag{font-size:14px;color:var(--muted);letter-spacing:.12em}.stats{display:flex;gap:22px;font-size:14px;color:var(--muted)}.stats strong{display:block;color:#fff;font-size:15px}.layout{max-width:1480px;margin:auto;padding:22px 4vw;display:grid;grid-template-columns:minmax(0,1fr) clamp(340px,30vw,470px);gap:16px}.card{border:1px solid var(--line);border-radius:15px;background:#0b2638df;box-shadow:0 18px 40px #0003}.map{height:650px;position:relative;overflow:hidden;background:#19394a}.gsi-tiles{position:absolute;inset:0;overflow:hidden;filter:saturate(.8) contrast(1.06) brightness(.78)}.gsi-tiles img{position:absolute;width:256px;height:256px;pointer-events:none;user-select:none}.gsi-tiles .photo-tile{z-index:1}.map:before,.picker-map:before{content:'';position:absolute;z-index:1;inset:0;background:repeating-linear-gradient(90deg,transparent 0 48px,#95dfe810 49px),repeating-linear-gradient(0deg,transparent 0 48px,#95dfe810 49px);pointer-events:none}.map-title{position:absolute;z-index:4;top:15px;left:15px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#061827d9}.map-title h1{font-size:16px;margin:0}.map-title p{font-size:14px;color:var(--muted);margin:4px 0 0}.airport,.picker-airport{position:absolute;z-index:5;transform:translate(-50%,-50%);border:0;background:transparent;color:#effcff;font-weight:bold;font-size:14px;text-shadow:0 1px 4px #000;cursor:pointer;touch-action:manipulation}.airport:before,.picker-airport:before{content:'';display:block;width:12px;height:12px;margin:auto;border:3px solid var(--cyan);border-radius:50%;background:#fff;box-shadow:0 0 0 4px #72e4ed28,0 0 13px #72e4ed}.airport.active:before,.airport:hover:before,.picker-airport.active:before,.picker-airport:hover:before{background:var(--cyan);transform:scale(1.2)}.airport small{display:block;font-size:14px;color:#9fc7d0;margin-top:4px}.airport.compact{font-size:0}.airport.compact:before{width:8px;height:8px;border-width:2px}.airport.compact small{display:none}.route{position:absolute;height:2px;transform-origin:0 50%;background:linear-gradient(90deg,var(--cyan),#7286ff);box-shadow:0 0 8px var(--cyan);z-index:3}.plane{position:absolute;z-index:4;font-size:16px;text-shadow:0 0 10px var(--cyan)}.side{padding:16px}.side h2{font-size:18px;margin:0}.side p{color:var(--muted);font-size:14px;line-height:1.6}.market,.fleet-row,.route-row{padding:10px;border:1px solid var(--line);border-radius:10px;background:#061b2a9a;margin:11px 0;font-size:14px}.market b{color:var(--green)}.field{margin-top:12px}.field label{display:block;font-size:14px;font-weight:500;color:#b4d3dc;margin-bottom:5px}.field select{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:#061827;color:#fff}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{width:100%;margin-top:12px;padding:11px;border:0;border-radius:8px;cursor:pointer;background:var(--cyan);color:#05202b;font-weight:bold}.btn.secondary{color:#e8faff;background:#ffffff0d;border:1px solid var(--line)}.btn:disabled{opacity:.4;cursor:not-allowed}.route-row b,.fleet-row b{display:block}.route-row span,.fleet-row span{display:block;margin-top:4px;color:var(--muted);font-size:14px}.modal{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:20px;background:#020d16e8}.modal.hidden{display:none}.picker{width:min(980px,96vw);padding:26px}.picker h1{margin:0;font-size:28px}.picker h1 b{color:var(--cyan-ink)}.picker>p{color:var(--muted);font-size:14px}.picker-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(270px,.8fr);gap:16px;margin-top:18px}.picker-map{height:440px;position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#19394a}.picker-map-title{position:absolute;z-index:4;top:14px;left:14px;font-size:14px;color:#b7edf2;letter-spacing:.12em}.picker-info{padding:18px;border:1px solid var(--line);border-radius:12px;background:#061d2d}.picker-info .eyebrow{font-size:14px;color:var(--cyan-ink);letter-spacing:.12em}.picker-info h2{margin:8px 0 3px;font-size:24px}.picker-info p{min-height:98px;color:var(--muted);font-size:14px;line-height:1.7}.picker-info dl{font-size:14px}.picker-info dt{color:#9fc4cf;margin-top:12px}.picker-info dd{margin:4px 0;color:#fff}.empty{padding-top:42px}.toast{position:fixed;right:18px;bottom:18px;z-index:20;opacity:0;transition:.2s;transform:translateY(8px);padding:11px;border:1px solid #71e4ecaa;border-radius:9px;background:#0d3c4d;font-size:14px}.toast.show{opacity:1;transform:none}@media(max-width:900px){.layout{grid-template-columns:1fr}.map{height:520px}.picker-grid{grid-template-columns:1fr}.picker-map{height:370px}.stats{gap:10px}}@media(max-width:600px){.top{padding:0 16px}.stats{font-size:14px}.layout{padding:15px}.picker{padding:20px}.picker h1{font-size:23px}}
   </style>
   <style>
-    .rival-route{position:absolute;height:1px;transform-origin:0 50%;opacity:.48;z-index:2;border-top:1px dashed currentColor;pointer-events:none}.rival-route[data-carrier="JAL"]{color:#ec5a68}.rival-route[data-carrier="ANA"]{color:#5aa6ff}.rival-route[data-carrier="スカイマーク"]{color:#ffd268}.rival-route[data-carrier="AIRDO"]{color:#77d6c8}.route-legend{position:absolute;right:14px;bottom:14px;z-index:6;display:flex;gap:8px;flex-wrap:wrap;max-width:280px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#061827dc;font-size:12px;color:#d7edf2}.route-legend i{display:inline-block;width:12px;border-top:2px dashed currentColor;vertical-align:middle;margin-right:3px}.route-legend .jal{color:#ec5a68}.route-legend .ana{color:#5aa6ff}.route-legend .sky{color:#ffd268}.route-legend .ado{color:#77d6c8}
-    .rival-list{margin-top:13px;padding-top:11px;border-top:1px solid var(--line);max-height:190px;overflow:auto}.rival-list h3{font-size:12px;margin:0 0 7px;color:#dff7fa}.rival-item{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid #ffffff0d;font-size:12px}.rival-item b{color:var(--cyan-ink)}.rival-item span{color:var(--muted);white-space:nowrap}
-    .airport-facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.airport-fact{padding:9px;border:1px solid var(--line);border-radius:8px;background:#061b2a9a}.airport-fact span{display:block;color:var(--muted);font-size:12px}.airport-fact b{display:block;margin-top:3px;font-size:13px}
+    .rival-route{position:absolute;height:1px;transform-origin:0 50%;opacity:.48;z-index:2;border-top:1px dashed currentColor;pointer-events:none}.rival-route[data-carrier="JAL"]{color:#ec5a68}.rival-route[data-carrier="ANA"]{color:#5aa6ff}.rival-route[data-carrier="スカイマーク"]{color:#ffd268}.rival-route[data-carrier="AIRDO"]{color:#77d6c8}.route-legend{position:absolute;right:14px;bottom:14px;z-index:6;display:flex;gap:8px;flex-wrap:wrap;max-width:280px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#061827dc;font-size:14px;color:#d7edf2}.route-legend i{display:inline-block;width:12px;border-top:2px dashed currentColor;vertical-align:middle;margin-right:3px}.route-legend .jal{color:#ec5a68}.route-legend .ana{color:#5aa6ff}.route-legend .sky{color:#ffd268}.route-legend .ado{color:#77d6c8}
+    .rival-list{margin-top:13px;padding-top:11px;border-top:1px solid var(--line);max-height:190px;overflow:auto}.rival-list h3{font-size:14px;margin:0 0 7px;color:#dff7fa}.rival-item{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid #ffffff0d;font-size:14px}.rival-item b{color:var(--cyan-ink)}.rival-item span{color:var(--muted);white-space:nowrap}
+    .airport-facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.airport-fact{padding:9px;border:1px solid var(--line);border-radius:8px;background:#061b2a9a}.airport-fact span{display:block;color:var(--muted);font-size:14px}.airport-fact b{display:block;margin-top:3px;font-size:14px}
     /* 2026-10-26：作成欄の縦を詰めるため、見出しの前後を 20/8 → 12/5 にした */
-    .step-title{margin:12px 0 5px;font-size:12px;color:var(--cyan-ink);letter-spacing:.08em}.fleet-row select,.side>select{width:100%;margin-top:8px;padding:7px;border:1px solid var(--line);border-radius:7px;background:#061827;color:#fff;font-size:12px}.fleet-row .mini-btn{width:100%;margin-top:7px;padding:7px;border:1px solid var(--line);border-radius:7px;background:#ffffff10;color:#e8faff;font-size:12px;cursor:pointer}.route-row.unassigned{border-color:#ffd26888}.route-row .status{color:var(--amber)}.report{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}.report-total{display:grid;grid-template-columns:1fr 1fr;gap:7px}.report-total div{padding:8px;border-radius:8px;background:#061b2a9a;font-size:12px;color:var(--muted)}.report-total b{display:block;margin-top:3px;color:#fff;font-size:13px}.report-total .profit b{color:var(--green)}.report-total .loss b{color:var(--red)}.report-row{padding:8px 0;border-bottom:1px solid #ffffff12;font-size:12px}.report-row b{display:block;font-size:12px}.report-row span{color:var(--muted)}.plane.flying{animation:flightPulse 1.6s ease-in-out infinite;transition:left 1.7s linear,top 1.7s linear}.flight-status{position:absolute;z-index:6;left:15px;bottom:66px;padding:8px 10px;border:1px solid #71e4ec88;border-radius:8px;background:#061827dc;color:#dffcff;font-size:12px}.flight-status b{color:var(--cyan-ink)}@keyframes flightPulse{50%{transform:translate(5px,-4px) scale(1.16);filter:drop-shadow(0 0 7px #71e4ec)}}.map-actions{position:absolute;z-index:7;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;padding:8px;background:#04131ff2;border-top:1px solid var(--line)}.map-actions button{min-height:36px;border:1px solid var(--line);border-radius:7px;background:#0b2a3bd8;color:#dff8fc;font-weight:500;cursor:pointer}.map-actions button.active,.map-actions button:hover{background:var(--cyan);color:#05202b}.map .route-legend{bottom:62px}
+    .step-title{margin:12px 0 5px;font-size:14px;color:var(--cyan-ink);letter-spacing:.08em}.fleet-row select,.side>select{width:100%;margin-top:8px;padding:7px;border:1px solid var(--line);border-radius:7px;background:#061827;color:#fff;font-size:14px}.fleet-row .mini-btn{width:100%;margin-top:7px;padding:7px;border:1px solid var(--line);border-radius:7px;background:#ffffff10;color:#e8faff;font-size:14px;cursor:pointer}.route-row.unassigned{border-color:#ffd26888}.route-row .status{color:var(--amber)}.report{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}.report-total{display:grid;grid-template-columns:1fr 1fr;gap:7px}.report-total div{padding:8px;border-radius:8px;background:#061b2a9a;font-size:14px;color:var(--muted)}.report-total b{display:block;margin-top:3px;color:#fff;font-size:14px}.report-total .profit b{color:var(--green)}.report-total .loss b{color:var(--red)}.report-row{padding:8px 0;border-bottom:1px solid #ffffff12;font-size:14px}.report-row b{display:block;font-size:14px}.report-row span{color:var(--muted)}.plane.flying{animation:flightPulse 1.6s ease-in-out infinite;transition:left 1.7s linear,top 1.7s linear}.flight-status{position:absolute;z-index:6;left:15px;bottom:66px;padding:8px 10px;border:1px solid #71e4ec88;border-radius:8px;background:#061827dc;color:#dffcff;font-size:14px}.flight-status b{color:var(--cyan-ink)}@keyframes flightPulse{50%{transform:translate(5px,-4px) scale(1.16);filter:drop-shadow(0 0 7px #71e4ec)}}.map-actions{position:absolute;z-index:7;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;padding:8px;background:#04131ff2;border-top:1px solid var(--line)}.map-actions button{min-height:36px;border:1px solid var(--line);border-radius:7px;background:#0b2a3bd8;color:#dff8fc;font-weight:500;cursor:pointer}.map-actions button.active,.map-actions button:hover{background:var(--cyan);color:#05202b}.map .route-legend{bottom:62px}
   </style>
   <style>
     .chips{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:10px 0}
-    .chip{display:inline-flex;align-items:center;gap:4px;padding:5px 9px;border:1px solid var(--line);border-radius:20px;background:#0b2a3b;font-size:12px}
+    .chip{display:inline-flex;align-items:center;gap:4px;padding:5px 9px;border:1px solid var(--line);border-radius:20px;background:#0b2a3b;font-size:14px}
     .chip.base{border-color:var(--cyan);color:var(--cyan-ink)}
     .chip.park{border-color:var(--amber);color:var(--amber)}
-    .chip.park small{opacity:.75;font-size:12px;margin-left:2px}
+    .chip.park small{opacity:.75;font-size:14px;margin-left:2px}
     /* 2026-10-22：12×14pxしかなく指で押せなかった。②到着空港を外す操作なので大きくする */
     .chip-x{border:0;background:transparent;color:var(--red);cursor:pointer;font-size:14px;line-height:1;
       min-width:32px;min-height:32px;padding:0 6px;margin:-6px -4px -6px 2px}
-    .chip-arrow{color:var(--muted);font-size:12px}
-    .route-row .kind{display:inline-block;padding:1px 7px;border-radius:10px;font-size:12px;margin-right:6px;background:#ffffff1c;color:#dff8fc;vertical-align:middle}
+    .chip-arrow{color:var(--muted);font-size:14px}
+    .route-row .kind{display:inline-block;padding:1px 7px;border-radius:10px;font-size:14px;margin-right:6px;background:#ffffff1c;color:#dff8fc;vertical-align:middle}
     .multi-leg{position:absolute;height:2px;transform-origin:0 50%;background:linear-gradient(90deg,var(--cyan),#7286ff);box-shadow:0 0 8px var(--cyan);z-index:3}
     #mainTiles{overflow:visible;will-change:transform;backface-visibility:hidden}
     /* タイル整備範囲外（外洋）を海色で埋めてシームレスに見せる */
@@ -65,17 +65,17 @@
     /* 経営ゲームでいちばん大事な数字。常に見えるようにする（以前は4.5画面下にしか無かった） */
     #netStat.pos strong{color:#1f7a3d !important;}
     #netStat.neg strong{color:#c0392b !important;}
-    #netStat.neg::after{content:'▼';margin-left:3px;color:#c0392b;font-size:12px;}
-    #netStat.pos::after{content:'▲';margin-left:3px;color:#1f7a3d;font-size:12px;}
+    #netStat.neg::after{content:'▼';margin-left:3px;color:#c0392b;font-size:14px;}
+    #netStat.pos::after{content:'▲';margin-left:3px;color:#1f7a3d;font-size:14px;}
     .stats strong{white-space:nowrap;font-size:14px !important;font-variant-numeric:tabular-nums;}
     /* 日付は進行がひと目で分かるよう強調する */
     #date{color:#1373a6 !important;font-size:15px !important;}
-    #date small{display:inline;font-size:12px;color:#7da3b4;font-weight:500;margin-left:4px;}
+    #date small{display:inline;font-size:14px;color:#7da3b4;font-weight:500;margin-left:4px;}
     @media(max-width:760px){
       .top .tag{display:none;}
-      .stats{font-size:12px !important;gap:4px 12px !important;}
-      .stats strong{font-size:13px !important;}
-      #date{font-size:13px !important;}
+      .stats{font-size:14px !important;gap:4px 12px !important;}
+      .stats strong{font-size:14px !important;}
+      #date{font-size:14px !important;}
       #date small{display:none;}
     }
     .card{background:#ffffff !important;border:2px solid #dcecf5 !important;border-radius:22px !important;
@@ -134,15 +134,15 @@
     .flight-sprite.parked .tail{animation:none;opacity:0}
     .flight-sprite.parked{opacity:.75}
     @keyframes tailPuff{0%{transform:translate(-40%,-50%) scale(.5);opacity:.5}100%{transform:translate(-190%,-50%) scale(1.6);opacity:0}}
-    .flight-bubble{position:absolute;z-index:9;transform:translate(-50%,-125%);background:#fff;border:2px solid #ffce6b;border-radius:12px;padding:7px 10px;font-size:12px;color:#2a4657;box-shadow:0 8px 20px #0003;white-space:nowrap;pointer-events:none;font-weight:500}
+    .flight-bubble{position:absolute;z-index:9;transform:translate(-50%,-125%);background:#fff;border:2px solid #ffce6b;border-radius:12px;padding:7px 10px;font-size:14px;color:#2a4657;box-shadow:0 8px 20px #0003;white-space:nowrap;pointer-events:none;font-weight:500}
     .flight-bubble:after{content:'';position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);border:7px solid transparent;border-top-color:#ffce6b}
     .flight-bubble small{display:block;font-weight:400;color:#405964;margin-top:2px}
     #radio{position:absolute;left:14px;bottom:70px;z-index:8;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-width:min(72%,330px)}
     .radio-bubble{display:flex;align-items:flex-start;gap:7px;background:#ffffffee;border:2px solid #cfe6f2;border-radius:14px;padding:6px 11px 6px 7px;box-shadow:0 6px 16px #0002;transition:opacity .4s,transform .4s}
     .radio-bubble.out{opacity:0;transform:translateX(-16px)}
     .radio-ic{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:15px;background:#eef7fb}
-    .radio-tx{font-size:12px;line-height:1.32;color:#26414f;font-weight:500}
-    .radio-tx small{display:block;font-weight:500;font-size:12px;letter-spacing:.06em;color:#496572;margin-bottom:1px}
+    .radio-tx{font-size:14px;line-height:1.32;color:#26414f;font-weight:500}
+    .radio-tx small{display:block;font-weight:500;font-size:14px;letter-spacing:.06em;color:#496572;margin-bottom:1px}
     @keyframes radioIn{from{opacity:0;transform:translateY(10px) scale(.9)}to{opacity:1;transform:none}}
     .radio-bubble{animation:radioIn .28s cubic-bezier(.2,1.4,.4,1)}
     /* 地図上の日付。いつでも「いま何年目の何月か」が見える */
@@ -153,10 +153,10 @@
     .date-chip{display:flex;align-items:center;gap:7px;padding:6px 11px 6px 9px;border-radius:14px;
       background:#ffffffe8;border:2px solid #cfe6f2;box-shadow:0 4px 12px #0002;white-space:nowrap}
     .date-chip .dc-ic{font-size:18px;line-height:1}
-    .date-chip b{display:block;font-size:13px;color:#1373a6;line-height:1.2}
-    .date-chip small{display:block;font-size:12px;color:#7da3b4;font-weight:500;margin-top:1px}
+    .date-chip b{display:block;font-size:14px;color:#1373a6;line-height:1.2}
+    .date-chip small{display:block;font-size:14px;color:#7da3b4;font-weight:500;margin-top:1px}
     .date-chip em,#date em{font-style:normal;color:#a0450a;font-weight:500}
-    #date em{margin-left:5px;padding:1px 6px;border-radius:7px;background:#fff1e4;font-size:12px}
+    #date em{margin-left:5px;padding:1px 6px;border-radius:7px;background:#fff1e4;font-size:14px}
     /* 2026-10-14：日付の下に資金。週を送ると、この数字がスロットのように回る（animateCash）
        ・tabular-nums … 桁ごとの幅を揃える。回っている間に文字送りがガタつくと安っぽい
        ・.reel の上下グラデ … リールの窓。数字が筒の上で回っているように見せる
@@ -165,7 +165,7 @@
       padding:5px 12px 6px;border-radius:14px;background:#0e3b55f0;border:2px solid #2d7fa8;
       box-shadow:0 4px 12px #0003, inset 0 1px 0 #ffffff26;white-space:nowrap;
       transition:border-color .2s, box-shadow .2s}
-    .cash-chip .cc-lab{font-size:12px;font-weight:500;letter-spacing:.1em;color:#8ec6e2}
+    .cash-chip .cc-lab{font-size:14px;font-weight:500;letter-spacing:.1em;color:#8ec6e2}
     .cash-chip b{font-size:16px;font-weight:800;color:#fff;letter-spacing:.01em;
       font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;
       text-shadow:0 1px 0 #0006}
@@ -180,7 +180,7 @@
     /* 増えた額そのもの。資金チップの左どなりから浮かび上がって消える。
        上に出すと日付チップの「第○週」に重なって読めなくなったため、横へ逃がしている */
     .cash-chip .cc-delta{position:absolute;right:calc(100% + 8px);top:3px;opacity:0;pointer-events:none;
-      white-space:nowrap;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;
+      white-space:nowrap;font-size:14px;font-weight:500;font-variant-numeric:tabular-nums;
       padding:2px 8px;border-radius:9px;background:#fff;box-shadow:0 3px 9px #0003}
     .cash-chip .cc-delta.up{color:#0b7a3e}
     .cash-chip .cc-delta.down{color:#c0392b}
@@ -214,17 +214,17 @@
     .tut-card button{cursor:pointer;user-select:auto;}
     .tut-card.tut-dragging{cursor:grabbing;transition:none !important;animation:none !important;
       box-shadow:0 22px 50px #0005,0 0 0 3px #ffce6b99 !important;}
-    .tut-grip{color:#d9b25e;margin-right:5px;letter-spacing:-1px;font-size:12px;vertical-align:-1px;}
+    .tut-grip{color:#d9b25e;margin-right:5px;letter-spacing:-1px;font-size:14px;vertical-align:-1px;}
     .tut-reset{background:transparent;color:#a8812a;border:1.5px solid #f0dcae;border-radius:10px;
-      padding:7px 10px;font-weight:500;font-size:12px;cursor:pointer;}
+      padding:7px 10px;font-weight:500;font-size:14px;cursor:pointer;}
     .tut-reset:hover{background:#fff7e6;}
     /* 中身が変わったことは、消さずに枠の明滅で知らせる */
     .tut-card.tut-bump{animation:tutBump .45s ease-out}
     @keyframes tutBump{0%{border-color:#ff9f1c;box-shadow:0 0 0 7px #ff9f1c44,0 16px 40px #0004}
       100%{border-color:#ffce6b;box-shadow:0 0 0 0 #ff9f1c00,0 16px 40px #0004}}
     .tut-ic{flex:0 0 auto;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:#eef7fb}
-    .tut-who{font-size:12px;font-weight:500;color:#8f650c;letter-spacing:.06em;margin-bottom:3px}
-    .tut-tx{font-size:13px;color:#2a4657;line-height:1.5;font-weight:500}.tut-tx b{color:#1373a6}
+    .tut-who{font-size:14px;font-weight:500;color:#8f650c;letter-spacing:.06em;margin-bottom:3px}
+    .tut-tx{font-size:14px;color:#2a4657;line-height:1.5;font-weight:500}.tut-tx b{color:#1373a6}
     .tut-actions{display:flex;gap:8px;margin-top:11px;align-items:center}
     .tut-next{background:var(--cyan);color:#05202b;border:0;border-radius:10px;padding:8px 16px;font-weight:500;cursor:pointer}
     .tut-skip{background:#eef2f4;color:#405964;border:0;border-radius:10px;padding:8px 12px;font-weight:500;cursor:pointer}
@@ -232,14 +232,14 @@
        画面の左下は、日付・資金チップ（右上）とも通知（右下）とも当たらない */
     .tut-restore{position:fixed;left:14px;bottom:14px;z-index:29;pointer-events:auto;
       display:flex;align-items:center;gap:6px;padding:10px 14px;border-radius:999px;
-      border:3px solid #ffce6b;background:#fff;color:#8a5a00;font-weight:500;font-size:12px;
+      border:3px solid #ffce6b;background:#fff;color:#8a5a00;font-weight:500;font-size:14px;
       font-family:inherit;cursor:pointer;box-shadow:0 10px 24px #0003;animation:radioIn .28s cubic-bezier(.2,1.4,.4,1)}
     .tut-restore:hover{background:#fff8e8}
     @media(max-width:560px){.tut-restore{left:10px;bottom:10px;padding:9px 12px}}
     .tut-dots{display:flex;gap:5px;margin-top:9px}
     .tut-dots span{width:7px;height:7px;border-radius:50%;background:#d6e4ea}.tut-dots span.on{background:var(--cyan);transform:scale(1.25)}
     .tut-dots span.did{background:var(--green)}
-    .tut-step{float:right;font-size:12px;font-weight:500;color:#496572}
+    .tut-step{float:right;font-size:14px;font-weight:500;color:#496572}
     /* 案内が勧めている行き先。おすすめ一覧の中の1枚だけを目立たせる */
     .dp-card.tut-target{border-color:#ff9f1c!important;background:#fffaf0!important;
       box-shadow:0 3px 0 #e08a1a,0 0 0 3px #ff9f1c44!important}
@@ -248,13 +248,13 @@
     .shop-item.tut-target{border-color:#ff9f1c!important;background:#fffaf0!important;
       box-shadow:0 0 0 3px #ff9f1c55,0 6px 18px #0002!important;position:relative}
     .shop-item.tut-target:before{content:'おすすめ';position:absolute;top:-10px;left:12px;
-      background:#ff9f1c;color:#fff;font-size:12px;font-weight:500;padding:2px 8px;border-radius:7px;letter-spacing:.06em}
+      background:#ff9f1c;color:#fff;font-size:14px;font-weight:500;padding:2px 8px;border-radius:7px;letter-spacing:.06em}
     /* 案内が指している空港。94個の点の中から、ここだけは必ず見つかるようにする */
     #airports.tut-focus .airport:not(.tut-target){opacity:.28;filter:saturate(.4)}
     .airport.tut-target{z-index:12!important;}
     .airport.tut-target:before{border-color:#ff9f1c!important;background:var(--sun)!important;
       transform:scale(1.5);animation:tutPin 1.1s ease-in-out infinite;}
-    .airport.tut-target .lbl{display:block!important;font-size:12px;font-weight:500;}
+    .airport.tut-target .lbl{display:block!important;font-size:14px;font-weight:500;}
     .airport.tut-target .lbl small{display:none!important;}
     @keyframes tutPin{0%,100%{box-shadow:0 0 0 4px #ff9f1c55,0 2px 6px #0003}
       50%{box-shadow:0 0 0 13px #ff9f1c00,0 2px 6px #0003}}
@@ -266,21 +266,21 @@
     .event-card.good{border-top-color:#43c265}.event-card.bad{border-top-color:#ff8a5c}
     .event-ic{font-size:46px;line-height:1;animation:radioIn .4s cubic-bezier(.2,1.6,.4,1)}
     .event-card h3{margin:8px 0 6px;color:#26414f;font-size:18px}
-    .event-card p{color:#405964;font-size:13px;line-height:1.6;margin:0 0 16px}
+    .event-card p{color:#405964;font-size:14px;line-height:1.6;margin:0 0 16px}
     .event-btns{display:flex;flex-direction:column;gap:8px}
-    .event-btns button{background:var(--cyan);color:#05202b;border:0;border-radius:12px;padding:11px;font-weight:500;font-size:13px;cursor:pointer}
+    .event-btns button{background:var(--cyan);color:#05202b;border:0;border-radius:12px;padding:11px;font-weight:500;font-size:14px;cursor:pointer}
     .event-btns button.alt{background:#eef2f4;color:#48606c}
     /* ⑥ 今週の見どころ（アイコンで語る） */
     .highlights{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin:12px 0 4px}
     .hl{padding:9px 7px;border-radius:12px;background:#f3f8fb;border:1.5px solid #e2edf2;text-align:center}
-    .hl span{display:block;font-size:12px;color:#496572;font-weight:500;letter-spacing:.03em}
-    .hl b{display:block;font-size:12px;color:#2a4657;margin:3px 0;line-height:1.25}
-    .hl small{font-size:12px;color:#405964}
+    .hl span{display:block;font-size:14px;color:#496572;font-weight:500;letter-spacing:.03em}
+    .hl b{display:block;font-size:14px;color:#2a4657;margin:3px 0;line-height:1.25}
+    .hl small{font-size:14px;color:#405964}
     .hl.good{background:#eefaf0;border-color:#bfe8c8}.hl.bad{background:#fff2ee;border-color:#ffd3c2}.hl.rank{background:#fff8e6;border-color:#ffe2a8}
     /* セグメント式（ドロップダウン廃止） */
     .seg{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
-    .seg-btn{flex:1 1 auto;min-width:60px;padding:8px 6px;border:2px solid #d6e4ea;border-radius:10px;background:#fff;color:#3a5563;font-weight:500;font-size:12px;cursor:pointer;line-height:1.2;transition:.12s;text-align:center}
-    .seg-btn small{display:block;font-weight:500;font-size:12px;color:#496572;margin-top:2px}
+    .seg-btn{flex:1 1 auto;min-width:60px;padding:8px 6px;border:2px solid #d6e4ea;border-radius:10px;background:#fff;color:#3a5563;font-weight:500;font-size:14px;cursor:pointer;line-height:1.2;transition:.12s;text-align:center}
+    .seg-btn small{display:block;font-weight:500;font-size:14px;color:#496572;margin-top:2px}
     .seg-btn:hover:not(:disabled){border-color:var(--cyan)}
     .seg-btn.on{background:var(--cyan);border-color:var(--cyan);color:#05202b}
     .seg-btn.on small{color:#05202b}
@@ -303,8 +303,8 @@
     .slot-seg{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(8,auto);
       grid-auto-flow:column;gap:4px}
     .slot-seg .seg-btn{display:block;min-width:0;padding:5px 8px;
-      font-size:13px;font-variant-numeric:tabular-nums;text-align:left;line-height:1.25}
-    .slot-seg .seg-btn em{font-style:normal;font-size:12px;font-weight:500;margin-left:4px;opacity:.75}
+      font-size:14px;font-variant-numeric:tabular-nums;text-align:left;line-height:1.25}
+    .slot-seg .seg-btn em{font-style:normal;font-size:14px;font-weight:500;margin-left:4px;opacity:.75}
     /* 2026-10-28：…で切らずに折り返す。倍率は4文字で収まったが、人数と席数は
        「需要412名／405席・空124」のように伸びるので、狭い板では2行になる */
     .slot-seg .seg-btn small{display:block;font-size:11px;margin-top:0;white-space:normal;line-height:1.3}
@@ -317,60 +317,60 @@
     .slot-seg .seg-btn small b{font-weight:500;color:#405964}
     .slot-seg .seg-btn small b.hi{color:#1f7a3d}.slot-seg .seg-btn small b.lo{color:#a0450a}
     .slot-seg .seg-btn.on small b,.slot-seg .seg-btn.on small{color:#05202b}
-    .tap-hint{font-size:12px;color:#5b7886;background:#eef7fb;border:1.5px dashed #bcdcea;border-radius:10px;padding:8px 10px;margin:8px 0 2px}.tap-hint b{color:#1373a6}
+    .tap-hint{font-size:14px;color:#5b7886;background:#eef7fb;border:1.5px dashed #bcdcea;border-radius:10px;padding:8px 10px;margin:8px 0 2px}.tap-hint b{color:#1373a6}
     /* 季節バー */
     .season-bar{display:flex;align-items:center;gap:10px;margin:10px 0 2px;padding:9px 12px;border-radius:14px;background:linear-gradient(90deg,#fff6e3,#eef7fb);border:2px solid #ffe2a8}
     .season-bar .s-ic{font-size:24px;line-height:1}
-    .season-bar b{display:block;font-size:13px;color:#2a4657}
-    .season-bar small{display:block;font-size:12px;color:#405964;line-height:1.35;margin-top:1px}
-    .season-bar .s-eff{margin-left:auto;font-size:12px;font-weight:500;color:#8f650c;text-align:right;white-space:nowrap;line-height:1.5}
+    .season-bar b{display:block;font-size:14px;color:#2a4657}
+    .season-bar small{display:block;font-size:14px;color:#405964;line-height:1.35;margin-top:1px}
+    .season-bar .s-eff{margin-left:auto;font-size:14px;font-weight:500;color:#8f650c;text-align:right;white-space:nowrap;line-height:1.5}
     /* ⑤ 季節予報 */
-    .fc-lead{font-size:12px;color:#5b7886;margin:2px 2px 8px}.fc-lead b{color:#1373a6}
+    .fc-lead{font-size:14px;color:#5b7886;margin:2px 2px 8px}.fc-lead b{color:#1373a6}
     .fc-chart{display:flex;gap:4px;align-items:flex-end;padding:8px 6px 4px;background:linear-gradient(180deg,#f7fcff,#eef7fb);border:1.5px solid #cfe6f1;border-radius:12px}
     .fc-col{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
     .fc-col.now{background:#fff6e3;border-radius:8px;outline:1.5px solid #ffd89a}
-    .fc-val{font-size:12px;font-weight:500;color:#405964;letter-spacing:-.3px}
+    .fc-val{font-size:14px;font-weight:500;color:#405964;letter-spacing:-.3px}
     .fc-track{width:100%;height:68px;display:flex;align-items:flex-end;background:#e6f1f6;border-radius:5px;overflow:hidden}
     .fc-bar{width:100%;border-radius:5px 5px 0 0;transition:height .25s}
     .fc-bar.hot{background:linear-gradient(180deg,#43c265,#2ea852)}
     .fc-bar.mid{background:linear-gradient(180deg,#7cc3e8,#1f9fe0)}
     .fc-bar.cold{background:linear-gradient(180deg,#ffa98f,#ef6b4a)}
-    .fc-m{font-size:12px;font-weight:500;color:#3a5563;white-space:nowrap}
-    .fc-e{font-size:12px;line-height:1;height:12px;color:#8f650c;font-weight:500}
+    .fc-m{font-size:14px;font-weight:500;color:#3a5563;white-space:nowrap}
+    .fc-e{font-size:14px;line-height:1;height:12px;color:#8f650c;font-weight:500}
     .fc-peaks{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
-    .fc-peaks .pk{flex:1 1 140px;font-size:12px;font-weight:500;padding:6px 8px;border-radius:9px;border:1.5px solid}
+    .fc-peaks .pk{flex:1 1 140px;font-size:14px;font-weight:500;padding:6px 8px;border-radius:9px;border:1.5px solid}
     .fc-peaks .pk.hot{background:#eefaf0;border-color:#bfe8c8;color:#1f7a3d}
     .fc-peaks .pk.cold{background:#fff2ee;border-color:#ffd3c2;color:#b4472a}
-    .fc-ev{margin-top:7px;font-size:12px;color:#8f650c;font-weight:500;background:#fff8e6;border:1.5px solid #ffe2a8;border-radius:9px;padding:6px 9px}
+    .fc-ev{margin-top:7px;font-size:14px;color:#8f650c;font-weight:500;background:#fff8e6;border:1.5px solid #ffe2a8;border-radius:9px;padding:6px 9px}
     .wx-row{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:11px;background:#f3fafd;border:1.5px solid #cfe6f1;margin-bottom:5px}
     .wx-row.bad{background:#fff3ef;border-color:#ffc9b8}
     .wx-row.soft{opacity:.78}
     .wx-row .wxr-ic{font-size:19px;line-height:1}
-    .wx-row b{display:block;font-size:12px;color:#2a4657}
-    .wx-row small{display:block;font-size:12px;color:#405964}
-    .wx-row .wxr-c{margin-left:auto;font-size:12px;font-weight:500;color:#496572;white-space:nowrap}
+    .wx-row b{display:block;font-size:14px;color:#2a4657}
+    .wx-row small{display:block;font-size:14px;color:#405964}
+    .wx-row .wxr-c{margin-left:auto;font-size:14px;font-weight:500;color:#496572;white-space:nowrap}
     /* 季節便 */
-    .rs-tag{display:inline-block;margin-left:6px;font-size:12px;font-weight:500;padding:1px 7px;border-radius:999px;background:#fff8e6;border:1.5px solid #ffe2a8;color:#8f650c;vertical-align:1px}
+    .rs-tag{display:inline-block;margin-left:6px;font-size:14px;font-weight:500;padding:1px 7px;border-radius:999px;background:#fff8e6;border:1.5px solid #ffe2a8;color:#8f650c;vertical-align:1px}
     .route-row.resting{opacity:.82;background:repeating-linear-gradient(135deg,#fafdff,#fafdff 8px,#f1f7fa 8px,#f1f7fa 16px)}
-    .pc-multi{margin-left:auto;font-size:12px;font-weight:500;padding:2px 8px;border-radius:999px;background:#eefaf0;border:1.5px solid #bfe8c8;color:#1f7a3d}
+    .pc-multi{margin-left:auto;font-size:14px;font-weight:500;padding:2px 8px;border-radius:999px;background:#eefaf0;border:1.5px solid #bfe8c8;color:#1f7a3d}
     .world-news.season{background:#fff8e6;border-color:#ffe2a8}
     .wx-bar{display:flex;align-items:center;gap:10px;margin:6px 0 2px;padding:9px 12px;border-radius:14px;background:linear-gradient(90deg,#eaf6ff,#f7fcff);border:2px solid #bcdcea}
     .wx-bar.bad{background:linear-gradient(90deg,#fff0ec,#fff8f6);border-color:#ffc0b0}
     .wx-bar .s-ic{font-size:24px;line-height:1}
-    .wx-bar b{display:block;font-size:13px;color:#2a4657}
-    .wx-bar small{display:block;font-size:12px;color:#405964;line-height:1.35;margin-top:1px}
-    .wx-bar .s-eff{margin-left:auto;font-size:12px;font-weight:500;color:#1373a6;text-align:right;white-space:nowrap;line-height:1.5}
+    .wx-bar b{display:block;font-size:14px;color:#2a4657}
+    .wx-bar small{display:block;font-size:14px;color:#405964;line-height:1.35;margin-top:1px}
+    .wx-bar .s-eff{margin-left:auto;font-size:14px;font-weight:500;color:#1373a6;text-align:right;white-space:nowrap;line-height:1.5}
     .wx-bar.bad .s-eff{color:#a0450a}
     .idle-warn{color:#a0450a;font-weight:500}
     /* 発着枠。見出しが「06〜08」と長くなったので、3列のそろった格子に並べる
        （流し込みだと行ごとに個数が変わり、時間帯を目で追えない） */
     .slot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:3px}
     .slot-grid .slot-pip{display:block;margin:0;text-align:center}
-    .slot-pip{display:inline-block;margin:2px 3px 0 0;padding:3px 5px;border-radius:7px;font-size:12px;font-weight:500;line-height:1.3;
+    .slot-pip{display:inline-block;margin:2px 3px 0 0;padding:3px 5px;border-radius:7px;font-size:14px;font-weight:500;line-height:1.3;
       min-width:20px;text-align:center;font-variant-numeric:tabular-nums}
     .slot-pip.shut{background:#eef2f4;color:#496572}
-    .slot-pip.shut i{font-size:12px}
-    .slot-pip i{display:block;font-style:normal;font-size:12px;font-weight:500;opacity:.85}
+    .slot-pip.shut i{font-size:14px}
+    .slot-pip i{display:block;font-style:normal;font-size:14px;font-weight:500;opacity:.85}
     .slot-pip.ok{background:#e6f7ec;color:#1f7a3d}
     .slot-pip.tight{background:#fff3d9;color:#c08a12}
     .slot-pip.full{background:#ffe7e4;color:#c0392b}
@@ -378,20 +378,20 @@
        人件費は路線ごとの運航費に含めて見せる */
     /* 戦い方のヒント・巡回比較 */
     .tactic{margin:8px 0 2px;padding:9px 11px;border-radius:12px;background:#fff;border:2px solid #e2edf2}
-    .tactic b{display:block;font-size:13px;margin-bottom:2px}
-    .tactic span{display:block;font-size:12px;color:#5b7886;line-height:1.5}
+    .tactic b{display:block;font-size:14px;margin-bottom:2px}
+    .tactic span{display:block;font-size:14px;color:#5b7886;line-height:1.5}
     .circuit-cmp{margin:8px 0 2px;padding:10px 11px;border-radius:12px;background:#f3f8fb;border:2px solid #cfe4ef}
     .circuit-cmp.good{background:#eefaf0;border-color:#bfe8c8}
     .circuit-cmp.bad{background:#fff2ee;border-color:#ffd3c2}
-    .cc-row{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#5b7886;padding:2px 0}
+    .cc-row{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:#5b7886;padding:2px 0}
     .cc-row b{color:#2a4657}
-    .cc-diff{margin-top:6px;padding-top:6px;border-top:1.5px dashed #cfe4ef;font-size:12px;color:#5b7886;line-height:1.5}
-    .cc-diff b{color:#1373a6;font-size:13px}
+    .cc-diff{margin-top:6px;padding-top:6px;border-top:1.5px dashed #cfe4ef;font-size:14px;color:#5b7886;line-height:1.5}
+    .cc-diff b{color:#1373a6;font-size:14px}
     /* 折りたたみセクション */
     .sect{border:2px solid #e2edf2;border-radius:14px;margin:10px 0;overflow:hidden;background:#fff}
-    .sect-head{width:100%;display:flex;align-items:center;gap:8px;padding:11px 12px;border:0;background:#f3f8fb;color:#2a4657;font-weight:500;font-size:13px;cursor:pointer;text-align:left}
+    .sect-head{width:100%;display:flex;align-items:center;gap:8px;padding:11px 12px;border:0;background:#f3f8fb;color:#2a4657;font-weight:500;font-size:14px;cursor:pointer;text-align:left}
     .sect-head:hover{background:#e8f3f9}
-    .sect-ar{display:inline-block;transition:.15s;color:#496572;font-size:12px}
+    .sect-ar{display:inline-block;transition:.15s;color:#496572;font-size:14px}
     .sect.open .sect-ar{transform:rotate(90deg)}
     .sect-body{padding:2px 10px 10px}
     .sect:not(.open) .sect-body{display:none}
@@ -405,48 +405,48 @@
     #advanceWeekBtn:disabled{opacity:.65;cursor:progress}
     /* カンセの提案カード */
     .suggest{margin-top:12px;border:2px solid #ffce6b;border-radius:16px;background:linear-gradient(180deg,#fffaf0,#fff);overflow:hidden;animation:reportIn .4s cubic-bezier(.2,1.2,.4,1)}
-    .sg-head{display:flex;align-items:center;gap:7px;padding:9px 11px;background:#fff3d9;font-size:13px;color:#8f650c}
+    .sg-head{display:flex;align-items:center;gap:7px;padding:9px 11px;background:#fff3d9;font-size:14px;color:#8f650c}
     .sg-head b{flex:1}
     .sg-ic{font-size:17px}
-    .sg-close{border:0;background:#ffffffaa;color:#8a7350;border-radius:9px;padding:5px 10px;font-size:12px;font-weight:500;cursor:pointer}
+    .sg-close{border:0;background:#ffffffaa;color:#8a7350;border-radius:9px;padding:5px 10px;font-size:14px;font-weight:500;cursor:pointer}
     .sg-card{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:0;border-top:1.5px solid #ffe9c2;background:#fff;padding:10px 11px;cursor:pointer;transition:.12s}
     .sg-card:hover{background:#fff8ec}
     .sg-card:active{transform:scale(.985)}
     .sg-cic{font-size:20px;flex:0 0 auto}
     .sg-tx{flex:1;min-width:0}
-    .sg-tx b{display:block;font-size:13px;color:#2a4657;line-height:1.3}
-    .sg-tx small{display:block;font-size:12px;color:#405964;margin-top:2px}
-    .sg-go{flex:0 0 auto;font-size:12px;font-weight:500;color:#05202b;background:var(--cyan);border-radius:9px;padding:6px 10px}
+    .sg-tx b{display:block;font-size:14px;color:#2a4657;line-height:1.3}
+    .sg-tx small{display:block;font-size:14px;color:#405964;margin-top:2px}
+    .sg-go{flex:0 0 auto;font-size:14px;font-weight:500;color:#05202b;background:var(--cyan);border-radius:9px;padding:6px 10px}
     /* 銀行 */
     .money-line{display:flex;align-items:center;gap:10px;padding:9px 11px;margin-bottom:8px;border-radius:12px;background:#f3f8fb;border:1.5px solid #e2edf2}
     .money-line .ml-ic{font-size:22px}
-    .money-line b{display:block;font-size:12px;color:#2a4657}
-    .money-line small{display:block;font-size:12px;color:#405964;margin-top:2px}
+    .money-line b{display:block;font-size:14px;color:#2a4657}
+    .money-line small{display:block;font-size:14px;color:#405964;margin-top:2px}
     /* 提携・M&A */
     .al-row{display:flex;align-items:center;gap:9px;padding:9px 4px;border-bottom:1px solid #eef3f6}
     .al-ic{flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:900}
     .al-info{flex:1;min-width:0}
-    .al-info b{display:block;font-size:12px;color:#2a4657}
-    .al-info span{display:block;font-size:12px;color:#405964;margin-top:1px}
+    .al-info b{display:block;font-size:14px;color:#2a4657}
+    .al-info span{display:block;font-size:14px;color:#405964;margin-top:1px}
     .al-note{color:#1373a6 !important}
-    .al-btn{flex:0 0 auto;width:auto !important;padding:7px 10px !important;font-size:12px !important;white-space:nowrap}
-    .al-b{display:inline-block;margin-left:5px;padding:1px 6px;border-radius:7px;font-size:12px;font-weight:500;vertical-align:middle;color:#fff}
+    .al-btn{flex:0 0 auto;width:auto !important;padding:7px 10px !important;font-size:14px !important;white-space:nowrap}
+    .al-b{display:inline-block;margin-left:5px;padding:1px 6px;border-radius:7px;font-size:14px;font-weight:500;vertical-align:middle;color:#fff}
     .al-b.own{background:#2fa35a}.al-b.eq{background:#e0a01a}.al-b.cd{background:#1f9fe0}
     /* お買い物ウィンドウ（メイン画面に大きく開く） */
     .shop-modal{position:fixed;inset:0;z-index:28;display:grid;place-items:center;background:#0a1a2688;padding:18px;animation:radioIn .2s}
     .shop-win{width:min(920px,95vw);max-height:88vh;display:flex;flex-direction:column;background:#fff;border-radius:20px;box-shadow:0 24px 60px #0005;overflow:hidden}
     .shop-head{display:flex;align-items:center;gap:10px;padding:13px 16px;background:#eef7fb;border-bottom:2px solid #d8e9f2}
     .shop-head b{font-size:16px;color:#2a4657}
-    .shop-cash{margin-left:auto;font-size:13px;font-weight:500;color:#1373a6}
-    .shop-close{border:0;background:#fff;color:#5b7886;border-radius:10px;padding:8px 13px;font-size:12px;font-weight:500;cursor:pointer;box-shadow:0 2px 6px #0001}
+    .shop-cash{margin-left:auto;font-size:14px;font-weight:500;color:#1373a6}
+    .shop-close{border:0;background:#fff;color:#5b7886;border-radius:10px;padding:8px 13px;font-size:14px;font-weight:500;cursor:pointer;box-shadow:0 2px 6px #0001}
     .shop-close:hover{background:#ffe9e9;color:#c8444a}
     .shop-win .shop-tabs{display:flex;gap:8px;padding:11px 16px 0;background:#fff}
     .shop-win .shop-body{padding:10px 16px 18px;overflow:auto}
-    .shop-win .shop-group{margin:14px 0 6px;font-size:12px;font-weight:500;color:#1373a6;border-bottom:2px dashed #cfe4ef;padding-bottom:5px}
+    .shop-win .shop-group{margin:14px 0 6px;font-size:14px;font-weight:500;color:#1373a6;border-bottom:2px dashed #cfe4ef;padding-bottom:5px}
     /* ── 2026-10-25：保有機をえらぶ窓（買い物窓の作りを借りる） ── */
-    .pw-where{margin-left:auto;text-align:right;font-size:13px;font-weight:500;color:#1373a6;line-height:1.3}
-    .pw-where small{display:block;font-size:12px;font-weight:400;color:#5b7886}
-    .pw-note{margin:2px 0 10px;font-size:12px;color:#3b5a68;line-height:1.5}
+    .pw-where{margin-left:auto;text-align:right;font-size:14px;font-weight:500;color:#1373a6;line-height:1.3}
+    .pw-where small{display:block;font-size:14px;font-weight:400;color:#5b7886}
+    .pw-note{margin:2px 0 10px;font-size:14px;color:#3b5a68;line-height:1.5}
     .pw-note small{color:var(--muted)}
     .pw-card{border:2px solid #dcecf5;border-radius:14px;background:#f7fcfe;padding:8px 11px 7px;margin:0 0 8px}
     .pw-card.on{border-color:#1683bd;background:#eaf6fd;box-shadow:0 0 0 2px #1683bd33}
@@ -456,12 +456,12 @@
     .pw-art svg,.pw-art img{max-width:100%;height:auto}
     .pw-id{flex:1 1 auto;min-width:0}
     .pw-id b{display:block;font-size:14px;color:#17384a;line-height:1.25}
-    .pw-id span{display:block;font-size:12px;color:#547482;line-height:1.25}
+    .pw-id span{display:block;font-size:14px;color:#547482;line-height:1.25}
     .pw-net{flex:0 0 auto;text-align:right;line-height:1.2}
     .pw-net b{display:block;font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
-    .pw-net small{display:block;font-size:12px;color:#5b7886}
+    .pw-net small{display:block;font-size:14px;color:#5b7886}
     .pw-net.ok b{color:#1f7a3d}.pw-net.loss b{color:#c0392b}.pw-net.ng b{color:#b0813a}
-    .pw-top .pw-use{flex:0 0 auto;width:auto;min-width:140px;padding:9px 14px;font-size:13px;margin:0}
+    .pw-top .pw-use{flex:0 0 auto;width:auto;min-width:140px;padding:9px 14px;font-size:14px;margin:0}
     /* 能力は4列1行。2列2行だと、それだけでカードが2行ぶん高くなっていた */
     .specbars.sb-4col{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px 10px;margin:0}
     .shop-win .sb-4col .sb-l{flex:0 0 36px}
@@ -469,7 +469,7 @@
     .shop-win .sb-4col .sb-v{min-width:46px;white-space:nowrap}
     /* 就航状況と見込みは1行ずつ。表にすると5行ぶん縦に伸びた */
     .pw-lines{margin-top:6px;padding-top:6px;border-top:1.5px dashed #e2eef5;
-      display:flex;flex-wrap:wrap;gap:2px 14px;align-items:baseline;font-size:12px}
+      display:flex;flex-wrap:wrap;gap:2px 14px;align-items:baseline;font-size:14px}
     .pw-jobs{flex:1 1 240px;min-width:0;color:#2a4a5a;line-height:1.45}
     .pw-job+.pw-job:before{content:'／';color:#9ab6c4;margin:0 2px}
     .pw-job.free{color:var(--muted)}
@@ -523,13 +523,13 @@
     /* 性能バーは2列×3行。縦1列だと6本で116px になり、支払欄より高くなる */
     .specbars.sb-2col{display:grid;grid-template-columns:1fr 1fr;gap:3px 8px;margin:0}
     .specbars.sb-2col .sb{gap:5px}
-    .sb-extra{grid-column:1/-1;margin-top:3px;font-size:12px;color:#547482}
+    .sb-extra{grid-column:1/-1;margin-top:3px;font-size:14px;color:#547482}
     .sb-extra b{color:#8a6a1a;font-weight:500}
     .sb-warn .sb-l,.sb-warn .sb-v{color:#c0392b}
     .sb-warn .sb-t{background:#ffe4da}
     /* 解説・使いどころ・相場・寸法を1ブロックに。たたまない */
     .pi-foot{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin-top:1px;padding-top:5px;
-      border-top:1.5px dashed #e9f1f6;font-size:12px;line-height:1.4;color:#44667a}
+      border-top:1.5px dashed #e9f1f6;font-size:14px;line-height:1.4;color:#44667a}
     /* 使いどころは平均47字。1行に収まる幅があるので、縮めずに置く */
     .pf-tip{flex:1 1 320px;min-width:0;color:#7a5a16}
     .pf-tip b{color:#8f650c;margin-right:3px}
@@ -560,14 +560,14 @@
     .shop-win .shop-item:hover{border-color:#bcdcea}
     .shop-win .shop-item.owned{opacity:.55}
     .shop-win .shop-ic{font-size:26px}
-    .shop-win .shop-info b{display:block;font-size:13px;color:#2a4657;margin-bottom:3px}
-    .shop-win .shop-info span{display:block;font-size:12px;color:#405964;line-height:1.45}
+    .shop-win .shop-info b{display:block;font-size:14px;color:#2a4657;margin-bottom:3px}
+    .shop-win .shop-info span{display:block;font-size:14px;color:#405964;line-height:1.45}
     .shop-win .shop-price{color:#8f650c !important;font-weight:500;margin-top:3px}
     /* 機体スペックの横棒グラフ */
     .shop-head2{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
     .shop-head2 .shop-ic{font-size:20px}
     .shop-head2 b{font-size:14px;color:#2a4657}
-    .shop-maker{font-size:12px;color:#496572}
+    .shop-maker{font-size:14px;color:#496572}
     /* 社名の設定 */
     /* ===== 3領域レイアウト：地図の下を一覧に使う =====
        右の細い列は「操作」、地図の下の広い列は「一覧」。
@@ -587,7 +587,7 @@
     /* 2026-10-23：決算ボタンはヘッダーの社名の横。
        航路タブの中だと、路線を組んでいる最中ずっと視界に入って邪魔になる。
        ここなら画面のどこを見ていても同じ場所にあり、押し間違えもしない。 */
-    .top-week{width:auto;margin:0 0 0 18px;padding:9px 16px;font-size:13px;white-space:nowrap;flex:0 0 auto}
+    .top-week{width:auto;margin:0 0 0 18px;padding:9px 16px;font-size:14px;white-space:nowrap;flex:0 0 auto}
     @media(max-width:760px){.top-week{margin:8px 0 0;width:100%}}
     .layout>#mainMap{min-width:0}
     #wide:empty{display:none}
@@ -610,7 +610,7 @@
     /* ===== 開業の2画面（社名・難易度）：共通の作り ===== */
     .setup-card{width:min(640px,94vw)!important;padding:26px 28px 24px!important;text-align:left!important}
     .setup-head{text-align:center;margin-bottom:20px}
-    .setup-step{display:inline-block;font-size:12px;font-weight:500;letter-spacing:.16em;color:#1373a6;
+    .setup-step{display:inline-block;font-size:14px;font-weight:500;letter-spacing:.16em;color:#1373a6;
       background:#eaf6ff;border:1.5px solid #bcdcea;border-radius:999px;padding:4px 14px;margin-bottom:10px}
     .setup-card .event-ic{font-size:52px;margin-bottom:4px}
     .setup-card h3{margin:6px 0 8px!important;font-size:24px!important;color:#17384a!important;letter-spacing:.01em}
@@ -618,11 +618,11 @@
     .setup-card .event-btns{margin-top:18px}
     .setup-card .event-btns button{padding:15px!important;font-size:16px!important;border-radius:14px!important}
     @media(max-width:560px){.setup-card{padding:20px 16px!important}.setup-card h3{font-size:20px!important}
-      .setup-card>.setup-head p{font-size:13px!important}}
+      .setup-card>.setup-head p{font-size:14px!important}}
     .np-form{display:flex;flex-direction:column;gap:9px;margin:14px 0 10px;text-align:left}
     .np-form.inline{flex-direction:row;align-items:center;gap:6px;margin:6px 0 0}
     .np-row{display:flex;align-items:center;gap:10px}
-    .np-row>span{flex:0 0 52px;font-size:12px;font-weight:500;color:#4e7f98;text-align:right}
+    .np-row>span{flex:0 0 52px;font-size:14px;font-weight:500;color:#4e7f98;text-align:right}
     .np-form input{flex:1;min-width:0;padding:11px 13px;border:2.5px solid #cfe6f1;border-radius:12px;background:#fff;
       color:#17384a;font-family:inherit;font-size:15px;font-weight:800}
     .np-form input:focus{outline:0;border-color:var(--cyan);background:#f7fcff}
@@ -634,8 +634,8 @@
       background:linear-gradient(90deg,#eaf6ff,#f7fcff);border:2.5px solid #bcdcea;text-align:left}
     .np-preview .np-tail{font-size:27px;color:#1373a6}
     .np-preview b{font-size:21px;color:#17384a}
-    .np-preview i{font-style:normal;font-size:13px;font-weight:500;color:#1b6b8c;background:#fff;border:2px solid #bfe0f0;border-radius:999px;padding:3px 12px}
-    .np-preview small{flex:1 1 100%;font-size:12px;color:#405964;margin-top:2px}
+    .np-preview i{font-style:normal;font-size:14px;font-weight:500;color:#1b6b8c;background:#fff;border:2px solid #bfe0f0;border-radius:999px;padding:3px 12px}
+    .np-preview small{flex:1 1 100%;font-size:14px;color:#405964;margin-top:2px}
     /* 飛行場 → 空港への昇格 */
     .promo-box{margin:8px 0 10px;padding:12px 13px;border:2.5px solid #ffe2a8;border-radius:15px;background:linear-gradient(180deg,#fffaf0,#fff8e6)}
     .promo-box.ready{border-color:#8fd9ff;background:linear-gradient(180deg,#f2fbff,#eaf7fe);box-shadow:0 4px 14px #5a9dc128}
@@ -643,22 +643,22 @@
     .pm-head{display:flex;align-items:flex-start;gap:10px}
     .pm-head .pm-ic{font-size:24px;line-height:1.1}
     .pm-head b{display:block;font-size:14px;color:#17384a}
-    .pm-head small{display:block;font-size:12px;color:#405964;line-height:1.5;margin-top:2px}
-    .pm-head small b{display:inline;font-size:12px;color:#1373a6}
-    .pm-cnt{margin-left:auto;font-size:12px;font-weight:500;color:#8f650c;white-space:nowrap}
+    .pm-head small{display:block;font-size:14px;color:#405964;line-height:1.5;margin-top:2px}
+    .pm-head small b{display:inline;font-size:14px;color:#1373a6}
+    .pm-cnt{margin-left:auto;font-size:14px;font-weight:500;color:#8f650c;white-space:nowrap}
     .pm-reqs{display:flex;flex-direction:column;gap:4px;margin:9px 0 0}
-    .pm-req{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#496572}
+    .pm-req{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:#496572}
     .pm-req.ok{color:#1f7a3d}
-    .pm-req i{margin-left:auto;font-style:normal;font-size:12px;font-weight:500;color:#405964}
-    .pm-note{margin:8px 0 0;font-size:12px;color:#496572;line-height:1.5}
-    .pm-advice{margin:8px 0 0;padding:7px 9px;border-radius:9px;background:#fff8e6;border:1.3px solid #ffe2a8;font-size:12px;color:#7a5a16;line-height:1.5}
+    .pm-req i{margin-left:auto;font-style:normal;font-size:14px;font-weight:500;color:#405964}
+    .pm-note{margin:8px 0 0;font-size:14px;color:#496572;line-height:1.5}
+    .pm-advice{margin:8px 0 0;padding:7px 9px;border-radius:9px;background:#fff8e6;border:1.3px solid #ffe2a8;font-size:14px;color:#7a5a16;line-height:1.5}
     .pm-advice b{color:#8f650c}
-    .pm-btn{width:100%!important;margin-top:9px!important;padding:10px!important;font-size:13px!important}
+    .pm-btn{width:100%!important;margin-top:9px!important;padding:10px!important;font-size:14px!important}
     /* 空港・飛行場の区分 */
-    .kind-tag{font-size:12px;font-weight:500;color:#1b6b8c;background:#e7f5fc;border:1.5px solid #bfe0f0;border-radius:999px;padding:2px 9px;white-space:nowrap}
+    .kind-tag{font-size:14px;font-weight:500;color:#1b6b8c;background:#e7f5fc;border:1.5px solid #bfe0f0;border-radius:999px;padding:2px 9px;white-space:nowrap}
     .kind-tag.field{color:#7a5a16;background:#fff8e6;border-color:#ffe2a8}
     .kind-tag.shared{color:#4a5a7a;background:#eef0fb;border-color:#c9d2ef}
-    .kind-note{margin:6px 0 0;padding:7px 10px;font-size:12px;line-height:1.55;color:#405964;background:#f7fbfd;border:1.3px solid #dcecf5;border-radius:10px}
+    .kind-note{margin:6px 0 0;padding:7px 10px;font-size:14px;line-height:1.55;color:#405964;background:#f7fbfd;border:1.3px solid #dcecf5;border-radius:10px}
     .kind-note b{color:#2a4657}
     /* 購入とリースの比較 */
     /* 2026-10-15：支払い方法は「見出し・値段・説明・ボタン」で1枚のカード。
@@ -673,19 +673,19 @@
     .pc-col{display:flex;flex-direction:column;padding:7px 4px;border-radius:11px;background:#f7fbfd;border:1.5px solid #dcecf5;min-width:0}
     .pc-col.loan{background:#f2f7ff;border-color:#c9ddf7}
     .pc-col.lease{background:#fffaf0;border-color:#ffe2a8}
-    .pc-h{display:block;font-size:12px;font-weight:500;color:#405964}
+    .pc-h{display:block;font-size:14px;font-weight:500;color:#405964}
     /* 金額は <wbr> で「単位の前」を優先的に折り、それでも入らなければどこでも折る。
        「円そのまま」表示だと ¥3,470,000,000 のように14桁になり、
        82pxの枠にはどう詰めても入らないため、最後の逃げ道を用意しておく */
-    .pc-col b{display:block;margin-top:3px;font-size:13px;font-weight:500;color:#17384a;line-height:1.3;
+    .pc-col b{display:block;margin-top:3px;font-size:14px;font-weight:500;color:#17384a;line-height:1.3;
       overflow-wrap:anywhere}
-    .pc-col b i{display:block;font-style:normal;font-size:12px;color:#8f650c;margin-top:1px}
-    .pc-col small{display:block;margin-top:3px;margin-bottom:7px;font-size:12px;color:#496572;line-height:1.35}
+    .pc-col b i{display:block;font-style:normal;font-size:14px;color:#8f650c;margin-top:1px}
+    .pc-col small{display:block;margin-top:3px;margin-bottom:7px;font-size:14px;color:#496572;line-height:1.35}
     .pc-col b{margin-bottom:7px}
     .pc-col .mini-btn{margin-top:auto;width:100%;min-width:0;padding:8px 2px;white-space:normal;line-height:1.25}
     .pc-col.loan .mini-btn:not(:disabled){background:#1f7ad0;border-color:#1f7ad0}
     .pc-col.lease .mini-btn:not(:disabled){background:#d08a0f;border-color:#d08a0f}
-    .pc-note{margin-top:5px;font-size:12px;color:#405964;line-height:1.45}
+    .pc-note{margin-top:5px;font-size:14px;color:#405964;line-height:1.45}
     .pc-note b{color:#1373a6;font-weight:500}
     /* 難易度えらび */
     .diff-cards{display:flex;flex-direction:column;gap:11px}
@@ -697,25 +697,25 @@
     .diff-card .df-ic{font-size:36px;line-height:1.05}
     .df-main{flex:1;min-width:0}
     .df-main b{display:block;font-size:20px;color:#17384a;line-height:1.3}
-    .df-main b i{font-style:normal;font-size:12px;font-weight:500;color:#fff;background:var(--cyan);border-radius:999px;padding:3px 11px;margin-left:10px;vertical-align:3px}
+    .df-main b i{font-style:normal;font-size:14px;font-weight:500;color:#fff;background:var(--cyan);border-radius:999px;padding:3px 11px;margin-left:10px;vertical-align:3px}
     .df-cash{display:block;font-size:18px;font-weight:800;color:#8f650c;margin-top:6px}
     /* 難易度の3軸を、資金の下に並べる */
     .df-axes{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:7px}
-    .df-axes i{font-style:normal;font-size:12px;font-weight:500;color:#5b7886;
+    .df-axes i{font-style:normal;font-size:14px;font-weight:500;color:#5b7886;
       background:#f2f8fb;border:1.5px solid #dcecf5;border-radius:999px;padding:3px 9px;white-space:nowrap}
     .df-axes i b{font-weight:500;color:#17384a;margin-left:3px}
     .df-tag{display:block;font-size:14px;font-weight:700;color:#1373a6;margin-top:5px;line-height:1.5}
-    .df-note{display:block;font-size:12px;color:#405964;line-height:1.6;margin-top:4px}
+    .df-note{display:block;font-size:14px;color:#405964;line-height:1.6;margin-top:4px}
     @media(max-width:560px){.diff-card{padding:13px 13px;gap:11px}.diff-card .df-ic{font-size:29px}
-      .df-main b{font-size:17px}.df-cash{font-size:16px}.df-tag{font-size:12px}.df-note{font-size:12px}}
-    .co-diff{margin-left:6px;font-size:12px;font-weight:500;color:#7a5a16;background:#fff8e6;border:1.5px solid #ffe2a8;border-radius:999px;padding:2px 9px;vertical-align:3px}
-    .co-code{margin-left:8px;font-size:12px;font-weight:500;color:#1b6b8c;background:#e7f5fc;border:1.5px solid #bfe0f0;border-radius:999px;padding:2px 9px;vertical-align:3px}
+      .df-main b{font-size:17px}.df-cash{font-size:16px}.df-tag{font-size:14px}.df-note{font-size:14px}}
+    .co-diff{margin-left:6px;font-size:14px;font-weight:500;color:#7a5a16;background:#fff8e6;border:1.5px solid #ffe2a8;border-radius:999px;padding:2px 9px;vertical-align:3px}
+    .co-code{margin-left:8px;font-size:14px;font-weight:500;color:#1b6b8c;background:#e7f5fc;border:1.5px solid #bfe0f0;border-radius:999px;padding:2px 9px;vertical-align:3px}
     /* 曜日えらび */
-    .dow-sum{margin-left:8px;font-size:12px;font-weight:500;color:#1373a6}
+    .dow-sum{margin-left:8px;font-size:14px;font-weight:500;color:#1373a6}
     .dow-row{display:flex;gap:4px;margin-top:6px}
     .dow-btn{flex:1 1 0;min-width:0;padding:7px 2px 5px;border:2px solid #d6e4ea;border-radius:10px;background:#fff;
-      color:#496572;font-family:inherit;font-weight:500;font-size:13px;cursor:pointer;line-height:1.1;transition:.1s}
-    .dow-btn i{display:block;font-style:normal;font-size:12px;font-weight:500;color:#b6cad6;margin-top:2px}
+      color:#496572;font-family:inherit;font-weight:500;font-size:14px;cursor:pointer;line-height:1.1;transition:.1s}
+    .dow-btn i{display:block;font-style:normal;font-size:14px;font-weight:500;color:#b6cad6;margin-top:2px}
     .dow-btn:hover{border-color:var(--cyan)}
     .dow-btn.we{color:#c08aa0}
     .dow-btn.on{background:var(--cyan);border-color:var(--cyan);color:#05202b}
@@ -727,13 +727,13 @@
     /* 表示切替（カード／時刻表） */
     .view-sw{display:flex;gap:6px;margin:9px 0 0}
     .vw-btn{flex:1;padding:8px 6px;border:2px solid #d6e4ea;border-radius:11px;background:#fff;
-      color:#3a5563;font-family:inherit;font-weight:500;font-size:12px;cursor:pointer;transition:.12s}
+      color:#3a5563;font-family:inherit;font-weight:500;font-size:14px;cursor:pointer;transition:.12s}
     .vw-btn:hover{border-color:var(--cyan)}
     .vw-btn.on{background:var(--cyan);border-color:var(--cyan);color:#05202b}
     /* 時刻表 */
     .tt-wrap{position:relative;margin-top:9px;max-width:100%;overflow-x:auto;border:1.5px solid #dcecf5;border-radius:12px;background:#fff;
       -webkit-overflow-scrolling:touch}
-    table.tt{border-collapse:collapse;width:100%;min-width:640px;font-size:12px}
+    table.tt{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
     /* 入りきらない画面では、横に送れることを右端の影で知らせる */
     @media(max-width:700px){
       .tt-wrap{background:linear-gradient(90deg,#fff 70%,#fff),linear-gradient(90deg,rgba(0,0,0,.06),transparent 14px) right/18px 100% no-repeat #fff}
@@ -745,7 +745,7 @@
     .md-body table.tt{min-width:0}
     .md-body table.tt td,.md-body table.tt th{padding:7px 4px}
     .md-body .tt-ap .tt-tag{margin-left:3px;padding:1px 4px}
-    table.tt th{position:sticky;top:0;background:#eef7fb;color:#1f6a8e;font-weight:500;font-size:12px;
+    table.tt th{position:sticky;top:0;background:#eef7fb;color:#1f6a8e;font-weight:500;font-size:14px;
       text-align:left;padding:8px 9px;border-bottom:2px solid #cfe6f1;white-space:nowrap}
     table.tt td{padding:9px;border-bottom:1px solid #eef3f6;vertical-align:middle;color:#2a4657}
     table.tt tbody tr:last-child td{border-bottom:0}
@@ -753,33 +753,33 @@
     table.tt tr.rest td{background:repeating-linear-gradient(135deg,#fafdff,#fafdff 7px,#f1f7fa 7px,#f1f7fa 14px);color:#496572}
     table.tt tr.noplane td{background:#fffdf6}
     .tt-ap{font-weight:500;white-space:nowrap}
-    .tt-ap .tt-tag{font-style:normal;font-size:12px;font-weight:500;color:#1b6b8c;background:#e7f5fc;
+    .tt-ap .tt-tag{font-style:normal;font-size:14px;font-weight:500;color:#1b6b8c;background:#e7f5fc;
       border:1.2px solid #bfe0f0;border-radius:999px;padding:1px 6px;margin-left:5px;vertical-align:1px}
     .tt-time{font-weight:500;color:#17384a;font-variant-numeric:tabular-nums;white-space:nowrap}
-    .tt-plane{white-space:nowrap;font-weight:500;font-size:12px}
-    .tt-plane small{display:block;font-size:12px;font-weight:500;color:#496572}
+    .tt-plane{white-space:nowrap;font-weight:500;font-size:14px}
+    .tt-plane small{display:block;font-size:14px;font-weight:500;color:#496572}
     .tt-dur{white-space:nowrap;font-weight:500;color:#1b6b8c;font-variant-numeric:tabular-nums}
-    .tt-dur small{display:block;font-size:12px;font-weight:500;color:#496572}
+    .tt-dur small{display:block;font-size:14px;font-weight:500;color:#496572}
     .tt-na{color:#8f650c;font-weight:500}
     .tt-warn{font-style:normal;margin-left:3px;color:#c0392b}
     table.tt tr:has(.tt-warn) td{background:#fff3ef}
     .tt-num{text-align:right;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
     .tt-num .pos{color:var(--green)}.tt-num .neg{color:var(--red)}
-    .tt-note{margin:7px 2px 0;font-size:12px;color:var(--muted);line-height:1.55}
+    .tt-note{margin:7px 2px 0;font-size:14px;color:var(--muted);line-height:1.55}
     /* 就航路線一覧 */
     /* 会社タブ「📊 路線の合計」の前置き（2026-10-26） */
-    .rt-sub{margin:2px 2px 0;font-size:12px;color:#496572}
+    .rt-sub{margin:2px 2px 0;font-size:14px;color:#496572}
     .rt-sub b{color:#17384a}
     .rl-total{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0 0}
-    .rl-total>div{padding:8px;border-radius:10px;background:#f3fafd;border:1.5px solid #cfe6f1;font-size:12px;color:#405964}
+    .rl-total>div{padding:8px;border-radius:10px;background:#f3fafd;border:1.5px solid #cfe6f1;font-size:14px;color:#405964}
     .rl-total>div span{display:block;font-weight:500}
-    .rl-total>div b{display:block;margin-top:2px;font-size:13px;font-weight:500;color:#17384a}
+    .rl-total>div b{display:block;margin-top:2px;font-size:14px;font-weight:500;color:#17384a}
     .rl-total>div b.loss,.rl-total>div.loss b{color:var(--red)}
     .rl-total>div.pos b{color:var(--green)}
     .rl-total .rl-year{background:linear-gradient(90deg,#fff8e6,#f3fafd);border-color:#ffe2a8;display:flex;align-items:center;gap:8px}
-    .rl-total .rl-year span{flex:1;font-size:12px}
+    .rl-total .rl-year span{flex:1;font-size:14px}
     .rl-total .rl-year b{margin-top:0;font-size:15px}
-    .rl-note{margin:7px 2px 0;font-size:12px;color:var(--muted);line-height:1.5}
+    .rl-note{margin:7px 2px 0;font-size:14px;color:var(--muted);line-height:1.5}
     .rl-sort{margin-top:9px}
     .rl-row{margin:8px 0;padding:10px 11px;border:2px solid #e2edf2;border-radius:14px;background:#fff}
     /* ── 2026-10-23：就航中の航路は2行の横長パネルにする ──
@@ -796,6 +796,10 @@
     .rl-row:not(.open) .rl-sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     /* 狭い画面では1行に入らない（283pxの枠に560px要る）。
        数字を省略記号で隠すくらいなら、折り返して3行にする */
+    /* 2026-11-16：画面幅で切り替えていたので、1024pxのように「画面は広いが板は狭い」
+       ときに効かず、14px化で副題が524pxの枠に634px要って切れた。板の幅で決める */
+    .rl-list{container-type:inline-size}
+    @container (max-width:600px){.rl-row:not(.open) .rl-sub{white-space:normal;overflow:visible}}
     @media(max-width:760px){.rl-row:not(.open) .rl-sub{white-space:normal;overflow:visible}}
     /* 操作は7つあって2段に折れる（88px）。閉じているときは「くわしく」だけ。
        残りは開いてから出す */
@@ -808,46 +812,46 @@
     .rl-row.unassigned{border-color:#ffe2a8;background:#fffdf6}
     .rl-row.resting{opacity:.9;background:repeating-linear-gradient(135deg,#fafdff,#fafdff 8px,#f1f7fa 8px,#f1f7fa 16px)}
     .rl-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-    .rl-head b{font-size:13px;color:#17384a}
-    .rl-net{margin-left:auto;font-size:13px;font-weight:500;white-space:nowrap}
-    .rl-net.ok{color:var(--green)}.rl-net.bad{color:var(--red)}.rl-net.na{color:#8f650c;font-size:12px}
-    .rl-sub{margin-top:4px;font-size:12px;color:#405964;line-height:1.5}
+    .rl-head b{font-size:14px;color:#17384a}
+    .rl-net{margin-left:auto;font-size:14px;font-weight:500;white-space:nowrap}
+    .rl-net.ok{color:var(--green)}.rl-net.bad{color:var(--red)}.rl-net.na{color:#8f650c;font-size:14px}
+    .rl-sub{margin-top:4px;font-size:14px;color:#405964;line-height:1.5}
     /* 2026-10-13：1枚550pxで1画面に1.8本しか入らなかった。
        客層・満足度・時刻表・操作ボタンは「くわしく」に畳み、一覧では数字だけを並べる。 */
     .rl-more{margin-left:auto;border:1.5px solid #d6e4ea;background:#f7fbfd;color:#4a6b7c;
-      border-radius:9px;padding:4px 9px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap}
+      border-radius:9px;padding:4px 9px;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
     .rl-more:hover{background:#eaf5fa;border-color:var(--cyan)}
     /* 時刻の帯：出発→到着と飛行時間 */
     .rl-time{margin-top:5px;padding:6px 8px;border-radius:9px;background:#f3fafd;border:1.5px solid #dcecf5;
-      font-size:12px;color:#4a6c7d;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
+      font-size:14px;color:#4a6c7d;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
     .rl-time span{font-weight:500;color:#17384a;font-variant-numeric:tabular-nums;white-space:nowrap}
     .rl-time span i{font-style:normal;margin-left:5px;font-weight:500;color:#1b6b8c}
-    .rl-time small{flex:1 0 100%;font-size:12px;color:#496572;font-weight:500}
+    .rl-time small{flex:1 0 100%;font-size:14px;color:#496572;font-weight:500}
     .rl-bar{position:relative;height:16px;margin:7px 0 6px;border-radius:8px;background:#eef3f6;overflow:hidden}
     .rl-bar i{display:block;height:100%;border-radius:8px;transition:width .25s}
-    .rl-bar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#2a4657}
+    .rl-bar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#2a4657}
     .rl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-    .rl-grid>div{padding:6px 7px;border-radius:9px;background:#f7fbfd;font-size:12px;color:#405964}
+    .rl-grid>div{padding:6px 7px;border-radius:9px;background:#f7fbfd;font-size:14px;color:#405964}
     .rl-grid>div span{display:block;font-weight:500}
-    .rl-grid>div b{display:block;margin-top:1px;font-size:12px;font-weight:500;color:#2a4657}
+    .rl-grid>div b{display:block;margin-top:1px;font-size:14px;font-weight:500;color:#2a4657}
     .rl-grid>div b.loss{color:var(--red)}
     .rl-grid>div.pos{background:#eefaf0}.rl-grid>div.pos b{color:var(--green)}
     .rl-grid>div.loss{background:#fff2ee}.rl-grid>div.loss b{color:var(--red)}
-    .rl-swing{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-top:6px;padding:6px 9px;border-radius:9px;background:#f7fbfd;border:1.3px solid #dcecf5;font-size:12px;color:#405964}
-    .rl-swing .rls-ic{font-size:12px}
+    .rl-swing{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-top:6px;padding:6px 9px;border-radius:9px;background:#f7fbfd;border:1.3px solid #dcecf5;font-size:14px;color:#405964}
+    .rl-swing .rls-ic{font-size:14px}
     .rl-swing b{font-weight:500;color:#2a4657}
     .rl-swing b.calm{color:var(--green)}.rl-swing b.mid{color:#8f650c}.rl-swing b.wild{color:var(--red)}
-    .rl-swing small{flex:1 1 100%;font-size:12px;color:#496572;margin-top:2px}
+    .rl-swing small{flex:1 1 100%;font-size:14px;color:#496572;margin-top:2px}
     /* 予想と実績の差 */
     .fc-diff{display:flex;align-items:center;gap:9px;margin:8px 0 2px;padding:8px 11px;border-radius:12px;border:2px solid}
     .fc-diff.up{background:#eefaf0;border-color:#bfe8c8}
     .fc-diff.down{background:#fff3ef;border-color:#ffc9b8}
     .fc-diff .fcd-ic{font-size:20px;line-height:1}
-    .fc-diff b{display:block;font-size:12px;color:#17384a}
-    .fc-diff small{display:block;font-size:12px;color:#405964;margin-top:2px;line-height:1.4}
-    .fcd-s{margin-left:5px;font-size:12px;font-weight:500;color:#496572}
+    .fc-diff b{display:block;font-size:14px;color:#17384a}
+    .fc-diff small{display:block;font-size:14px;color:#405964;margin-top:2px;line-height:1.4}
+    .fcd-s{margin-left:5px;font-size:14px;font-weight:500;color:#496572}
     .fcd-s.up{color:#1f7a3d}.fcd-s.down{color:#b4472a}
-    .rl-rest{margin-top:7px;padding:6px 9px;border-radius:9px;background:#fff6e9;border:1.5px solid #ffd89a;font-size:12px;color:#7a5a16;line-height:1.5}
+    .rl-rest{margin-top:7px;padding:6px 9px;border-radius:9px;background:#fff6e9;border:1.5px solid #ffd89a;font-size:14px;color:#7a5a16;line-height:1.5}
     .rl-row .route-ops{margin-top:8px}
     @media(max-width:360px){.rl-total,.rl-grid{grid-template-columns:repeat(2,1fr)}}
     /* 2026-10-16：四半期の収支レポート。週次カードと同じ読み口にする */
@@ -856,25 +860,25 @@
     .event-card.month-report h3{text-align:center}
     .mr-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;justify-content:center;
       margin:2px 0 8px;padding-bottom:7px;border-bottom:2px solid #e4eef5}
-    .mr-head span{font-size:12px;font-weight:500;color:#496572}
+    .mr-head span{font-size:14px;font-weight:500;color:#496572}
     .mr-head b{font-size:19px;font-weight:800;color:#17384a}
-    .mr-head em{font-style:normal;font-size:12px;color:#496572}
+    .mr-head em{font-style:normal;font-size:14px;color:#496572}
     /* 期の中の3か月。伸びているのか落ちているのかを、開いた瞬間に見せる */
     .mr-months{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:0 0 9px}
     .mr-months>div{padding:6px 7px;border-radius:10px;text-align:center;border:1.5px solid #e4eef5;background:#f7fbfd}
     .mr-months>div.pos{background:#f3fbf5;border-color:#cfe9d6}
     .mr-months>div.neg{background:#fff6f3;border-color:#ffd6c9}
-    .mr-months span{display:block;font-size:12px;font-weight:500;color:#496572}
-    .mr-months b{display:block;margin-top:1px;font-size:12px;font-weight:500;
+    .mr-months span{display:block;font-size:14px;font-weight:500;color:#496572}
+    .mr-months b{display:block;margin-top:1px;font-size:14px;font-weight:500;
       font-variant-numeric:tabular-nums;color:#3a5563}
     .mr-months>div.pos b{color:#1f7a3d}.mr-months>div.neg b{color:#c0392b}
     .mr-sheet{display:flex;flex-direction:column;gap:2px}
     .mr-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
-      padding:4px 8px;border-radius:8px;font-size:12px}
+      padding:4px 8px;border-radius:8px;font-size:14px}
     .mr-row span{color:#405964}
     .mr-row b{font-weight:500;color:#3a5563;font-variant-numeric:tabular-nums;white-space:nowrap}
     .mr-row.rev{background:#f2fafd}.mr-row.rev b{color:#1373a6}
-    .mr-row.sum{margin-top:4px;padding:7px 8px;border-top:2px solid #e4eef5;font-size:13px}
+    .mr-row.sum{margin-top:4px;padding:7px 8px;border-top:2px solid #e4eef5;font-size:14px}
     .mr-row.sum span{font-weight:500;color:#2a4657}
     .mr-row.sum b{font-size:16px}
     .mr-row.pos b{color:#1f7a3d}.mr-row.neg b{color:#c0392b}
@@ -882,17 +886,17 @@
     .mr-row.ind b{color:#405964}
     .mr-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:9px 0 0}
     .mr-kpi>div{padding:6px 7px;border-radius:10px;background:#f7fbfd;border:1.5px solid #e4eef5;text-align:center}
-    .mr-kpi span{display:block;font-size:12px;color:#496572;font-weight:500}
-    .mr-kpi b{display:block;margin-top:1px;font-size:12px;font-weight:500;color:#17384a;
+    .mr-kpi span{display:block;font-size:14px;color:#496572;font-weight:500}
+    .mr-kpi b{display:block;margin-top:1px;font-size:14px;font-weight:500;color:#17384a;
       font-variant-numeric:tabular-nums}
-    .mr-vs{margin-top:8px;padding:6px 10px;border-radius:10px;font-size:12px;font-weight:500;text-align:center}
+    .mr-vs{margin-top:8px;padding:6px 10px;border-radius:10px;font-size:14px;font-weight:500;text-align:center}
     .mr-vs.up{background:#eefaf0;color:#1e7a46}
     .mr-vs.down{background:#fff2ee;color:#c0392b}
     .mr-vs b{font-weight:500}
     .mr-routes{margin-top:10px}
-    .mr-lab{display:block;font-size:12px;font-weight:500;color:#496572;margin-bottom:3px}
+    .mr-lab{display:block;font-size:14px;font-weight:500;color:#496572;margin-bottom:3px}
     .mr-rt{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:9px;
-      background:#f7fbfd;border:1.5px solid #e4eef5;margin-top:3px;font-size:12px}
+      background:#f7fbfd;border:1.5px solid #e4eef5;margin-top:3px;font-size:14px}
     .mr-rt.pos{background:#f3fbf5;border-color:#cfe9d6}
     .mr-rt.neg{background:#fff6f3;border-color:#ffd6c9}
     .mr-rt i{font-style:normal;font-size:14px;flex:0 0 auto}
@@ -901,64 +905,64 @@
     .mr-rt u{flex:0 0 auto;text-decoration:none;color:#496572}
     .mr-rt em{flex:0 0 auto;font-style:normal;font-weight:500;font-variant-numeric:tabular-nums}
     .mr-rt.pos em{color:#1f7a3d}.mr-rt.neg em{color:#c0392b}
-    .mr-empty{font-size:12px;color:#496572;text-align:center;margin:10px 0 0}
+    .mr-empty{font-size:14px;color:#496572;text-align:center;margin:10px 0 0}
     @media(max-width:480px){.mr-kpi{grid-template-columns:repeat(2,1fr)}}
     /* 2026-10-16：運航費の内訳。乗員の採用をやめ、人件費を路線に載せたので、
        その人件費が「どれだけ効いているか」が1行で読めるようにする */
     .rl-cost{display:flex;flex-wrap:wrap;align-items:stretch;gap:4px;margin-top:5px}
-    .rl-cost .rlc-lab{flex:0 0 100%;font-size:12px;font-weight:500;color:#496572}
+    .rl-cost .rlc-lab{flex:0 0 100%;font-size:14px;font-weight:500;color:#496572}
     .rl-cost i{flex:1 1 86px;min-width:0;font-style:normal;padding:5px 6px;border-radius:9px;
       background:#f7fbfd;border:1.5px solid #e4eef5}
     .rl-cost i.crew{background:#fff6e8;border-color:#ffd9a0}
-    .rl-cost em{display:block;font-style:normal;font-size:12px;font-weight:500;color:#405964}
+    .rl-cost em{display:block;font-style:normal;font-size:14px;font-weight:500;color:#405964}
     .rl-cost i.crew em{color:#8f650c}
-    .rl-cost b{display:block;font-size:12px;font-weight:500;color:#c0392b;margin-top:1px;
+    .rl-cost b{display:block;font-size:14px;font-weight:500;color:#c0392b;margin-top:1px;
       font-variant-numeric:tabular-nums}
-    .rl-cost u{display:block;text-decoration:none;font-size:12px;color:#547482}
-    .rl-cost small{flex:0 0 100%;font-size:12px;color:#496572;line-height:1.4;margin-top:2px}
+    .rl-cost u{display:block;text-decoration:none;font-size:14px;color:#547482}
+    .rl-cost small{flex:0 0 100%;font-size:14px;color:#496572;line-height:1.4;margin-top:2px}
     /* 行き先えらび（最初の1本で迷わせない） */
     .dest-pick{margin:10px 0 4px;padding:12px;border:2.5px dashed #8fd0f2;border-radius:16px;background:linear-gradient(180deg,#f2fbff,#eaf7fe)}
     .dp-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
     .dp-head .dp-ic{font-size:24px;line-height:1.1}
     .dp-head b{display:block;font-size:14px;color:#17384a}
-    .dp-head small{display:block;font-size:12px;color:#4e7f98;line-height:1.5;margin-top:3px}
-    .dp-head small b{display:inline;font-size:12px;color:#1373a6}
+    .dp-head small{display:block;font-size:14px;color:#4e7f98;line-height:1.5;margin-top:3px}
+    .dp-head small b{display:inline;font-size:14px;color:#1373a6}
     .dp-list{display:flex;flex-direction:column;gap:7px}
     .dp-card{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;padding:10px 12px;cursor:pointer;text-align:left;
       border:2px solid #fff;border-radius:13px;background:#fff;box-shadow:0 3px 0 #bfe0f0,0 6px 14px #5a9dc11f;transition:.12s}
     .dp-card:hover{transform:translateY(-2px);box-shadow:0 5px 0 #bfe0f0,0 10px 18px #5a9dc129;border-color:#8fd0f2}
     .dp-card:active{transform:translateY(1px);box-shadow:0 2px 0 #bfe0f0}
-    .dp-name{flex:1 1 auto;font-size:13px;font-weight:500;color:#3a5563;white-space:nowrap}
+    .dp-name{flex:1 1 auto;font-size:14px;font-weight:500;color:#3a5563;white-space:nowrap}
     .dp-name b{font-size:15px;font-weight:800;color:#17384a}
     /* 2026-10-26：おすすめを「利益の上位3件」から「性格の違う3枚」に変えたので、
        どういう性格の候補なのかを1行目に出す。順位ではないことを見た目でも示す。 */
     .dp-kind{flex:1 1 100%;order:0;display:flex;align-items:baseline;gap:6px;
-      font-size:12px;font-weight:800;color:#1373a6;letter-spacing:.02em}
+      font-size:14px;font-weight:800;color:#1373a6;letter-spacing:.02em}
     .dp-kind small{font-weight:500;color:#7a95a3;letter-spacing:0}
     .dp-kind.k-isle{color:#1f7a3d}.dp-kind.k-grow{color:#8f650c}
     .dp-kind.k-easy{color:#1373a6}.dp-kind.k-tut{color:#b4472a}
-    .dp-meta{flex:1 1 100%;order:3;font-size:12px;color:#405964;font-weight:500}
+    .dp-meta{flex:1 1 100%;order:3;font-size:14px;color:#405964;font-weight:500}
     .dp-meta b{color:#1f7a3d;font-weight:800}
-    .dp-tag{font-style:normal;font-size:12px;font-weight:500;border-radius:999px;padding:1px 7px;margin-right:6px}
+    .dp-tag{font-style:normal;font-size:14px;font-weight:500;border-radius:999px;padding:1px 7px;margin-right:6px}
     .dp-tag.free{background:#eefaf0;border:1.2px solid #bfe8c8;color:#1f7a3d}
     .dp-tag.thin{background:#fff8e6;border:1.2px solid #ffe2a8;color:#8f650c}
     .dp-tag.busy{background:#fff2ee;border:1.2px solid #ffd3c2;color:#b4472a}
-    .dp-net{flex:0 0 auto;font-size:12px;font-weight:500;white-space:nowrap}
+    .dp-net{flex:0 0 auto;font-size:14px;font-weight:500;white-space:nowrap}
     .dp-net.ok{color:var(--green)}.dp-net.loss{color:var(--red)}
-    .dp-note{margin:9px 2px 0;font-size:12px;color:#5b7886;line-height:1.5}
+    .dp-note{margin:9px 2px 0;font-size:14px;color:#5b7886;line-height:1.5}
     .dp-note b{color:#1373a6}
-    .cap-note{margin-left:6px;font-size:12px;font-weight:500;color:#a0450a;background:#fff0e8;border:1.2px solid #ffc9b4;border-radius:999px;padding:1px 7px}
-    .shop-label{margin-left:auto;font-size:12px;font-weight:500;color:#1b6b8c;background:#e7f5fc;border:1.3px solid #bfe0f0;border-radius:999px;padding:2px 8px;white-space:nowrap}
+    .cap-note{margin-left:6px;font-size:14px;font-weight:500;color:#a0450a;background:#fff0e8;border:1.2px solid #ffc9b4;border-radius:999px;padding:1px 7px}
+    .shop-label{margin-left:auto;font-size:14px;font-weight:500;color:#1b6b8c;background:#e7f5fc;border:1.3px solid #bfe0f0;border-radius:999px;padding:2px 8px;white-space:nowrap}
     /* 機体の説明と使いどころ */
-    .plane-desc{margin:6px 0 0;font-size:12px;line-height:1.55;color:#44667a}
-    .plane-tip{margin:6px 0 2px;padding:7px 9px;font-size:12px;line-height:1.5;color:#7a5a16;
+    .plane-desc{margin:6px 0 0;font-size:14px;line-height:1.55;color:#44667a}
+    .plane-tip{margin:6px 0 2px;padding:7px 9px;font-size:14px;line-height:1.5;color:#7a5a16;
       background:#fff8e6;border:1.5px solid #ffe2a8;border-radius:10px}
-    .plane-tip b{display:block;font-size:12px;color:#8f650c;margin-bottom:2px}
+    .plane-tip b{display:block;font-size:14px;color:#8f650c;margin-bottom:2px}
     /* 並べ替え（2026-10-21：ボタン7個から選択式に。1行で収まる） */
     .sort-bar{display:flex;align-items:center;gap:9px;margin:0 0 8px;padding:8px 10px;
       border:1.5px solid #cfe6f1;border-radius:12px;background:#f3fafd;position:sticky;top:-10px;z-index:2}
-    .sort-lab{flex:0 0 auto;font-size:12px;font-weight:500;color:#1f6a8e}
-    .sort-sel{flex:1 1 auto;min-width:0;max-width:320px;padding:8px 10px;font-size:12px;font-weight:500;
+    .sort-lab{flex:0 0 auto;font-size:14px;font-weight:500;color:#1f6a8e}
+    .sort-sel{flex:1 1 auto;min-width:0;max-width:320px;padding:8px 10px;font-size:14px;font-weight:500;
       color:#17384a;background:#fff;border:1.5px solid #cfe0ea;border-radius:10px;cursor:pointer}
     .sort-sel:hover{border-color:#9fcbe2}
     .sort-sel:focus-visible{outline:2px solid #1683bd;outline-offset:1px}
@@ -967,30 +971,30 @@
     /* 運賃の増減ボタン */
     .fare-row{display:flex;align-items:stretch;gap:5px;margin-top:4px}
     .fare-step{flex:0 0 auto;padding:7px 9px;border:2px solid #d6e4ea;border-radius:10px;background:#fff;
-      color:#3a5563;font-weight:500;font-size:12px;cursor:pointer;font-variant-numeric:tabular-nums}
+      color:#3a5563;font-weight:500;font-size:14px;cursor:pointer;font-variant-numeric:tabular-nums}
     .fare-step:hover{border-color:var(--cyan)}
     .fare-now{flex:1;min-width:0;text-align:center;padding:5px 4px;border-radius:10px;background:#f2f8fb;border:1.5px solid #dcecf5}
     .fare-now b{display:block;font-size:15px;font-weight:800;color:#17384a;font-variant-numeric:tabular-nums}
-    .fare-now small{display:block;font-size:12px;font-weight:500;color:#496572;margin-top:1px}
+    .fare-now small{display:block;font-size:14px;font-weight:500;color:#496572;margin-top:1px}
     .fare-now small.hi{color:#a0450a}.fare-now small.lo{color:var(--green)}
     .fare-quick{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
-    .fare-quick .mini-btn{flex:1 1 auto;width:auto;padding:5px 8px;font-size:12px}
+    .fare-quick .mini-btn{flex:1 1 auto;width:auto;padding:5px 8px;font-size:14px}
     /* いまのペース */
     .outlook{margin-top:8px;padding:9px 11px;border-radius:12px;background:#f4f9fc;border:1.5px solid #d8e8f2}
-    .ol-head{font-size:12px;font-weight:500;color:#1f6a8e;margin-bottom:5px}
-    .ol-head small{float:right;font-size:12px;font-weight:500;color:#496572}
+    .ol-head{font-size:14px;font-weight:500;color:#1f6a8e;margin-bottom:5px}
+    .ol-head small{float:right;font-size:14px;font-weight:500;color:#496572}
     .ol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
     .ol-grid>div{padding:6px 7px;border-radius:9px;background:#fff;border:1.5px solid #e3edf3;text-align:center}
-    .ol-grid span{display:block;font-size:12px;color:#496572;font-weight:500}
-    .ol-grid b{display:block;font-size:13px;font-weight:500;margin-top:2px;font-variant-numeric:tabular-nums}
+    .ol-grid span{display:block;font-size:14px;color:#496572;font-weight:500}
+    .ol-grid b{display:block;font-size:14px;font-weight:500;margin-top:2px;font-variant-numeric:tabular-nums}
     .ol-grid b.pos{color:var(--green)}.ol-grid b.neg{color:var(--red)}
-    .ol-note{margin:7px 2px 0;font-size:12px;color:var(--muted);line-height:1.55}.ol-note b{color:#1373a6}
+    .ol-note{margin:7px 2px 0;font-size:14px;color:var(--muted);line-height:1.55}.ol-note b{color:#1373a6}
     /* 就航前キャンペーン */
     .pread{margin-top:9px;padding:10px 11px;border-radius:12px;background:#fdf7ec;border:1.5px solid #ecdcbc}
     .pa-head{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px}
     .pa-ic{font-size:18px}
-    .pa-head b{display:block;font-size:12px;color:#7a5a1a}
-    .pa-head small{display:block;font-size:12px;color:#9b8458;margin-top:1px;line-height:1.45}
+    .pa-head b{display:block;font-size:14px;color:#7a5a1a}
+    .pa-head small{display:block;font-size:14px;color:#9b8458;margin-top:1px;line-height:1.45}
     .pa-head small b{color:#17384a}
     .pa-list{display:flex;flex-direction:column;gap:5px}
     .pa-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;text-align:left;cursor:pointer;
@@ -999,13 +1003,13 @@
     .pa-btn:disabled{opacity:.45;cursor:not-allowed}
     .pa-i{font-size:17px;flex:0 0 auto}
     .pa-t{flex:1;min-width:0}
-    .pa-t b{display:block;font-size:12px;color:#17384a}
-    .pa-t small{display:block;font-size:12px;color:#496572;margin-top:1px;line-height:1.4}
-    .pa-t em{display:block;font-style:normal;font-size:12px;color:#2a7a48;font-weight:500;margin-top:2px}
-    .pa-c{flex:0 0 auto;font-size:12px;font-weight:500;color:#8f650c;font-variant-numeric:tabular-nums}
-    .pa-note{margin:7px 2px 0;font-size:12px;color:var(--muted);line-height:1.55}.pa-note b{color:#1373a6}
-    .pa-pent{margin-bottom:8px;padding:8px 10px;border-radius:10px;background:#f0f7f2;border:1.5px solid #c8e2d0;font-size:12px;color:#44684f;line-height:1.5}
-    .pa-pent>b{display:block;font-size:12px;color:#2a7a48;margin-bottom:2px}
+    .pa-t b{display:block;font-size:14px;color:#17384a}
+    .pa-t small{display:block;font-size:14px;color:#496572;margin-top:1px;line-height:1.4}
+    .pa-t em{display:block;font-style:normal;font-size:14px;color:#2a7a48;font-weight:500;margin-top:2px}
+    .pa-c{flex:0 0 auto;font-size:14px;font-weight:500;color:#8f650c;font-variant-numeric:tabular-nums}
+    .pa-note{margin:7px 2px 0;font-size:14px;color:var(--muted);line-height:1.55}.pa-note b{color:#1373a6}
+    .pa-pent{margin-bottom:8px;padding:8px 10px;border-radius:10px;background:#f0f7f2;border:1.5px solid #c8e2d0;font-size:14px;color:#44684f;line-height:1.5}
+    .pa-pent>b{display:block;font-size:14px;color:#2a7a48;margin-bottom:2px}
     .pa-pent span b{color:#17384a}
     .pa-pent.mid{background:#fffaf0;border-color:#f0dcae;color:#7a6630}
     .pa-pent.mid>b{color:#8f650c}
@@ -1015,37 +1019,37 @@
     .ts-btn.tut{border-color:#f0cf8a;background:linear-gradient(135deg,#fffaf0,#fff6e4)}
     .ts-btn.tut:hover:not(:disabled){border-color:#e0a020}
     .tut-plan{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:#f4f9fc;border:1.5px solid #d8e8f2}
-    .tp-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:4px 0;font-size:13px;color:#17384a}
+    .tp-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:4px 0;font-size:14px;color:#17384a}
     .tp-row b{font-weight:500}
-    .tp-row span{font-size:12px;color:#405964;font-weight:500}
-    .tp-note{margin:6px 0 0;font-size:12px;color:var(--muted);line-height:1.5}
+    .tp-row span{font-size:14px;color:#405964;font-weight:500}
+    .tp-note{margin:6px 0 0;font-size:14px;color:var(--muted);line-height:1.5}
     .tut-goal{margin-top:10px;padding:10px 12px;border-radius:12px;background:#eefaf0;border:1.5px solid #bfe8c8;
-      font-size:13px;color:#2a7a48}
-    .tut-goal>b{display:block;font-size:12px;margin-bottom:3px}
+      font-size:14px;color:#2a7a48}
+    .tut-goal>b{display:block;font-size:14px;margin-bottom:3px}
     .tut-goal span b{color:#17384a}
-    .tut-tip{margin:10px 2px 0;font-size:12px;color:var(--muted);line-height:1.6}
+    .tut-tip{margin:10px 2px 0;font-size:14px;color:var(--muted);line-height:1.6}
     .tut-tip b{color:#1373a6}
     .chapter-bar.tut{background:linear-gradient(135deg,#fffaf0,#fff6e4);border-color:#f0dcae}
     .cb-now{display:inline-block;margin-left:6px;padding:0 6px;border-radius:7px;font-style:normal;
-      font-size:12px;font-weight:500;background:#ffffffcc;font-variant-numeric:tabular-nums}
+      font-size:14px;font-weight:500;background:#ffffffcc;font-variant-numeric:tabular-nums}
     .cb-now.pos{color:#1f7a3d}.cb-now.neg{color:#c0392b}
     .cb-bar{height:5px;border-radius:3px;background:#eadfc6;overflow:hidden;margin-top:5px}
     .cb-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#f0c060,#e0a020)}
     /* 章の目標 */
-    .cb-step{font-style:normal;margin-left:6px;font-size:12px;font-weight:500;color:#496572}
-    .cb-hint{display:block;font-style:normal;font-size:12px;color:#496572;margin-top:2px;line-height:1.45}
+    .cb-step{font-style:normal;margin-left:6px;font-size:14px;font-weight:500;color:#496572}
+    .cb-hint{display:block;font-style:normal;font-size:14px;color:#496572;margin-top:2px;line-height:1.45}
     /* 生活路線の表示 */
     .lifeline{margin-top:7px;padding:7px 9px;border-radius:10px;background:#f0f7f2;border:1.5px solid #c8e2d0;
-      font-size:12px;color:#44684f;line-height:1.55}
-    .lifeline>b{display:block;font-size:12px;color:#2a7a48;margin-bottom:2px}
+      font-size:14px;color:#44684f;line-height:1.55}
+    .lifeline>b{display:block;font-size:14px;color:#2a7a48;margin-bottom:2px}
     .lifeline span b{color:#17384a}
     /* 見込みの幅 */
-    .fog-line{display:inline-block;font-size:12px;color:#5b7886;font-weight:500}
-    .fog-line b{font-size:13px;font-weight:500}
+    .fog-line{display:inline-block;font-size:14px;color:#5b7886;font-weight:500}
+    .fog-line b{font-size:14px;font-weight:500}
     .fog-line b.pos{color:var(--green)}.fog-line b.neg{color:var(--red)}.fog-line b.mix{color:#8f650c}
-    .fog-tag{font-style:normal;margin-left:6px;font-size:12px;font-weight:500;color:#496572;
+    .fog-tag{font-style:normal;margin-left:6px;font-size:14px;font-weight:500;color:#496572;
       background:#f2f6f9;border:1.2px solid #dde7ee;border-radius:999px;padding:1px 7px}
-    .fog-note{font-size:12px;color:var(--muted);line-height:1.5}.fog-note b{color:#1373a6}
+    .fog-note{font-size:14px;color:var(--muted);line-height:1.5}.fog-note b{color:#1373a6}
     .dp-net.mix{color:#8f650c}.dp-net i{font-style:normal;opacity:.6;margin:0 2px}
     /* 調査部門 */
     .res{display:flex;flex-direction:column;gap:6px}
@@ -1055,75 +1059,75 @@
     .res-card.on{background:#eef7fb;border-color:var(--cyan);cursor:default}
     .rc-ic{font-size:19px;flex:0 0 auto}
     .rc-main{flex:1;min-width:0}
-    .rc-main b{display:block;font-size:13px;color:#17384a}
-    .rc-main b i{font-style:normal;margin-left:6px;font-size:12px;color:#1373a6;font-weight:500}
-    .rc-band{display:block;font-size:12px;color:#405964;font-weight:500;margin-top:2px}
-    .rc-band b{display:inline;color:#17384a;font-size:12px}
-    .rc-note{display:block;font-size:12px;color:#496572;margin-top:2px;line-height:1.45}
-    .rc-cost{display:block;font-size:12px;font-weight:500;color:#8f650c;margin-top:3px}
-    .res-note{margin:4px 2px 0;font-size:12px;color:var(--muted);line-height:1.55}.res-note b{color:#1373a6}
+    .rc-main b{display:block;font-size:14px;color:#17384a}
+    .rc-main b i{font-style:normal;margin-left:6px;font-size:14px;color:#1373a6;font-weight:500}
+    .rc-band{display:block;font-size:14px;color:#405964;font-weight:500;margin-top:2px}
+    .rc-band b{display:inline;color:#17384a;font-size:14px}
+    .rc-note{display:block;font-size:14px;color:#496572;margin-top:2px;line-height:1.45}
+    .rc-cost{display:block;font-size:14px;font-weight:500;color:#8f650c;margin-top:3px}
+    .res-note{margin:4px 2px 0;font-size:14px;color:var(--muted);line-height:1.55}.res-note b{color:#1373a6}
     /* 客層の内訳 */
     .seg-box{margin-top:6px;padding:8px 10px;border-radius:11px;background:#f6f8fb;border:1.5px solid #e0e8f0}
-    .sg-head{font-size:12px;font-weight:500;color:#4a6276;margin-bottom:4px}
-    .sg-head small{float:right;font-size:12px;font-weight:500;color:#496572}
-    .sg-row{display:flex;align-items:center;gap:5px;font-size:12px;color:#405964;padding:1.5px 0}
+    .sg-head{font-size:14px;font-weight:500;color:#4a6276;margin-bottom:4px}
+    .sg-head small{float:right;font-size:14px;font-weight:500;color:#496572}
+    .sg-row{display:flex;align-items:center;gap:5px;font-size:14px;color:#405964;padding:1.5px 0}
     .sg-row>span{flex:0 0 72px;font-weight:500}
     .sg-row>i{flex:1;min-width:20px;height:7px;border-radius:4px;background:#e6eef3;overflow:hidden}
     .sg-row>i>b{display:block;height:100%;border-radius:4px;background:#8fb4cc}
     .sg-row>i.got>b{background:#1f9fe0}
     .sg-row>em{flex:0 0 26px;font-style:normal;font-weight:500;color:#17384a;text-align:right;font-variant-numeric:tabular-nums}
-    .sg-note{display:block;margin-top:5px;font-size:12px;color:#2a7a48;font-weight:500}
+    .sg-note{display:block;margin-top:5px;font-size:14px;color:#2a7a48;font-weight:500}
     /* 機内サービス・装備の選択 */
-    .svc-seg .seg-btn{flex:1 1 30%;min-width:0;padding:7px 4px;font-size:12px}
+    .svc-seg .seg-btn{flex:1 1 30%;min-width:0;padding:7px 4px;font-size:14px}
     /* 2026-10-15：文字を12pxに上げたら「¥180/人・満足+16」が3分割のボタンに入らなくなった。
    …で切ると肝心の満足度が消えるので、折り返して2行にする */
-.svc-seg .seg-btn small{font-size:12px;margin-top:2px;line-height:1.3}
+.svc-seg .seg-btn small{font-size:14px;margin-top:2px;line-height:1.3}
 /* 「満足+16」は行として独立させる。なりゆきで折り返すと「満／足」で割れる */
 .svc-seg .seg-btn small i{display:block;font-style:normal}
     .svc-seg .seg-btn.undeliv{background:#fff2ee;border-color:#ffc9b4;color:#a85438}
     .svc-seg .seg-btn.undeliv small{color:#a0450a}
-    .svc-note{margin:6px 2px 0;font-size:12px;color:var(--muted);line-height:1.5}
+    .svc-note{margin:6px 2px 0;font-size:14px;color:var(--muted);line-height:1.5}
     .svc-note b{color:#1373a6}
     /* 顧客満足度 */
     .sat-box{margin-top:6px;padding:8px 10px;border-radius:11px;background:#f3faf5;border:1.5px solid #cfe6d4}
     .sat-box.mid{background:#fffaf0;border-color:#f0dcae}
     .sat-box.bad{background:#fff3ef;border-color:#ffd3c2}
-    .sat-head{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;font-weight:500;color:#4a6c56;margin-bottom:4px}
+    .sat-head{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:500;color:#4a6c56;margin-bottom:4px}
     .sat-box.mid .sat-head{color:#7a6630}.sat-box.bad .sat-head{color:#8a4a32}
     .sat-head b{font-size:15px;font-weight:800}
-    .sat-row{display:flex;align-items:center;gap:6px;font-size:12px;color:#405964;padding:1.5px 0}
+    .sat-row{display:flex;align-items:center;gap:6px;font-size:14px;color:#405964;padding:1.5px 0}
     .sat-row>span{flex:0 0 46px;font-weight:500}
     .sat-row>i{flex:1;min-width:30px;height:7px;border-radius:4px;background:#e6eef3;overflow:hidden}
     .sat-row>i>b{display:block;height:100%;border-radius:4px}
     .sat-row>em{flex:0 0 22px;font-style:normal;font-weight:500;color:#17384a;text-align:right;font-variant-numeric:tabular-nums}
-    .sat-row>small{flex:0 0 auto;font-size:12px;color:#496572;max-width:38%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .sat-row>small{flex:0 0 auto;font-size:14px;color:#496572;max-width:38%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     /* 運賃の読みやすさ */
-    .fare-steady{margin-top:7px;padding:7px 9px;border-radius:10px;font-size:12px;font-weight:500;
+    .fare-steady{margin-top:7px;padding:7px 9px;border-radius:10px;font-size:14px;font-weight:500;
       display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 8px;background:#f2f8f3;border:1.5px solid #cfe6d4;color:#4a6c56}
     .fare-steady.mid{background:#fff8e8;border-color:#f0dcae;color:#7a6630}
     .fare-steady.bad{background:#fff2ee;border-color:#ffd3c2;color:#8a4a32}
-    .fare-steady b{font-size:12px;font-weight:500}
+    .fare-steady b{font-size:14px;font-weight:500}
     .fare-steady i{font-style:normal;font-weight:500;opacity:.85}
-    .fare-steady small{flex:1 0 100%;font-size:12px;font-weight:500;opacity:.8;line-height:1.5}
-    .fp-trade{margin-top:9px;padding:8px 10px;border-radius:11px;background:#f7fafc;border:1.5px solid #e1ebf1;font-size:12px;color:#5b7886;line-height:1.6}
-    .fp-trade>b{display:block;font-size:12px;color:#1f6a8e;margin-bottom:4px}
+    .fare-steady small{flex:1 0 100%;font-size:14px;font-weight:500;opacity:.8;line-height:1.5}
+    .fp-trade{margin-top:9px;padding:8px 10px;border-radius:11px;background:#f7fafc;border:1.5px solid #e1ebf1;font-size:14px;color:#5b7886;line-height:1.6}
+    .fp-trade>b{display:block;font-size:14px;color:#1f6a8e;margin-bottom:4px}
     .fp-trade span{display:block;margin-top:4px}
     .fp-trade span b{color:#17384a}
     /* 運賃の一括設定 */
-    .fp-lab{font-size:12px;font-weight:500;color:#1f6a8e;margin:9px 0 2px;letter-spacing:.04em}
+    .fp-lab{font-size:14px;font-weight:500;color:#1f6a8e;margin:9px 0 2px;letter-spacing:.04em}
     .fp-lab:first-child{margin-top:0}
     .fp-lab b,.fp-lab span{float:right;font-weight:500;color:#17384a}
     .fp-seg{margin-top:4px}
-    .fp-note{margin:7px 2px 0;font-size:12px;color:var(--muted);line-height:1.55}
+    .fp-note{margin:7px 2px 0;font-size:14px;color:var(--muted);line-height:1.55}
     .fp-note b{color:#1373a6}
     /* 就航中の路線のダイヤ変更欄 */
     .rt-edit-box{margin-top:7px;padding:9px 10px;border-radius:12px;background:#f5fafd;border:1.5px solid #cfe6f1}
-    .ref-lab{font-size:12px;font-weight:500;color:#1f6a8e;margin:8px 0 2px;letter-spacing:.04em}
+    .ref-lab{font-size:14px;font-weight:500;color:#1f6a8e;margin:8px 0 2px;letter-spacing:.04em}
     .ref-lab:first-child{margin-top:0}
     .ref-lab span{float:right;font-weight:500;color:#496572}
     .rt-edit-box .seg{margin-top:4px}
     .rt-edit-box .dow-row{margin-top:4px}
-    .ref-note{margin:8px 2px 0;font-size:12px;color:var(--muted);line-height:1.5}
+    .ref-note{margin:8px 2px 0;font-size:14px;color:var(--muted);line-height:1.5}
     .ref-note b{color:#1373a6}
     .mini-btn.rt-tune.on{background:var(--cyan);border-color:var(--cyan);color:#05202b}
     /* 空港整備：地元の機運と工事の進み */
@@ -1133,32 +1137,32 @@
     .dp-head{display:flex;align-items:center;gap:8px}
     .dp-ic{font-size:18px;flex:0 0 auto}
     .dp-head>div{flex:1;min-width:0}
-    .dp-head b{display:block;font-size:12px;color:#17384a}
-    .dp-head small{display:block;font-size:12px;color:#496572;margin-top:1px;line-height:1.4}
-    .dp-eta{flex:0 0 auto;font-size:12px;font-weight:500;color:#1f6a8e;font-variant-numeric:tabular-nums}
+    .dp-head b{display:block;font-size:14px;color:#17384a}
+    .dp-head small{display:block;font-size:14px;color:#496572;margin-top:1px;line-height:1.4}
+    .dp-eta{flex:0 0 auto;font-size:14px;font-weight:500;color:#1f6a8e;font-variant-numeric:tabular-nums}
     .dp-bar{height:7px;border-radius:4px;background:#e6eef3;overflow:hidden;margin-top:7px}
     .dp-bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#4bb3e8,#1f9fe0)}
     .dev-plan.building .dp-bar i{background:linear-gradient(90deg,#f0c060,#e0a020)}
-    .dp-why{margin-top:6px;font-size:12px;color:#405964;line-height:1.5}
+    .dp-why{margin-top:6px;font-size:14px;color:#405964;line-height:1.5}
     .dp-why b{color:#17384a}.dp-why b.up{color:var(--green)}.dp-why b.dn{color:#a0450a}
-    .dev-note{margin:8px 2px 0;font-size:12px;color:var(--muted);line-height:1.6}
+    .dev-note{margin:8px 2px 0;font-size:14px;color:var(--muted);line-height:1.6}
     .dev-note b{color:#1373a6}
     .world-news.dev{background:#f3f7fb;border-color:#d6e5f0}
     /* 決算の下に出す、現金と会計上の損益の対比 */
     .report-acct{margin-top:7px;padding:8px 10px;border-radius:11px;background:#f7fafc;border:1.5px solid #e1ebf1}
-    .ra-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:3px 0;font-size:12px;color:#405964;font-weight:500}
+    .ra-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:3px 0;font-size:14px;color:#405964;font-weight:500}
     .ra-row b{font-weight:500;font-variant-numeric:tabular-nums;color:#17384a;white-space:nowrap}
     .ra-row b.pos{color:var(--green)}.ra-row b.neg{color:var(--red)}
     .ra-row.sum{border-top:1.5px solid #dce7ee;margin-top:2px;padding-top:5px}
     .ra-row.worth{border-top:1.5px dashed #dce7ee;margin-top:3px;padding-top:5px;color:#2a7a48}
-    .ra-row.worth b{color:#1f7a3d;font-size:13px}
+    .ra-row.worth b{color:#1f7a3d;font-size:14px}
     /* 貸借対照表 */
-    .bs{font-size:12px}
-    .bs-head{margin:8px 0 3px;font-size:12px;font-weight:500;color:#1f6a8e;letter-spacing:.06em;
+    .bs{font-size:14px}
+    .bs-head{margin:8px 0 3px;font-size:14px;font-weight:500;color:#1f6a8e;letter-spacing:.06em;
       border-bottom:2px solid #cfe6f1;padding-bottom:3px}
     .bs-head:first-child{margin-top:0}
     .bs-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:4px 2px;color:#3a5563}
-    .bs-row.ind span{padding-left:11px;color:#496572;font-size:12px}
+    .bs-row.ind span{padding-left:11px;color:#496572;font-size:14px}
     .bs-row b{font-weight:500;color:#17384a;font-variant-numeric:tabular-nums;white-space:nowrap}
     .bs-row.minus b{color:#a0450a;font-weight:500}
     .bs-row.sub{border-top:1px dashed #dce7ee}
@@ -1167,18 +1171,18 @@
     .bs-row.worth{background:#eefaf0;border:1.5px solid #bfe8c8;border-radius:9px;padding:7px 9px;margin-top:2px}
     .bs-row.worth span{font-weight:500;color:#2a7a48}
     .bs-row.worth b{font-size:15px;color:#1f7a3d}
-    .bs-note{margin:8px 2px 0;font-size:12px;color:var(--muted);line-height:1.6}
+    .bs-note{margin:8px 2px 0;font-size:14px;color:var(--muted);line-height:1.6}
     .bs-note b{color:#1373a6}
     .pl-val{margin:5px 0 2px;padding:6px 9px;border-radius:9px;background:#f7f9fb;border:1.5px solid #e3ebf0;
-      display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 8px;font-size:12px;color:#405964;font-weight:500}
-    .pl-val b{font-size:13px;font-weight:500;color:#17384a;font-variant-numeric:tabular-nums}
+      display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 8px;font-size:14px;color:#405964;font-weight:500}
+    .pl-val b{font-size:14px;font-weight:500;color:#17384a;font-variant-numeric:tabular-nums}
     .pl-val i{font-style:normal;font-weight:500}
     .pl-val i.up{color:var(--green)}.pl-val i.down{color:#a0450a}
-    .pl-val small{flex:1 0 100%;font-size:12px;font-weight:500;color:#496572}
+    .pl-val small{flex:1 0 100%;font-size:14px;font-weight:500;color:#496572}
     .real-price{margin-top:6px;padding:6px 9px;border-radius:9px;background:#f6f4ee;border:1.5px solid #e6e0d2;
-      font-size:12px;color:#7a6a4a;font-weight:500}
-    .real-price b{color:#8a6a1a;font-size:12px;margin-left:2px}
-    .real-price small{display:block;font-size:12px;font-weight:500;color:#9b8e74;margin-top:2px}
+      font-size:14px;color:#7a6a4a;font-weight:500}
+    .real-price b{color:#8a6a1a;font-size:14px;margin-left:2px}
+    .real-price small{display:block;font-size:14px;font-weight:500;color:#9b8e74;margin-top:2px}
     /* 2026-10-16：買い物カードは「写真・名前・3つの数字・支払い」だけにする。
        解説と性能バーは「くわしく」で開く（.pi-detail） */
     .pi-top{display:flex;align-items:center;gap:10px}
@@ -1201,80 +1205,80 @@
     /* 横1行の並びでは識別欄が細いので、メーカー名は省略記号ではなく折り返す
        （「ブリテン・ノーマン」が 102px の欄に 108px 必要だった） */
     .shop-win .pi-maker{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
-    .pi-id b{display:block;font-size:13px;color:#2a4657;line-height:1.3}
-    .pi-maker{display:block;font-size:12px;color:#496572;margin-top:1px;
+    .pi-id b{display:block;font-size:14px;color:#2a4657;line-height:1.3}
+    .pi-maker{display:block;font-size:14px;color:#496572;margin-top:1px;
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .pi-key{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:8px 0 2px}
     .pi-key>div{padding:5px 6px;border-radius:9px;background:#f7fbfd;border:1.5px solid #e4eef5;text-align:center}
-    .pi-key span{display:block;font-size:12px;color:#496572;font-weight:500}
-    .pi-key b{display:block;margin-top:1px;font-size:12px;font-weight:500;color:#17384a;
+    .pi-key span{display:block;font-size:14px;color:#496572;font-weight:500}
+    .pi-key b{display:block;margin-top:1px;font-size:14px;font-weight:500;color:#17384a;
       font-variant-numeric:tabular-nums}
     .pi-key>div.bad{background:#fff2ee;border-color:#ffc9b4}
     .pi-key>div.bad b{color:#c0392b}
     .pi-more{width:100%;margin-top:7px;padding:7px;border:1.5px dashed #cfe0ea;border-radius:10px;
-      background:#fbfdff;color:#405964;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer}
+      background:#fbfdff;color:#405964;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
     .pi-more:hover{background:#f2fafd;border-color:#9fcbe2}
     .pi-detail{margin-top:7px;padding-top:7px;border-top:1.5px dashed #e4eef5}
-    .pi-size{margin-top:6px;font-size:12px;color:#496572}
+    .pi-size{margin-top:6px;font-size:14px;color:#496572}
     /* 支払い方法の説明は買い物窓に1回だけ */
     .pay-howto{grid-column:1/-1;margin:0 0 8px;padding:9px 11px;border-radius:12px;
       background:#f7fbfd;border:1.5px solid #dcecf5}
-    .pay-howto>b{display:block;font-size:12px;color:#2a4657;margin-bottom:3px}
-    .pay-howto span{display:block;font-size:12px;color:#405964;line-height:1.5;margin-top:2px}
+    .pay-howto>b{display:block;font-size:14px;color:#2a4657;margin-bottom:3px}
+    .pay-howto span{display:block;font-size:14px;color:#405964;line-height:1.5;margin-top:2px}
     .pay-howto span b{color:#17384a}
     .specbars{display:flex;flex-direction:column;gap:4px;margin:2px 0}
     .sb{display:flex;align-items:center;gap:6px}
-    .sb-l{flex:0 0 58px;font-size:12px;color:#405964;text-align:right}
+    .sb-l{flex:0 0 58px;font-size:14px;color:#405964;text-align:right}
     .sb-t{flex:1;height:9px;border-radius:5px;background:#eef3f6;overflow:hidden;min-width:40px}
     .sb-t i{display:block;height:100%;border-radius:5px}
     .sb-t i.good{background:linear-gradient(90deg,#57c3f0,#1683bd)}
     .sb-t i.bad{background:linear-gradient(90deg,#ffb26b,#e87a2c)}
-    .sb-v{flex:0 0 auto;min-width:62px;font-size:12px;font-weight:500;color:#2a4657;text-align:right}
+    .sb-v{flex:0 0 auto;min-width:62px;font-size:14px;font-weight:500;color:#2a4657;text-align:right}
     .shop-win .shop-item.nofit{border-color:#ffc9b4;background:#fffaf8}
-    .nofit-note{font-size:12px;font-weight:500;color:#a0450a;background:#fff0e8;border-radius:8px;padding:5px 8px}
+    .nofit-note{font-size:14px;font-weight:500;color:#a0450a;background:#fff0e8;border-radius:8px;padding:5px 8px}
     .shop-win .buy2{display:flex;flex-direction:row;gap:6px;margin-top:auto;flex:0 0 auto}
     .shop-win .buy2 .mini-btn{flex:1 1 0;width:auto !important;min-width:0}
-    .shop-win .mini-btn{padding:9px !important;font-size:12px !important;line-height:1.2 !important}
-    .shop-win .shop-price{display:block;font-size:12px !important;font-weight:500;color:#8f650c !important;line-height:1.45;margin:2px 0 4px}
+    .shop-win .mini-btn{padding:9px !important;font-size:14px !important;line-height:1.2 !important}
+    .shop-win .shop-price{display:block;font-size:14px !important;font-weight:500;color:#8f650c !important;line-height:1.45;margin:2px 0 4px}
     @media(max-width:600px){.shop-win .shop-body{grid-template-columns:1fr}}
     .al-btns{flex:0 0 auto;display:flex;flex-direction:column;gap:4px}
-    .al-done{font-size:12px;font-weight:500;color:#1f7a3d;white-space:nowrap}
+    .al-done{font-size:14px;font-weight:500;color:#1f7a3d;white-space:nowrap}
     /* 章（ゴールへの道のり） */
     #chapterBar{position:absolute;z-index:6;left:15px;top:84px;pointer-events:none}
     .chapter-bar{display:flex;align-items:center;gap:9px;padding:7px 12px 7px 9px;border-radius:14px;background:#ffffffe8;border:2px solid #ffce6b;box-shadow:0 4px 12px #0002;max-width:min(78vw,330px)}
     .chapter-bar.won{border-color:#ffd23d;background:linear-gradient(90deg,#fff6d0,#ffffffe8)}
     .chapter-bar .cb-ic{font-size:20px;line-height:1}
-    .chapter-bar b{display:block;font-size:12px;color:#8f650c;letter-spacing:.02em}
-    .chapter-bar small{display:block;font-size:12px;color:#2a4657;font-weight:500;margin-top:1px}
+    .chapter-bar b{display:block;font-size:14px;color:#8f650c;letter-spacing:.02em}
+    .chapter-bar small{display:block;font-size:14px;color:#2a4657;font-weight:500;margin-top:1px}
     .chapters{margin:4px 0 2px}
     .ch-row{display:flex;gap:9px;align-items:flex-start;padding:8px 6px;border-bottom:1px solid #eef3f6}
     .ch-row .ch-ic{font-size:17px;flex:0 0 auto;width:22px;text-align:center}
-    .ch-row b{display:block;font-size:12px;color:#2a4657}
-    .ch-row span{display:block;font-size:12px;color:#405964;margin-top:1px}
+    .ch-row b{display:block;font-size:14px;color:#2a4657}
+    .ch-row span{display:block;font-size:14px;color:#405964;margin-top:1px}
     .ch-row.done{opacity:.55}.ch-row.done b{text-decoration:line-through}
     .ch-row.now{background:#fff8e6;border-radius:10px;border-bottom-color:transparent}
     .ch-row.now b{color:#8f650c}
     .ch-hint{color:#1373a6 !important;margin-top:3px !important}
     .ch-now{display:block;color:#1e7c37 !important;font-weight:700;margin-top:3px}
     /* 行き先カードの「大きい機体なら」行 */
-    .dp-up{display:block;margin-top:4px;font-size:12px;color:#1e7c37;
+    .dp-up{display:block;margin-top:4px;font-size:14px;color:#1e7c37;
       background:#f3fbf6;border:1.2px solid #cbe9d8;border-radius:8px;padding:3px 7px}
     .dp-up b{color:#17384a;font-weight:700}
     .dp-up i{font-style:normal;color:#496572;margin-left:5px}
     .ch-row.todo{opacity:.7}
     .chapter-clear{border-top-color:#ffd23d !important}
-    .cc-label{font-size:12px;font-weight:500;letter-spacing:.14em;color:#e0a01a}
-    .cc-next{background:#f3f8fb;border-radius:12px;padding:10px;font-size:12px !important;color:#2a4657 !important}
-    .cc-next b{color:#1373a6}.cc-next span{color:#405964;font-size:12px}
+    .cc-label{font-size:14px;font-weight:500;letter-spacing:.14em;color:#e0a01a}
+    .cc-next{background:#f3f8fb;border-radius:12px;padding:10px;font-size:14px !important;color:#2a4657 !important}
+    .cc-next b{color:#1373a6}.cc-next span{color:#405964;font-size:14px}
     .cc-win{color:#2a4657 !important;font-weight:500}
-    .rank-gapinfo{margin-top:7px;padding:8px 10px;border-radius:10px;background:#eef7fb;border:1.5px solid #cfe4ef;font-size:12px;color:#2a4657;text-align:center}
+    .rank-gapinfo{margin-top:7px;padding:8px 10px;border-radius:10px;background:#eef7fb;border:1.5px solid #cfe4ef;font-size:14px;color:#2a4657;text-align:center}
     .rank-gapinfo b{color:#1373a6}
     .rank-gapinfo.win{background:#fff6d0;border-color:#ffd23d;font-weight:500}
-    .world-news{margin:8px 0;padding:9px 11px;border-radius:12px;background:#eef3ff;border:1.5px solid #c3d2f5;font-size:12px;color:#36457a}
-    .world-news b{display:block;margin-bottom:3px;font-size:12px}
+    .world-news{margin:8px 0;padding:9px 11px;border-radius:12px;background:#eef3ff;border:1.5px solid #c3d2f5;font-size:14px;color:#36457a}
+    .world-news b{display:block;margin-bottom:3px;font-size:14px}
     .world-news span{display:block;padding:2px 0 2px 4px;border-left:3px solid #c3d2f5;margin-top:3px;line-height:1.45}
-    .rank-gap{text-align:center;color:#547482;font-size:12px;line-height:1;padding:2px 0}
-    .rank-more{font-size:12px !important;padding:8px !important}
+    .rank-gap{text-align:center;color:#547482;font-size:14px;line-height:1;padding:2px 0}
+    .rank-more{font-size:14px !important;padding:8px !important}
     /* サイドの見出し・カード類 */
     .side h2{color:#2a4a5a !important;}
     .side p,.side>p{color:var(--muted) !important;}
@@ -1296,7 +1300,7 @@
     .map-actions{background:#ffffffec !important;border-top:2px solid #d4ebf7 !important;grid-template-columns:repeat(5,1fr) !important;}
     /* チュートリアル中は、まだ習っていないタブを隠す。隠したぶんは詰めて並べる */
     .map-actions button[hidden]{display:none !important;}
-    .map-actions button{font-size:12px !important;padding:0 1px !important;}
+    .map-actions button{font-size:14px !important;padding:0 1px !important;}
     .map-actions button{background:#eef8fd !important;color:#1f6a8e !important;border:2px solid #cfe6f2 !important;
       border-radius:14px !important;font-weight:500 !important;}
     .map-actions button.active,.map-actions button:hover{
@@ -1313,7 +1317,7 @@
     .step-title{color:#1273a2 !important;font-weight:500 !important;}
     /* 実績・凡例・ステータス */
     .report{border-top:2px dashed #cfe4ef !important;}
-    .reaction{margin:8px 0;padding:8px 12px;border-radius:12px;background:#fff2e0;border:1.5px solid #ffcf99;color:#a85a00;font-weight:500;font-size:13px;}
+    .reaction{margin:8px 0;padding:8px 12px;border-radius:12px;background:#fff2e0;border:1.5px solid #ffcf99;color:#a85a00;font-weight:500;font-size:14px;}
     .report-total b{color:#243f4c !important;}
     .report-total .profit b{color:#1f7a3d !important;}
     .report-total .loss b{color:#c0392b !important;}
@@ -1336,14 +1340,14 @@
     .gameover h1{color:var(--red) !important;}
     /* 購入タブ＆アイテムカード */
     .shop-tabs{display:flex;gap:6px;margin:6px 0 10px;}
-    .shop-tab{flex:1;padding:8px 4px;border:2px solid #cfe6f2;border-radius:12px;background:#eef8fd;color:#1f6a8e;font-weight:500;font-size:12px;cursor:pointer;font-family:inherit;}
+    .shop-tab{flex:1;padding:8px 4px;border:2px solid #cfe6f2;border-radius:12px;background:#eef8fd;color:#1f6a8e;font-weight:500;font-size:14px;cursor:pointer;font-family:inherit;}
     .shop-tab.active{background:linear-gradient(180deg,#38b6ec,#1f9fe0);color:#fff;border-color:#1f9fe0;box-shadow:0 3px 0 #1683bd;}
     .shop-item{display:flex;align-items:center;gap:10px;padding:10px;border:1.5px solid #dcecf5;border-radius:14px;background:#f2fafd;margin:8px 0;}
     .shop-item.owned{border-color:#9fd8b4;background:#effaf1;}
     .shop-ic{font-size:26px;line-height:1;flex:0 0 auto;}
     .shop-info{flex:1;min-width:0;}
-    .shop-info b{display:block;font-size:12px;color:#2a4a5a;}
-    .shop-info span{display:block;font-size:12px;color:#405964;line-height:1.4;}
+    .shop-info b{display:block;font-size:14px;color:#2a4a5a;}
+    .shop-info span{display:block;font-size:14px;color:#405964;line-height:1.4;}
     .shop-info .shop-price{color:#c9791b;font-weight:500;margin-top:2px;}
     .shop-item .buy-item{flex:0 0 auto;width:auto;padding:8px 12px;}
     .shop-item .buy-item:disabled{opacity:.55;}
@@ -1353,23 +1357,23 @@
     .pc-col.tut-off{opacity:.42;filter:grayscale(.7)}
     /* 運転資金が残らない買い方の注意書きと、1度止めたボタン（2026-10-28） */
     .cash-warn{margin:6px 0 0;padding:7px 10px;border:1.5px solid #f3cfc6;border-radius:10px;
-      background:#fff4f1;color:#9a3326;font-size:12px;line-height:1.5}
+      background:#fff4f1;color:#9a3326;font-size:14px;line-height:1.5}
     .cash-warn b{color:#7d2a1e;font-weight:700}
     .mini-btn.danger-again{background:#c0392b !important;color:#fff !important;
       border-color:#a33327 !important;font-weight:700}
-    .shop-group{margin:12px 0 2px;font-size:12px;font-weight:500;color:#1273a2;letter-spacing:.04em;}
+    .shop-group{margin:12px 0 2px;font-size:14px;font-weight:500;color:#1273a2;letter-spacing:.04em;}
     /* 地図の下の一覧の先頭に置く「＋ 航路をつくる」。ここがいちばん目に入る場所 */
     .rl-make{width:100%;margin:2px 0 10px;padding:12px 14px;line-height:1.35}
-    .rl-make small{display:block;margin-top:3px;font-size:12px;font-weight:500;opacity:.92}
+    .rl-make small{display:block;margin-top:3px;font-size:14px;font-weight:500;opacity:.92}
     /* ── 航路をつくる：旅行サイトの予約フォームの並び（2026-10-22） ── */
     .bk-tabs{display:flex;gap:0;margin:8px 0 10px;border-bottom:2px solid #cfe6f1}
     .bk-tab{flex:1 1 0;min-height:44px;padding:9px 6px;border:0;border-bottom:3px solid transparent;
-      background:transparent;color:#496572;font:inherit;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:-2px}
+      background:transparent;color:#496572;font:inherit;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:-2px}
     .bk-tab:hover{color:#1373a6;background:#f3fafd}
     .bk-tab.on{color:#1683bd;border-bottom-color:#1683bd;background:#f3fafd}
     .bk-od{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:end;margin:0 0 10px}
     .bk-f{min-width:0}
-    .bk-f>label{display:block;margin-bottom:3px;font-size:12px;font-weight:500;color:#1f6a8e}
+    .bk-f>label{display:block;margin-bottom:3px;font-size:14px;font-weight:500;color:#1f6a8e}
     .bk-f .seg{gap:5px}
     .bk-f .seg-btn{padding:7px 5px}
     .bk-arrow{padding-bottom:12px;font-size:16px;color:#1683bd}
@@ -1383,8 +1387,8 @@
       box-shadow:0 0 0 2px #1683bd33;animation:tutPulse 1.4s ease-in-out infinite}
     .bk-slot b{display:block;font-size:14px;font-weight:700;color:#17384a;line-height:1.3;
       overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .bk-slot small{display:block;margin-top:1px;font-size:12px;color:#547482;line-height:1.3}
-    .bk-ph{font-size:12px;color:#547482;line-height:1.35}
+    .bk-slot small{display:block;margin-top:1px;font-size:14px;color:#547482;line-height:1.3}
+    .bk-ph{font-size:14px;color:#547482;line-height:1.35}
     .bk-slot.arm .bk-ph{color:#1373a6;font-weight:500}
     .bk-guide{display:flex;align-items:center;gap:8px;margin:0 0 8px}
     .bk-guide .mini-btn{flex:0 0 auto;width:auto;padding:5px 12px}
@@ -1394,13 +1398,13 @@
     }
     /* 5項目を決めたあとの確認とOK（2026-10-22） */
     .mk-ok{margin:10px 0 2px;padding:11px 12px;border:2px solid #cfe6f1;border-radius:14px;background:#f3fafd}
-    .mk-sum{font-size:12px;font-weight:500;color:#17384a;line-height:1.4}
+    .mk-sum{font-size:14px;font-weight:500;color:#17384a;line-height:1.4}
     .mk-warn{margin-top:6px;padding:7px 10px;border:1.5px solid #f3cfc6;border-radius:10px;
-      background:#fff4f1;color:#9a3326;font-size:12px;line-height:1.5}
+      background:#fff4f1;color:#9a3326;font-size:14px;line-height:1.5}
     .mk-warn b{color:#7d2a1e;font-weight:700}
-    .mk-sum small{display:block;margin-top:2px;font-size:12px;font-weight:500;color:#496572}
-    .mk-net{margin:7px 0 2px;font-size:12px;color:#496572}
-    .mk-net b{font-size:13px;font-weight:700}
+    .mk-sum small{display:block;margin-top:2px;font-size:14px;font-weight:500;color:#496572}
+    .mk-net{margin:7px 0 2px;font-size:14px;color:#496572}
+    .mk-net b{font-size:14px;font-weight:700}
     .mk-net.ok b{color:#1e7c37}.mk-net.loss b{color:#c0392b}
     .mk-ok .btn{margin-top:8px}
     .pick-plane.on{border-color:#1683bd;background:#eaf6fd;box-shadow:0 0 0 2px #1683bd33}
@@ -1417,23 +1421,23 @@
     .rm-row.idle{border-style:dashed;background:#fcfdfe}
     .rm-row.rest{opacity:.72}
     .rm-main{flex:1 1 auto;min-width:0}
-    .rm-main b{display:block;font-size:12px;font-weight:500;color:#17384a;line-height:1.3}
-    .rm-main small{display:block;margin-top:1px;font-size:12px;color:#496572;line-height:1.3}
+    .rm-main b{display:block;font-size:14px;font-weight:500;color:#17384a;line-height:1.3}
+    .rm-main small{display:block;margin-top:1px;font-size:14px;color:#496572;line-height:1.3}
     .rm-num{flex:0 0 auto;text-align:right}
-    .rm-num b{display:block;font-size:12px;font-weight:700;line-height:1.3}
+    .rm-num b{display:block;font-size:14px;font-weight:700;line-height:1.3}
     .rm-num b.pos{color:#1e7c37}.rm-num b.neg{color:#c0392b}
-    .rm-num small{display:block;margin-top:1px;font-size:12px;color:#547482;line-height:1.3}
-    .rm-empty{margin:6px 0 2px;font-size:12px;color:#496572;line-height:1.5}
+    .rm-num small{display:block;margin-top:1px;font-size:14px;color:#547482;line-height:1.3}
+    .rm-empty{margin:6px 0 2px;font-size:14px;color:#496572;line-height:1.5}
     /* 保有機材の設定（座席・サービス・装備）。
        2026-10-17：行先ブロックのドラッグ＆ドロップは廃止したので、
        .unassigned-blocks / .route-block / .drop-slot / .pick-bar は削除した。
        路線への配属は、航路タブの路線カードの .rp-pick で行う。 */
-    .ub-empty{font-size:12px;color:#496572;padding:6px 2px;}
+    .ub-empty{font-size:14px;color:#496572;padding:6px 2px;}
     .plane-cards{display:flex;flex-direction:column;gap:10px;}
     .plane-card{border:2px solid #dcecf5;border-radius:16px;background:#fff;padding:10px;box-shadow:0 4px 0 #eaf4fa;}
-    .pc-head{font-size:13px;color:#2a4a5a;font-weight:500;}
+    .pc-head{font-size:14px;color:#2a4a5a;font-weight:500;}
     .pc-head .pc-plane{color:#1273a2;margin-right:2px;}
-    .pc-spec{font-size:12px;color:#405964;margin:2px 0 2px;}
+    .pc-spec{font-size:14px;color:#405964;margin:2px 0 2px;}
     /* ── 2026-10-17：左に項目、右に中身（マスター/ディテール） ──
        折りたたみだと、開いた瞬間に下の項目がぜんぶ下へずれて場所を見失う。
        項目の列は動かさず、右側だけ差し替える。 */
@@ -1454,11 +1458,14 @@
     .md-item .mi-tx{flex:1 1 auto;min-width:0}
     /* 名前と数字は同じ行に。数字を別の列にすると名前の幅が足りず「JA02AO DHC…」になる */
     .md-item .mi-top{display:flex;align-items:baseline;gap:6px}
-    .md-item .mi-tx b{flex:1 1 auto;min-width:0;font-size:12px;font-weight:500;color:#2a4657;
+    .md-item .mi-tx b{flex:1 1 auto;min-width:0;font-size:14px;font-weight:500;color:#2a4657;
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .md-item .mi-tx small{display:block;font-size:12px;color:#496572;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .md-item .mi-right{flex:0 0 auto;font-size:12px;font-weight:500;
+    /* 2026-11-16：14pxにしたら「運用時間・滑走路・発着枠」が148pxの枠に168px要るようになった。
+       副題は添え物なので、…で切らずに2行へ落とす。keep-all で語の途中では折らず、
+       「運用時間・」「滑走路・発着枠」のように中黒のところで折れる */
+    .md-item .mi-tx small{display:block;font-size:14px;color:#496572;
+      white-space:normal;word-break:keep-all;overflow-wrap:break-word;line-height:1.35}
+    .md-item .mi-right{flex:0 0 auto;font-size:14px;font-weight:500;
       font-variant-numeric:tabular-nums;white-space:nowrap}
     .mi-net.ok{color:#1f7a3d}.mi-net.bad{color:#c0392b}
     .md-body{min-width:0}
@@ -1469,23 +1476,23 @@
     .apd-head{border:1.5px solid #dcecf5;border-radius:14px;background:linear-gradient(180deg,#f7fcff,#eef7fb);padding:11px 13px}
     .apd-name{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     .apd-name>b{font-size:15px;font-weight:800;color:#1b3a4a}
-    .apd-code{font-size:12px;font-weight:500;color:#1f6a8e;background:#fff;border:1.5px solid #bfe0f0;
+    .apd-code{font-size:14px;font-weight:500;color:#1f6a8e;background:#fff;border:1.5px solid #bfe0f0;
       border-radius:7px;padding:1px 7px;letter-spacing:.08em}
-    .apd-rank{font-size:12px;font-weight:500;color:#fff;border-radius:7px;padding:1px 8px;line-height:1.5}
-    .apd-rklab{font-size:12px;color:#405964}
+    .apd-rank{font-size:14px;font-weight:500;color:#fff;border-radius:7px;padding:1px 8px;line-height:1.5}
+    .apd-rklab{font-size:14px;color:#405964}
     .apd-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-top:9px}
     .apd-kpis>div{background:#fff;border:1.5px solid #e2eef5;border-radius:11px;padding:7px 9px}
-    .apd-kpis span{display:block;font-size:12px;color:#405964}
-    .apd-kpis span em{font-style:normal;font-size:12px;color:#547482;margin-left:3px}
+    .apd-kpis span{display:block;font-size:14px;color:#405964}
+    .apd-kpis span em{font-style:normal;font-size:14px;color:#547482;margin-left:3px}
     .apd-kpis b{font-size:21px;font-weight:800;color:#17384a;font-variant-numeric:tabular-nums;line-height:1.2}
     .apd-kpis b.sm{font-size:14px}
-    .apd-kpis i{font-style:normal;font-size:12px;color:#405964;margin-left:3px}
+    .apd-kpis i{font-style:normal;font-size:14px;color:#405964;margin-left:3px}
     /* 数字の下に全国順位。上位ほど濃い色で、94空港のどのあたりかが色でも分かる */
-    .kpi-rank{display:block;margin-top:4px;font-size:12px;text-decoration:none;border-radius:999px;
+    .kpi-rank{display:block;margin-top:4px;font-size:14px;text-decoration:none;border-radius:999px;
       padding:1px 7px;font-weight:500;width:max-content;max-width:100%;white-space:nowrap;
       overflow:hidden;text-overflow:ellipsis}
-    .kpi-rank b{font-size:12px;font-weight:500}
-    .kpi-rank i{font-style:normal;font-size:12px;opacity:.7;margin-left:1px}
+    .kpi-rank b{font-size:14px;font-weight:500}
+    .kpi-rank i{font-style:normal;font-size:14px;opacity:.7;margin-left:1px}
     .kpi-rank.rk-top{background:#ffe9ef;color:#a82f53;border:1.2px solid #f6c6d5}
     .kpi-rank.rk-high{background:#e9f3fd;color:#215b96;border:1.2px solid #c6dcf4}
     .kpi-rank.rk-mid{background:#eef5f8;color:#405964;border:1.2px solid #d8e7ee}
@@ -1493,22 +1500,22 @@
     .kpi-rank.rk-note{background:transparent;border:0;padding:1px 0;color:#496572;font-weight:500;white-space:normal}
     .apd-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:10px}
     .apd-card{border:1.5px solid #dcecf5;border-radius:14px;background:#fff;padding:10px 12px}
-    .apd-card h4{margin:0 0 9px;font-size:12px;font-weight:500;color:#2a4a5a;display:flex;
+    .apd-card h4{margin:0 0 9px;font-size:14px;font-weight:500;color:#2a4a5a;display:flex;
       align-items:baseline;gap:7px;flex-wrap:wrap}
-    .apd-card h4 small{font-weight:500;color:#496572;font-size:12px}
+    .apd-card h4 small{font-weight:500;color:#496572;font-size:14px}
     /* 滑走路：4kmの物差しの上に置く */
     .rw-viz{position:relative;padding-bottom:16px}
     .rw-bar{height:13px;border-radius:4px;background:#eef4f7;border:1px solid #e0eaf0;margin-bottom:4px;overflow:hidden}
     .rw-bar i{display:block;height:100%;background:linear-gradient(90deg,#4fb3e8,#1f7fb8)}
     .rw-ticks{position:absolute;left:0;right:0;bottom:0;height:14px}
-    .rw-ticks span{position:absolute;top:0;transform:translateX(-50%);font-size:12px;color:#547482;
+    .rw-ticks span{position:absolute;top:0;transform:translateX(-50%);font-size:14px;color:#547482;
       padding-top:2px;border-left:1px solid #dde8ee;line-height:1}
     /* 右端の目盛りは、半分だけ外へはみ出してしまうので内側へ寄せる */
     .rw-ticks span:last-child{transform:translateX(-100%);border-left:0;border-right:1px solid #dde8ee}
     .rw-num{display:flex;align-items:baseline;gap:7px;margin-top:4px}
     .rw-num b{font-size:18px;font-weight:800;color:#17384a;font-variant-numeric:tabular-nums}
-    .rw-num span{font-size:12px;color:#405964}
-    .rw-fit{margin-top:8px;font-size:12px;color:#4a6b7c}
+    .rw-num span{font-size:14px;color:#405964}
+    .rw-fit{margin-top:8px;font-size:14px;color:#4a6b7c}
     .rw-fit b{color:#17384a}
     .rw-fit i{display:block;height:6px;border-radius:3px;background:#eef4f7;margin-top:4px;overflow:hidden}
     .rw-fit i u{display:block;height:100%;background:#2fa35a;text-decoration:none}
@@ -1516,17 +1523,17 @@
     .fee-gauge{position:relative;height:10px;border-radius:5px;margin:22px 0 18px;
       background:linear-gradient(90deg,#9fd8b4,#ffe08a,#f3a08c)}
     .fee-gauge i{position:absolute;top:-4px;width:4px;height:18px;border-radius:2px;background:#17384a;transform:translateX(-50%)}
-    .fee-gauge b{position:absolute;top:-21px;transform:translateX(-50%);font-size:12px;font-weight:500;
+    .fee-gauge b{position:absolute;top:-21px;transform:translateX(-50%);font-size:14px;font-weight:500;
       color:#17384a;white-space:nowrap;font-variant-numeric:tabular-nums}
-    .fee-gauge .fg-lo,.fee-gauge .fg-hi{position:absolute;top:13px;font-size:12px;color:#496572;white-space:nowrap}
+    .fee-gauge .fg-lo,.fee-gauge .fg-hi{position:absolute;top:13px;font-size:14px;color:#496572;white-space:nowrap}
     .fee-gauge .fg-lo{left:0}.fee-gauge .fg-hi{right:0}
     .fee-mix{display:flex;gap:6px;flex-wrap:wrap}
     .fee-mix span{flex:1 1 68px;background:#f6fafc;border:1.5px solid #e4eef4;border-radius:10px;
-      padding:5px 7px;font-size:12px;color:#405964;text-align:center}
+      padding:5px 7px;font-size:14px;color:#405964;text-align:center}
     .fee-mix b{display:block;font-size:14px;font-weight:800;color:#17384a;font-variant-numeric:tabular-nums}
     .fee-mix b.hot{color:#c0392b}
     .fee-mix .tot{background:#eef7fb;border-color:#cfe6f1}
-    .fee-eg{margin-top:8px;font-size:12px;color:#405964}
+    .fee-eg{margin-top:8px;font-size:14px;color:#405964}
     .fee-eg b{color:#17384a}
     /* 発着枠の棒グラフ */
     /* 凡例を右に置けるかどうかは画面幅では決まらない。同じ1440pxでも、
@@ -1543,7 +1550,7 @@
     .sc-col.picked .sc-lab{color:#1273a2;font-weight:700}
     /* 棒を押したときに出る内訳。吹き出しが使えない端末でも読める */
     .sc-pick{margin-top:9px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;
-      font-size:12px;color:#405964;background:#f6fafc;border:1.5px solid #e2eef5;border-radius:10px;padding:7px 10px}
+      font-size:14px;color:#405964;background:#f6fafc;border:1.5px solid #e2eef5;border-radius:10px;padding:7px 10px}
     .sc-pick>b{color:#17384a}
     .sc-pick span b{color:#17384a;font-weight:700}
     .sc-pick .free b{color:#1e7c37}
@@ -1579,17 +1586,17 @@
     .sc-col.tight .sc-used u{background:#7f5f0c}
     .sc-col.full .sc-used u{background:#93341f}
     /* 数字は全部には付けない（いちばん混む枠・いちばん空く枠・選んだ枠だけ） */
-    .sc-val{position:absolute;left:0;right:0;margin-bottom:3px;text-align:center;font-size:12px;
+    .sc-val{position:absolute;left:0;right:0;margin-bottom:3px;text-align:center;font-size:14px;
       font-weight:700;color:#405964;font-variant-numeric:tabular-nums;line-height:1}
-    .sc-shut{position:absolute;left:-2px;right:-2px;bottom:6px;text-align:center;font-size:12px;
+    .sc-shut{position:absolute;left:-2px;right:-2px;bottom:6px;text-align:center;font-size:14px;
       color:#547482;white-space:nowrap}
     .sc-col.shut .sc-stack{background:repeating-linear-gradient(135deg,#f7fafb,#f7fafb 5px,#eef3f6 5px,#eef3f6 10px)}
-    .sc-lab{display:block;margin-top:6px;text-align:center;font-size:12px;color:#547482;
+    .sc-lab{display:block;margin-top:6px;text-align:center;font-size:14px;color:#547482;
       font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     /* 凡例はグラフの右に縦積み。横1行だと板の下にもう1段増え、
        グラフは小さいのに板だけ背が高くなっていた（2026-10-28） */
     .sc-legend{flex:1 1 168px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;
-      gap:5px;font-size:12px;color:#496572}
+      gap:5px;font-size:14px;color:#496572}
     .sc-lgh{display:block;font-weight:500;color:#2a4a5a}
     .sc-legend .k{display:inline-flex;align-items:center;gap:5px;color:#405964;white-space:nowrap}
     .sc-legend .k::before{content:'';width:9px;height:9px;border-radius:2px;background:#3da767;flex:0 0 auto}
@@ -1605,7 +1612,7 @@
       .sc-lgh,.sc-legend em{flex:1 1 100%}
     }
     /* グラフを読まなくても動けるように、結論を1行で */
-    .sc-advice{margin:-2px 0 9px;font-size:12px;color:#2a6b45;background:#f1fbf5;
+    .sc-advice{margin:-2px 0 9px;font-size:14px;color:#2a6b45;background:#f1fbf5;
       border:1.5px solid #cbe9d8;border-radius:10px;padding:6px 9px}
     .sc-advice b{color:#17384a}
     .sc-advice .bad{color:#c0392b}
@@ -1617,85 +1624,85 @@
       border:1.5px solid #dcecf5;border-radius:11px;background:#fff;padding:7px 10px;transition:.1s}
     .apg:hover{border-color:#9fcbe2;background:#f7fcff}
     .apg.mine{border-color:#cbe9d8;background:#f6fcf8}
-    .apg-n{grid-column:1;grid-row:1;font-size:12px;font-weight:500;color:#2a4657;
+    .apg-n{grid-column:1;grid-row:1;font-size:14px;font-weight:500;color:#2a4657;
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .apg-bar{grid-column:2;grid-row:1;height:9px;border-radius:5px;background:#eef4f7;overflow:hidden}
     .apg-bar u{display:block;height:100%;background:#3da767;text-decoration:none}
     .apg.loss .apg-bar u{background:#e08a7a}
-    .apg-net{grid-column:3;grid-row:1;font-size:12px;font-weight:700;color:#1f7a3d;
+    .apg-net{grid-column:3;grid-row:1;font-size:14px;font-weight:700;color:#1f7a3d;
       font-variant-numeric:tabular-nums;white-space:nowrap}
     .apg.loss .apg-net{color:#c0392b}
     .apg-net em{font-style:normal;font-weight:500;color:#496572;margin-left:1px}
-    .apg-sub{grid-column:1/-1;grid-row:2;font-size:12px;color:#496572}
+    .apg-sub{grid-column:1/-1;grid-row:2;font-size:14px;color:#496572}
     /* 行先の行もボタンになったので、見た目を素の行に戻しておく */
     button.apb{width:100%;text-align:left;font-family:inherit;border:0;background:transparent;
       cursor:pointer;border-radius:8px}
     button.apb:hover{background:#f2f9fd}
     /* 乗り入れ航空会社・行先の横棒 */
-    .apr h4{margin:2px 0 8px;font-size:12px;font-weight:500;color:#2a4a5a;display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
-    .apr h4 small{font-weight:500;color:#496572;font-size:12px}
+    .apr h4{margin:2px 0 8px;font-size:14px;font-weight:500;color:#2a4a5a;display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+    .apr h4 small{font-weight:500;color:#496572;font-size:14px}
     .apr-bars{display:grid;grid-template-columns:repeat(auto-fit,minmax(266px,1fr));gap:3px 16px;margin-bottom:12px}
     .apb{display:flex;align-items:center;gap:7px;padding:3px 0;min-width:0}
-    .apb-n{flex:0 0 112px;font-size:12px;font-weight:500;color:#2a4657;white-space:nowrap;
+    .apb-n{flex:0 0 112px;font-size:14px;font-weight:500;color:#2a4657;white-space:nowrap;
       overflow:hidden;text-overflow:ellipsis}
     .apb-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:0}
     /* 行先の名前は短い（羽田・福岡）。会社名ぶんの幅は要らないので、そのぶん棒に回す */
     .apr-bars.dest .apb-n{flex:0 0 80px}
     .apb>b{min-width:22px;text-align:right}
-    .apb-me{font-style:normal;font-size:12px;font-weight:500;color:#1f7a3d;background:#e6f7ed;
+    .apb-me{font-style:normal;font-size:14px;font-weight:500;color:#1f7a3d;background:#e6f7ed;
       border:1.2px solid #b8e5cb;border-radius:999px;padding:0 5px;margin-left:4px}
     .apb>i{flex:1 1 56px;min-width:0;height:9px;border-radius:5px;background:#eef4f7;overflow:hidden}
     .apb>i u{display:block;height:100%;background:#8fbed8;text-decoration:none}
     .apb.mine>i u{background:#3da767}
-    .apb>b{flex:0 0 auto;font-size:12px;font-weight:500;color:#17384a;font-variant-numeric:tabular-nums}
+    .apb>b{flex:0 0 auto;font-size:14px;font-weight:500;color:#17384a;font-variant-numeric:tabular-nums}
     .apb>b em{font-style:normal;font-weight:500;color:#496572;margin-left:2px}
-    .apb-p{flex:0 0 auto;font-size:12px;color:#496572;white-space:nowrap}
+    .apb-p{flex:0 0 auto;font-size:14px;color:#496572;white-space:nowrap}
     /* 行先に入っている会社名は長い（JAL・ANA・スカイマーク・ソラシドエア）。
        横棒の幅を食いつぶさないよう、ここだけ縮んで三点リーダで切れるようにする */
     .apb-c{flex:0 0 auto;display:flex;gap:0;white-space:nowrap}
     .apb-c .apb-dot{margin-right:0;margin-left:3px}
-    .apb-more{font-style:normal;font-size:12px;color:#496572;margin-left:3px}
-    .al-why{display:block;font-size:12px;color:#8f650c;margin-top:2px}
+    .apb-more{font-style:normal;font-size:14px;color:#496572;margin-left:3px}
+    .al-why{display:block;font-size:14px;color:#8f650c;margin-top:2px}
     /* 満席の路線に、大きい機体を勧める帯。このゲームの成長はここで起きる */
     .rl-up{display:flex;gap:8px;align-items:flex-start;margin-top:7px;padding:8px 10px;
       background:#f3fbf6;border:1.5px solid #cbe9d8;border-radius:11px}
     .rl-up .rlu-ic{flex:0 0 auto;font-size:14px;color:#1e7c37}
-    .rl-up b{display:block;font-size:12px;color:#17384a;font-weight:700}
+    .rl-up b{display:block;font-size:14px;color:#17384a;font-weight:700}
     .rl-up b u{text-decoration:none;color:#1e7c37}
-    .rl-up small{display:block;margin-top:3px;font-size:12px;color:#496572;line-height:1.5}
+    .rl-up small{display:block;margin-top:3px;font-size:14px;color:#496572;line-height:1.5}
     .rl-up .rlu-who{text-decoration:none;color:#1e7c37;font-weight:700}
     /* 取られる前に知らせる側は、色を変えて区別する */
     .rl-up.warn{background:#fff8e6;border-color:#f0dcae}
     .rl-up.warn .rlu-ic{color:#8f650c}
     .rl-up.warn b u.rlu-who{color:#9a3326}
     /* 他社の社風と、最近の動き */
-    .rw h4{margin:2px 0 8px;font-size:12px;font-weight:700;color:#2a4a5a;display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
-    .rw h4 small{font-weight:500;color:#496572;font-size:12px}
+    .rw h4{margin:2px 0 8px;font-size:14px;font-weight:700;color:#2a4a5a;display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+    .rw h4 small{font-weight:500;color:#496572;font-size:14px}
     .rw-list{display:flex;flex-direction:column;gap:3px}
     /* 板が狭いとき（会社タブの右側は329pxになることがある）に備えて、各列を縮められるように */
     .rw-row{display:grid;grid-template-columns:minmax(72px,104px) minmax(0,118px) minmax(36px,1fr) auto;
       gap:3px 8px;align-items:center;
       padding:5px 7px;border-radius:9px}
     .rw-row.ally{background:#f3fbf6}
-    .rw-n{font-size:12px;font-weight:700;color:#2a4657;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .rw-tag{font-style:normal;font-size:12px;font-weight:700;color:#1e7c37;background:#e6f7ed;
+    .rw-n{font-size:14px;font-weight:700;color:#2a4657;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rw-tag{font-style:normal;font-size:14px;font-weight:700;color:#1e7c37;background:#e6f7ed;
       border:1.2px solid #b8e5cb;border-radius:999px;padding:0 5px;margin-left:4px}
-    .rw-home{font-size:12px;color:#496572;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rw-home{font-size:14px;color:#496572;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .rw-bar{height:8px;border-radius:4px;background:#eef4f7;overflow:hidden}
     .rw-bar u{display:block;height:100%;background:#8fbed8;text-decoration:none}
-    .rw-f{font-size:12px;font-weight:700;color:#17384a;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .rw-f{font-size:14px;font-weight:700;color:#17384a;font-variant-numeric:tabular-nums;white-space:nowrap}
     .rw-f em{font-style:normal;font-weight:500;color:#496572;margin-left:2px}
-    .rw-tx{grid-column:1/-1;font-size:12px;color:#496572}
+    .rw-tx{grid-column:1/-1;font-size:14px;color:#496572}
     .rw-log{display:flex;flex-direction:column;gap:3px}
-    .rw-le{display:flex;gap:8px;align-items:baseline;font-size:12px;color:#405964;
+    .rw-le{display:flex;gap:8px;align-items:baseline;font-size:14px;color:#405964;
       border-bottom:1px solid #eef3f6;padding:4px 2px}
     .rw-w{flex:0 0 auto;font-weight:700;color:#496572;font-variant-numeric:tabular-nums}
     @media(max-width:760px){.rw-row{grid-template-columns:1fr auto;gap:2px 8px}
       .rw-home{grid-column:1/-1}.rw-bar{grid-column:1/-1}}
     /* 点が何の会社かは、触る端末では吹き出しが出ないので、色見本を文字で添える */
-    .apr-key{margin:-4px 0 8px;font-size:12px;color:#496572;display:flex;flex-wrap:wrap;gap:3px 10px;align-items:center}
+    .apr-key{margin:-4px 0 8px;font-size:14px;color:#496572;display:flex;flex-wrap:wrap;gap:3px 10px;align-items:center}
     .apr-k{display:inline-flex;align-items:center;gap:1px;white-space:nowrap}
-    .apr-note{margin:2px 0 0;font-size:12px;color:#4a6b7c;background:#f3fbf6;border:1.5px solid #cdeedb;
+    .apr-note{margin:2px 0 0;font-size:14px;color:#4a6b7c;background:#f3fbf6;border:1.5px solid #cdeedb;
       border-radius:10px;padding:7px 9px}
     @media(max-width:760px){
       .slotchart{gap:4px}
@@ -1707,12 +1714,12 @@
     .ap-mine{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:7px}
     .apm-row{border:1.5px solid #dcecf5;border-radius:12px;background:#fff;padding:8px 10px}
     .apm-row.resting{background:#f6f9fb;color:#496572}
-    .apm-head b{display:block;font-size:12px;font-weight:500;color:#2a4657}
-    .apm-head span{display:block;font-size:12px;color:#405964;margin-top:2px}
+    .apm-head b{display:block;font-size:14px;font-weight:500;color:#2a4657}
+    .apm-head span{display:block;font-size:14px;color:#405964;margin-top:2px}
     .apm-times{margin-top:5px;display:flex;flex-wrap:wrap;gap:4px}
-    .apm-times span{font-size:12px;font-weight:500;color:#17384a;background:#eef7fb;
+    .apm-times span{font-size:14px;font-weight:500;color:#17384a;background:#eef7fb;
       border:1.2px solid #d8eaf4;border-radius:999px;padding:2px 8px;font-variant-numeric:tabular-nums}
-    .apm-rest{margin-top:5px;font-size:12px;color:#8f650c}
+    .apm-rest{margin-top:5px;font-size:14px;color:#8f650c}
     /* 横に余裕がない所（右パネル）は、項目を上の帯にして中身を下に置く。
        それでも「開いた分だけ下がどく」ことは起きない＝場所を見失わない */
     .md.narrow{grid-template-columns:1fr;gap:8px}
@@ -1721,7 +1728,7 @@
     /* 帯に3つ以上並ぶときだけ、2行目を落として1行の見出しにする */
     .md.narrow .md-list:has(.md-item:nth-child(3)) .md-item small{display:none}
     .md.shut>.md-body{display:none}
-    .mi-caret{flex:0 0 auto;font-size:12px;color:#496572}
+    .mi-caret{flex:0 0 auto;font-size:14px;color:#496572}
     .plane-card.plain{box-shadow:none}
     @media(max-width:760px){
       .md,.md.wide,.md.slim{grid-template-columns:1fr}
@@ -1739,8 +1746,8 @@
       display:flex;align-items:center;justify-content:center}
     .fl-art .pa-svg{width:100%;height:100%}
     .fl-id{min-width:0}
-    .fl-id b{display:block;font-size:12px;font-weight:500;color:#17384a;line-height:1.25}
-    .fl-id span{display:block;font-size:12px;color:#405964;
+    .fl-id b{display:block;font-size:14px;font-weight:500;color:#17384a;line-height:1.25}
+    .fl-id span{display:block;font-size:14px;color:#405964;
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     /* 諸元は会社タブだと「標準／ドリンク｜実36席・品質46」と長い。
        機体欄は168px固定なので、この行だけ折り返させる（…で切ると席数が消える） */
@@ -1758,13 +1765,13 @@
        .fl-row は 168px+1fr の2列なので、両列にまたがらせる。 */
     .fl-cfg{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
       margin-top:2px;padding-top:7px;border-top:1px dashed #dcecf5}
-    .fl-cfgnow{flex:1 1 auto;min-width:0;font-size:12px;color:#496572;line-height:1.3}
+    .fl-cfgnow{flex:1 1 auto;min-width:0;font-size:14px;color:#496572;line-height:1.3}
     .fl-cfgnow i{font-style:normal;font-weight:800;color:#17384a;
       background:#eef7fc;border:1.2px solid #cfe7f4;border-radius:999px;padding:1px 7px;margin-right:6px}
     .fl-setup{flex:0 0 auto}
     /* 設定の窓。買い物窓より中身が少ないので細くする */
     .fw-win{width:min(640px,95vw)}
-    .fw-sub{padding:7px 14px;font-size:12px;color:#496572;background:#f6fbfe;border-bottom:1px solid #e3f0f7}
+    .fw-sub{padding:7px 14px;font-size:14px;color:#496572;background:#f6fbfe;border-bottom:1px solid #e3f0f7}
     .cfg-now{font-style:normal;color:#1f7a3d;font-weight:800}
     .cfg-fee{font-style:normal;color:#8f650c}
     .cfg-fee.ng{color:#b4472a;text-decoration:line-through}
@@ -1773,7 +1780,7 @@
        本文がスクロールしても、この帯は窓の下に残る（払う前に必ず目に入る） */
     .fw-bar{flex:0 0 auto;border-top:1.5px solid #e3f0f7;background:#f8fcfe;
       padding:9px 14px;display:flex;flex-direction:column;gap:7px}
-    .fw-chg{display:flex;flex-direction:column;gap:3px;font-size:12px;line-height:16px}
+    .fw-chg{display:flex;flex-direction:column;gap:3px;font-size:14px;line-height:16px}
     /* 1行ずつ必ず1行に収める。名前は足りなければ途中で切り、金額は右端に残す */
     .fw-ci{display:flex;align-items:baseline;gap:8px;color:#17384a}
     .fw-cl{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1784,7 +1791,7 @@
     .fw-act{display:flex;align-items:center;justify-content:flex-end;gap:8px}
     /* 行の高さを数字で決めておく。「（あと ¥… 不足）」のような
        全角まじりの行は字によって2pxほど背が変わり、そのぶん帯が動く */
-    .fw-sum{font-size:13px;line-height:19px;font-weight:800;color:#17384a;
+    .fw-sum{font-size:14px;line-height:19px;font-weight:800;color:#17384a;
       overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .fw-sum.none{color:#7a95a3;font-weight:500}
     .fw-sum.pay{color:#8f650c}.fw-sum.free{color:#1f7a3d}.fw-sum.ng{color:#b4472a}
@@ -1798,51 +1805,51 @@
     .fl-duty .fd-ic{flex:0 0 auto}
     /* 路線名は「鹿児島 → 新千歳 → 鹿児島」で145px要る。
        切らずに折り返す（どこへ飛んでいるかが読めないと、この一覧の意味が無い） */
-    .fl-duty .fd-name{flex:1 1 150px;min-width:0;font-size:12px;font-weight:500;color:#2a4a5a;
+    .fl-duty .fd-name{flex:1 1 150px;min-width:0;font-size:14px;font-weight:500;color:#2a4a5a;
       white-space:normal;overflow-wrap:anywhere}
-    .fl-duty .fd-days{flex:0 0 auto;font-size:12px;font-weight:500;color:#1373a6;
+    .fl-duty .fd-days{flex:0 0 auto;font-size:14px;font-weight:500;color:#1373a6;
       background:#e8f5fd;border-radius:7px;padding:1px 7px}
-    .fl-duty .fd-time{flex:0 0 auto;font-size:12px;font-weight:500;color:#3a5563;
+    .fl-duty .fd-time{flex:0 0 auto;font-size:14px;font-weight:500;color:#3a5563;
       font-variant-numeric:tabular-nums}
-    .fl-duty .fd-freq{flex:0 0 auto;font-size:12px;color:#405964}
-    .fl-duty .fd-season{flex:0 0 auto;font-size:12px;color:#8f650c;background:#fff8e6;
+    .fl-duty .fd-freq{flex:0 0 auto;font-size:14px;color:#405964}
+    .fl-duty .fd-season{flex:0 0 auto;font-size:14px;color:#8f650c;background:#fff8e6;
       border-radius:7px;padding:1px 6px}
     .fl-idle{padding:6px 8px;border-radius:9px;background:#f7fbfe;border:1.5px dashed #bcdcec;
-      font-size:12px;color:#405964}
-    .fl-idle small{font-size:12px;color:#496572}
-    .fl-free{font-size:12px;color:#496572;padding:1px 2px}
+      font-size:14px;color:#405964}
+    .fl-idle small{font-size:14px;color:#496572}
+    .fl-free{font-size:14px;color:#496572;padding:1px 2px}
     .fl-free b{color:#1373a6}
     /* 予想利益。路線ごとは「売上−運航費」、機体の合計は夜間格納とリース料を引いたあと */
-    .fl-duty .fd-gain{flex:0 0 auto;margin-left:auto;font-size:12px;font-weight:500;
+    .fl-duty .fd-gain{flex:0 0 auto;margin-left:auto;font-size:14px;font-weight:500;
       font-variant-numeric:tabular-nums;white-space:nowrap}
     .fl-duty .fd-gain.ok{color:#1f7a3d}
     .fl-duty .fd-gain.bad{color:#c0392b}
     .fl-duty .fd-gain.na{color:#547482;font-weight:500}
     .fl-sum{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px;margin-top:4px;
       padding:5px 8px;border-radius:9px;border:1.5px solid #dcecf5;background:#f7fbfd}
-    .fl-sum span{font-size:12px;font-weight:500;color:#405964}
+    .fl-sum span{font-size:14px;font-weight:500;color:#405964}
     .fl-sum b{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
-    .fl-sum small{flex:0 0 100%;font-size:12px;color:#496572;line-height:1.4}
+    .fl-sum small{flex:0 0 100%;font-size:14px;color:#496572;line-height:1.4}
     .fl-sum.pos{background:#f3fbf5;border-color:#cfe9d6}.fl-sum.pos b{color:#1f7a3d}
     .fl-sum.neg{background:#fff6f3;border-color:#ffd6c9}.fl-sum.neg b{color:#c0392b}
     .fl-total{display:flex;align-items:baseline;justify-content:space-between;gap:8px;
       margin:0 0 8px;padding:8px 12px;border-radius:12px;border:2px solid #dcecf5;background:#f7fbfd}
-    .fl-total span{font-size:12px;font-weight:500;color:#405964}
+    .fl-total span{font-size:14px;font-weight:500;color:#405964}
     .fl-total b{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
     .fl-total.pos{background:#f3fbf5;border-color:#a9d8bd}.fl-total.pos b{color:#1f7a3d}
     .fl-total.neg{background:#fff6f3;border-color:#ffc9b4}.fl-total.neg b{color:#c0392b}
     @media(max-width:620px){.fl-row{grid-template-columns:1fr;gap:6px}}
     /* 機材待ちの路線があることの知らせ */
-    .fb-note{margin:2px 0 8px;padding:8px 11px;border-radius:12px;font-size:12px;line-height:1.5;
+    .fb-note{margin:2px 0 8px;padding:8px 11px;border-radius:12px;font-size:14px;line-height:1.5;
       background:#fff6e6;border:2px solid #ffd9a0;color:#8a5a00}
     /* 路線カードから機材をえらぶ */
     .rp-pick{margin-top:8px;padding:8px 9px;border-radius:12px;background:#f7fbfe;border:2px solid #cfe6f2}
-    .rp-pick .rp-lab{display:block;font-size:12px;font-weight:500;color:#1f6a8e;margin-bottom:5px}
-    .rp-pick .rp-lab small{display:block;font-size:12px;font-weight:500;color:#496572;margin-top:1px}
+    .rp-pick .rp-lab{display:block;font-size:14px;font-weight:500;color:#1f6a8e;margin-bottom:5px}
+    .rp-pick .rp-lab small{display:block;font-size:14px;font-weight:500;color:#496572;margin-top:1px}
     .rp-pick .pick-plane{margin-bottom:5px}
     .rp-pick .pick-plane.on{border-color:#2fa35a;background:#f1fbf4;box-shadow:0 3px 0 #d8f0e1}
     .rp-pick .rp-off{width:100%;margin-top:2px}
-    .rp-empty{font-size:12px;color:#496572;margin:2px}
+    .rp-empty{font-size:14px;color:#496572;margin:2px}
     /* 地図で経路を描く（航路タブ表示中） */
     .draft-leg{position:absolute;height:0;border-top:3px dashed #1f9fe0;transform-origin:0 50%;z-index:3;filter:drop-shadow(0 0 4px #1f9fe0aa);pointer-events:none;}
     .airport.picking{cursor:crosshair;}
@@ -1860,64 +1867,68 @@
     /* 会社（資産）画面 */
     .co-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 4px;}
     .co-summary>div{background:#f2fafd;border:1.5px solid #dcecf5;border-radius:12px;padding:8px 10px;}
-    .co-summary span{font-size:12px;color:#405964;}
+    .co-summary span{font-size:14px;color:#405964;}
     .co-summary b{display:block;margin-top:2px;font-size:15px;color:#243f4c;}
-    .co-summary b i{font-style:normal;font-size:12px;color:#2fa957;margin-left:3px;}
+    .co-summary b i{font-style:normal;font-size:14px;color:#2fa957;margin-left:3px;}
     .asset-row{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;border:1.5px solid #dcecf5;border-radius:12px;background:#fff;margin:6px 0;}
     .asset-ic{font-size:22px;line-height:1;flex:0 0 auto;}
     .asset-info{flex:1;min-width:0;}
-    .asset-info b{display:block;font-size:12px;color:#2a4a5a;}
-    .asset-info span{display:block;font-size:12px;color:#405964;line-height:1.4;}
+    .asset-info b{display:block;font-size:14px;color:#2a4a5a;}
+    .asset-info span{display:block;font-size:14px;color:#405964;line-height:1.4;}
     .asset-info .asset-sub{margin-top:2px;color:#1f6a8e;font-weight:500;}
-    .asset-empty{font-size:12px;color:#9bbccb;padding:6px 2px;}
+    .asset-empty{font-size:14px;color:#9bbccb;padding:6px 2px;}
     .co-summary .rank-cell b{color:#1373a6;}
-    .co-summary b i{font-style:normal;font-size:12px;color:#405964;margin-left:2px;}
+    .co-summary b i{font-style:normal;font-size:14px;color:#405964;margin-left:2px;}
     /* 全国ランキング */
     .rank-board{display:flex;flex-direction:column;gap:5px;margin:4px 0;}
     .rank-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;background:#f4fafd;border:1.5px solid #e4eef5;}
     .rank-row.me{background:#e6f5ff;border-color:#8fd0f2;box-shadow:0 2px 0 #cfe6f2;}
-    .rank-pos{flex:0 0 20px;text-align:center;font-weight:500;color:#496572;font-size:13px;}
+    .rank-pos{flex:0 0 20px;text-align:center;font-weight:500;color:#496572;font-size:14px;}
     .rank-row.me .rank-pos{color:#1373a6;}
     /* 2026-10-15：社名の幅は固定せず、余りを取らせる。
    96px固定だったため「あおぞら航空（あなた）」が入りきらず、肝心の（あなた）が切れていた。
    足りないときだけ…で詰める。 */
-.rank-name{flex:1 1 auto;min-width:0;font-size:12px;font-weight:500;color:#2a4a5a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .rank-row.me .rank-name:after{content:'（あなた）';font-size:12px;color:#1273a2;font-weight:500;}
+/* 2026-11-16：14px化で「あおぞら航空（あなた）」が154px要るようになり、
+   320pxの板（社名の枠102px）では…で切っても肝心の（あなた）が消える。
+   折り返させる。keep-all なので社名の途中では折れず、「（あなた）」が次の行へ落ちるだけ */
+.rank-name{flex:1 1 auto;min-width:0;font-size:14px;font-weight:500;color:#2a4a5a;
+  white-space:normal;word-break:keep-all;overflow-wrap:break-word;line-height:1.3;}
+    .rank-row.me .rank-name:after{content:'（あなた）';font-size:14px;color:#1273a2;font-weight:500;}
     /* 棒の幅は固定。行ごとに伸び縮みすると、順位どうしの比較ができなくなる */
-.rank-bar{flex:0 0 56px;height:10px;background:#e4eef5;border-radius:6px;overflow:hidden;}
+.rank-bar{flex:0 0 50px;height:10px;background:#e4eef5;border-radius:6px;overflow:hidden;}   /* 2026-11-16：14px化で「あおぞら航空（あなた）」に3px足りなくなったので、棒を6px譲った */
     .rank-bar i{display:block;height:100%;border-radius:6px;min-width:3px;}
-    .rank-val{flex:0 0 auto;font-size:12px;font-weight:500;color:#3a5563;width:40px;text-align:right;}
+    .rank-val{flex:0 0 auto;font-size:14px;font-weight:500;color:#3a5563;width:40px;text-align:right;}
     /* 機材別 週次収支 */
     .pl-sum{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:4px 0 8px;}
     .pl-sum>div{background:#f2fafd;border:1.5px solid #dcecf5;border-radius:10px;padding:7px 8px;}
-    .pl-sum span{font-size:12px;color:#405964;display:block;}
-    .pl-sum b{font-size:12px;color:#243f4c;}
+    .pl-sum span{font-size:14px;color:#405964;display:block;}
+    .pl-sum b{font-size:14px;color:#243f4c;}
     .pl-sum .pos b{color:#1f7a3d;}
     .pl-sum .loss b{color:#c0392b;}
     .pl-row{border:1.5px solid #dcecf5;border-radius:12px;background:#fff;padding:8px 10px;margin:6px 0;}
     .pl-row.neg{border-color:#ffcabf;background:#fff6f4;}
     .pl-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
-    .pl-head b{font-size:12px;color:#2a4a5a;}
+    .pl-head b{font-size:14px;color:#2a4a5a;}
     /* 売却ボタン＋経路名は、狭い所では1行に収まらない。折り返させて横にはみ出させない */
-    .pl-head span{font-size:12px;color:#405964;min-width:0;}
+    .pl-head span{font-size:14px;color:#405964;min-width:0;}
     .pl-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px;}
-    .pl-cell{display:flex;justify-content:space-between;font-size:12px;}
+    .pl-cell{display:flex;justify-content:space-between;font-size:14px;}
     .pl-cell span{color:#405964;}
     .pl-cell b{color:#3a5563;}
     .pl-cell.rev b{color:#1373a6;}
-    .pl-cell.net{grid-column:1/3;border-top:1px dashed #dcecf5;padding-top:4px;margin-top:2px;font-size:12px;}
+    .pl-cell.net{grid-column:1/3;border-top:1px dashed #dcecf5;padding-top:4px;margin-top:2px;font-size:14px;}
     .pl-cell.net b{font-weight:500;}
     .pl-cell.net.pos b{color:#1f7a3d;}
     .pl-cell.net.loss b{color:#c0392b;}
     .buy2{display:flex;flex-direction:column;gap:4px;flex:0 0 auto;}
     .buy2 .mini-btn{width:auto;padding:6px 10px;white-space:nowrap;}
-    .lease-tag{font-size:12px;background:#ffe6bf;color:#b5731a;border-radius:6px;padding:1px 5px;font-weight:500;}
+    .lease-tag{font-size:14px;background:#ffe6bf;color:#b5731a;border-radius:6px;padding:1px 5px;font-weight:500;}
     /* 財務 */
     .fin-box{border:2px solid #dcecf5;border-radius:14px;background:#f7fbfe;padding:10px;margin:6px 0;}
     .fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
     .fin-grid>div{background:#fff;border:1.5px solid #e4eef5;border-radius:10px;padding:6px 8px;}
-    .fin-grid span{font-size:12px;color:#405964;display:block;}
-    .fin-grid b{font-size:13px;color:#243f4c;}
+    .fin-grid span{font-size:14px;color:#405964;display:block;}
+    .fin-grid b{font-size:14px;color:#243f4c;}
     .fin-grid b.pos{color:#1f7a3d;}.fin-grid b.loss{color:#c0392b;}
     .fin-ops{display:flex;gap:6px;margin-top:8px;}
     .fin-ops .fin-btn{flex:1;width:auto;padding:8px 4px;}
@@ -1944,24 +1955,24 @@
     .ipo-cond>span{flex:0 0 auto;color:#b4c3cc;font-weight:500}
     .ipo-cond.ok{border-color:#bfe3c9;background:#f4fbf5}
     .ipo-cond.ok>span{color:#2fa35a}
-    .ipo-cond b{display:block;font-size:12px;color:#2a4657}
-    .ipo-cond small{display:block;font-size:12px;color:#5d7883;margin-top:1px}
+    .ipo-cond b{display:block;font-size:14px;color:#2a4657}
+    .ipo-cond small{display:block;font-size:14px;color:#5d7883;margin-top:1px}
     .ipo-ops{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 4px}
     .ipo-ops .mini-btn{width:auto;min-height:60px;padding:8px 6px;text-align:center;line-height:1.35}
-    .ipo-ops .mini-btn b{display:block;font-size:12px;font-weight:500}
-    .ipo-ops .mini-btn i{display:block;font-style:normal;font-size:12px;color:#1f7a3d}
-    .ipo-ops .mini-btn em{display:block;font-style:normal;font-size:12px;color:#7b8f99}
+    .ipo-ops .mini-btn b{display:block;font-size:14px;font-weight:500}
+    .ipo-ops .mini-btn i{display:block;font-style:normal;font-size:14px;color:#1f7a3d}
+    .ipo-ops .mini-btn em{display:block;font-style:normal;font-size:14px;color:#7b8f99}
     .ipo-ops .mini-btn[disabled] i,.ipo-ops .mini-btn[disabled] em{color:inherit;opacity:.8}
     .fin-card.stock:hover{background:#edf7ea}
     .fin-win{width:min(560px,95vw)}
     /* 証券の窓のタブ。買い物の窓の並べ替えボタンと同じ見た目に揃える */
     .fin-tabs{display:flex;gap:6px;margin:0 0 10px}
     .fin-tab{flex:1;min-height:42px;padding:9px 6px;border-radius:10px;border:2px solid #d8e6ee;background:#fff;
-      color:#486a78;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer}
+      color:#486a78;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
     .fin-tab.on{border-color:#1f9fe0;background:#eaf6fd;color:#12678f}
     .stk-lot{display:flex;align-items:center;gap:6px;margin:0 0 9px}
-    .stk-lot>span{font-size:12px;color:#405964;flex:0 0 auto}
-    .stk-lot .seg-btn{flex:1;padding:6px 4px;font-size:12px}
+    .stk-lot>span{font-size:14px;color:#405964;flex:0 0 auto}
+    .stk-lot .seg-btn{flex:1;padding:6px 4px;font-size:14px}
     /* ── 2026-10-28：中の<b>と<span>が勝手に改行する件 ──
        .al-info b と .al-info span は「display:block」なので、
        行の中で使った太字（4,200円・燃料費−3%）や業種の札まで
@@ -1982,10 +1993,10 @@
     .stk-spark svg{display:block;width:100%;height:30px;overflow:visible}
     .stk-spark svg.up{color:#1f7a3d}
     .stk-spark svg.down{color:#c0392b}
-    .stk-spark i{display:block;font-style:normal;font-size:12px;color:#8697a0;margin-top:1px}
-    .stk-spark.none{font-size:12px;color:#8697a0;margin:4px 0 2px}
+    .stk-spark i{display:block;font-style:normal;font-size:14px;color:#8697a0;margin-top:1px}
+    .stk-spark.none{font-size:14px;color:#8697a0;margin:4px 0 2px}
     /* 他社の株の見出しと、便数の札 */
-    .stk-head{font-size:13px;color:#2a4657;margin:16px 0 8px;padding-top:12px;border-top:2px solid #e3edf3}
+    .stk-head{font-size:14px;color:#2a4657;margin:16px 0 8px;padding-top:12px;border-top:2px solid #e3edf3}
     .al-b.freq{background:#c2d2da;color:#2a4657}
     .money-line small b{display:inline}
     .stk-row{align-items:flex-start}
@@ -1993,20 +2004,20 @@
     .stk-sec{background:#8aa5b2;margin-left:6px}
     .stk-px{color:#243f4c}
     .al-info .up{color:#1f7a3d;font-style:normal}.al-info .down{color:#c0392b;font-style:normal}
-    .stk-yu i{display:block;font-style:normal;font-size:12px;margin-top:1px}
+    .stk-yu i{display:block;font-style:normal;font-size:14px;margin-top:1px}
     .stk-on{color:#1f7a3d}.stk-next{color:#8f650c}.stk-none{color:#7b8f99}
     .stk-tx{color:#8697a0!important}
-    .stk-note{font-size:12px;color:var(--muted);margin:9px 2px 0;line-height:1.55}
+    .stk-note{font-size:14px;color:var(--muted);margin:9px 2px 0;line-height:1.55}
     /* 大空建設の優待で安くなっているとき、買い物の窓の値段のうしろに出す印 */
     .shop-yutai{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:7px;
-      background:#2fa35a;color:#fff;font-size:12px;font-style:normal;font-weight:500}
+      background:#2fa35a;color:#fff;font-size:14px;font-style:normal;font-weight:500}
     .pnl-chart{width:100%;height:96px;background:#f7fbfe;border:1.5px solid #dcecf5;border-radius:12px;}
-    .chart-cap{font-size:12px;color:#405964;text-align:right;margin-top:3px;}
+    .chart-cap{font-size:14px;color:#405964;text-align:right;margin-top:3px;}
     /* 企画（認知度・販促） */
     .aware-box{border:2px solid #dcecf5;border-radius:14px;background:#f7fbfe;padding:10px;margin:8px 0;}
-    .aware-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12px;}
+    .aware-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px;}
     .aware-head b{color:#2a4a5a;}
-    .aware-head span{font-size:12px;color:#405964;}
+    .aware-head span{font-size:14px;color:#405964;}
     .aware-bar{height:12px;background:#e4eef5;border-radius:8px;overflow:hidden;margin-top:8px;}
     .aware-bar i{display:block;height:100%;background:linear-gradient(90deg,#38b6ec,#1f9fe0);border-radius:8px;transition:width .2s;}
     /* 図鑑 */
@@ -2015,35 +2026,35 @@
     .pd-card{max-width:560px;width:100%;max-height:calc(100vh - 32px);display:flex;flex-direction:column;text-align:left}
     .pd-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
     .pd-top h3{margin:0;font-size:17px}
-    .pd-close{border:1.5px solid #d6e4ea;background:#fff;color:#4a6b7c;border-radius:9px;padding:7px 12px;font-weight:500;font-size:12px;cursor:pointer}
+    .pd-close{border:1.5px solid #d6e4ea;background:#fff;color:#4a6b7c;border-radius:9px;padding:7px 12px;font-weight:500;font-size:14px;cursor:pointer}
     .pd-close:hover{background:#f1f7fa}
-    .pd-note{font-size:12px;color:var(--muted);margin:6px 0 8px;line-height:1.5}
-    .pd-q{width:100%;border:2px solid #dcecf5;border-radius:10px;padding:9px 11px;font:inherit;font-size:13px;background:#f9fdff}
+    .pd-note{font-size:14px;color:var(--muted);margin:6px 0 8px;line-height:1.5}
+    .pd-q{width:100%;border:2px solid #dcecf5;border-radius:10px;padding:9px 11px;font:inherit;font-size:14px;background:#f9fdff}
     .pd-q:focus{outline:none;border-color:var(--cyan)}
     .pd-tabs{display:flex;gap:5px;margin:9px 0 6px}
-    .pd-tab{flex:1;border:2px solid #dcecf5;background:#fff;color:#5b7b8c;border-radius:10px;padding:8px 4px;font-weight:500;font-size:12px;cursor:pointer}
+    .pd-tab{flex:1;border:2px solid #dcecf5;background:#fff;color:#5b7b8c;border-radius:10px;padding:8px 4px;font-weight:500;font-size:14px;cursor:pointer}
     .pd-tab.on{background:var(--cyan);border-color:var(--cyan);color:#05202b}
     .pd-list{overflow:auto;flex:1;min-height:120px;-webkit-overflow-scrolling:touch}
-    .pd-cat{font-size:12px;letter-spacing:.08em;color:#496572;margin:12px 0 5px;font-weight:500}
+    .pd-cat{font-size:14px;letter-spacing:.08em;color:#496572;margin:12px 0 5px;font-weight:500}
     .pd-item{border:1.5px solid #e4eef5;border-radius:11px;background:#fff;margin-bottom:5px;overflow:hidden}
     .pd-head{width:100%;display:flex;align-items:baseline;justify-content:space-between;gap:8px;
       padding:10px 11px;border:0;background:#fff;cursor:pointer;text-align:left}
     .pd-head:hover{background:#f6fbfd}
     .pd-head.open{background:#eff8fc}
-    .pd-head b{font-size:13px;color:#17384a;display:flex;align-items:center;gap:6px}
-    .pd-head span{font-size:12px;color:#405964;white-space:nowrap}
+    .pd-head b{font-size:14px;color:#17384a;display:flex;align-items:center;gap:6px}
+    .pd-head span{font-size:14px;color:#405964;white-space:nowrap}
     .pd-dot{display:inline-block;width:9px;height:9px;border-radius:50%;flex:none}
     .pd-body{padding:0 11px 11px}
-    .pd-body>p{font-size:12px;line-height:1.7;color:#3d5a6b;margin:2px 0 9px}
+    .pd-body>p{font-size:14px;line-height:1.7;color:#3d5a6b;margin:2px 0 9px}
     .pd-spec{display:grid;grid-template-columns:1fr 1fr;gap:5px}
     .pd-spec>div{background:#f6fafc;border-radius:8px;padding:6px 8px}
-    .pd-spec span{display:block;font-size:12px;color:#496572;font-weight:500}
-    .pd-spec b{font-size:12px;color:#17384a}
-    .pd-tip{font-size:12px;line-height:1.6;color:#5b7b8c;background:#f3f8fb;border-radius:9px;padding:7px 9px;margin:8px 0 0}
-    .pd-empty{font-size:12px;color:var(--muted);text-align:center;padding:24px 0}
+    .pd-spec span{display:block;font-size:14px;color:#496572;font-weight:500}
+    .pd-spec b{font-size:14px;color:#17384a}
+    .pd-tip{font-size:14px;line-height:1.6;color:#5b7b8c;background:#f3f8fb;border-radius:9px;padding:7px 9px;margin:8px 0 0}
+    .pd-empty{font-size:14px;color:var(--muted);text-align:center;padding:24px 0}
     @media (max-width:420px){.pd-spec{grid-template-columns:1fr}}
     /* 地域別の知名度リスト */
-    .rg-note{font-size:12px;color:#405964;line-height:1.6;margin:4px 0 8px;}
+    .rg-note{font-size:14px;color:#405964;line-height:1.6;margin:4px 0 8px;}
     .rg-note b{color:#2a4a5a;}
     .rg-list{display:flex;flex-direction:column;gap:4px;}
     /* 2026-10-15：説明文は地域名の欄（幅41px）に入れていたため、
@@ -2051,27 +2062,27 @@
     /* 棒と数値の欄を細くして、地域名が1行に収まるようにする（「♨ 九州」＋「地元」で約80px） */
     .rg-row{display:grid;grid-template-columns:1fr 56px 52px auto;align-items:center;gap:4px 8px;
       border:1.5px solid #e4eef5;border-radius:11px;background:#fff;padding:6px 8px;}
-    .rg-sub{grid-column:1/-1;font-size:12px;color:#405964;line-height:1.3}
+    .rg-sub{grid-column:1/-1;font-size:14px;color:#405964;line-height:1.3}
     .rg-sub b{color:#1373a6}
     .rg-row.home{border-color:#bfe3cb;background:#f6fcf8;}
-    .rg-name b{font-size:12px;color:#17384a;}
-    .rg-name small{display:block;font-size:12px;color:#405964;margin-top:1px;}
+    .rg-name b{font-size:14px;color:#17384a;}
+    .rg-name small{display:block;font-size:14px;color:#405964;margin-top:1px;}
     .rg-name small b{color:#1373a6;}
-    .rg-tag{font-style:normal;font-size:12px;color:#2a7a48;background:#e3f4e9;border-radius:5px;padding:1px 4px;margin-left:4px;}
+    .rg-tag{font-style:normal;font-size:14px;color:#2a7a48;background:#e3f4e9;border-radius:5px;padding:1px 4px;margin-left:4px;}
     .rg-bar{position:relative;height:9px;background:#eef3f7;border-radius:6px;overflow:visible;}
     .rg-bar i{display:block;height:100%;background:linear-gradient(90deg,#38b6ec,#1f9fe0);border-radius:6px;transition:width .2s;}
     .rg-bar u{position:absolute;top:-2px;width:2px;height:13px;background:#f0a62e;border-radius:1px;}
-    .rg-val{text-align:right;font-size:12px;}
+    .rg-val{text-align:right;font-size:14px;}
     .rg-val b{color:#17384a;}
-    .rg-val em{display:block;font-style:normal;font-size:12px;line-height:1.3;}
+    .rg-val em{display:block;font-style:normal;font-size:14px;line-height:1.3;}
     .rg-up{color:#1f7a3d;} .rg-dn{color:#c0392b;} .rg-flat{color:#9aa8b2;}
     @media (max-width:480px){.rg-row{grid-template-columns:1fr 60px auto;}.rg-bar{grid-column:1/-1;order:3}}
     .promo-route{border:1.5px solid #dcecf5;border-radius:12px;background:#fff;padding:8px 10px;margin:6px 0;}
     .pr-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px;}
-    .pr-head b{font-size:12px;color:#2a4a5a;}
-    .pr-head span{font-size:12px;color:#405964;white-space:nowrap;}
+    .pr-head b{font-size:14px;color:#2a4a5a;}
+    .pr-head span{font-size:14px;color:#405964;white-space:nowrap;}
     .pr-ops{display:flex;gap:6px;}
-    .pr-ops .promo-btn{flex:1;width:auto;padding:7px 4px;font-size:12px;}
+    .pr-ops .promo-btn{flex:1;width:auto;padding:7px 4px;font-size:14px;}
     /* 機体ピッカー（航路タブで機体を選ぶ） */
     .plane-pick{display:flex;flex-direction:column;gap:6px;margin:2px 0 8px;}
     .pick-plane{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:2px solid #cfe6f2;border-radius:12px;background:#fff;padding:8px 10px;cursor:pointer;font-family:inherit;box-shadow:0 3px 0 #eaf4fa;}
@@ -2080,27 +2091,27 @@
     .pick-plane.bad{opacity:.6;border-style:dashed;cursor:not-allowed;box-shadow:none;}
     .pick-plane .pp-ic{font-size:20px;color:#1273a2;flex:0 0 auto;}
     .pick-plane .pp-main{flex:1;min-width:0;}
-    .pick-plane .pp-main b{display:block;font-size:12px;color:#2a4a5a;}
-    .pick-plane .pp-main span{display:block;font-size:12px;color:#405964;}
-    .pick-plane .pp-net{flex:0 0 auto;font-size:12px;font-weight:500;text-align:right;}
+    .pick-plane .pp-main b{display:block;font-size:14px;color:#2a4a5a;}
+    .pick-plane .pp-main span{display:block;font-size:14px;color:#405964;}
+    .pick-plane .pp-net{flex:0 0 auto;font-size:14px;font-weight:500;text-align:right;}
     .pick-plane .pp-net.ok{color:#1f7a3d;}
     .pick-plane .pp-net.loss{color:#c0392b;}
-    .pick-plane .pp-net.ng{color:#b0813a;font-size:12px;font-weight:500;max-width:96px;}
+    .pick-plane .pp-net.ng{color:#b0813a;font-size:14px;font-weight:500;max-width:96px;}
     /* 路線管理（増便・減便・撤退） */
     .route-row .route-ops{display:flex;gap:6px;margin-top:8px;}
-    .route-row .route-ops .mini-btn{width:auto;flex:1;margin:0;padding:6px 4px;font-size:12px;}
+    .route-row .route-ops .mini-btn{width:auto;flex:1;margin:0;padding:6px 4px;font-size:14px;}
     .route-row .rt-del{color:#c0392b !important;border-color:#ffc7bd !important;background:#fff3f0 !important;}
     .route-row.lossline{border-color:#ffc0b3 !important;background:#fff4f1 !important;}
     /* 空港ランク・開発 */
-    .rank-badge{display:flex;justify-content:space-between;align-items:center;border:2px solid #ccc;border-radius:12px;padding:6px 10px;margin:8px 0 4px;font-size:12px;font-weight:500;background:#fff;}
+    .rank-badge{display:flex;justify-content:space-between;align-items:center;border:2px solid #ccc;border-radius:12px;padding:6px 10px;margin:8px 0 4px;font-size:14px;font-weight:500;background:#fff;}
     .rank-badge b{font-size:15px;}
     .rank-badge .rb-mov{color:#405964;font-weight:500;}
     .dev-list{display:flex;flex-direction:column;gap:6px;}
     .dev-item{display:flex;align-items:center;gap:8px;border:1.5px solid #dcecf5;border-radius:12px;background:#f7fbfe;padding:8px 10px;}
     .dev-info{flex:1;min-width:0;}
-    .dev-info b{display:block;font-size:12px;color:#2a4a5a;}
-    .dev-info span{display:block;font-size:12px;color:#405964;}
-    .dev-btn{flex:0 0 auto;width:auto;padding:8px 10px;font-size:12px;white-space:nowrap;}
+    .dev-info b{display:block;font-size:14px;color:#2a4a5a;}
+    .dev-info span{display:block;font-size:14px;color:#405964;}
+    .dev-btn{flex:0 0 auto;width:auto;padding:8px 10px;font-size:14px;white-space:nowrap;}
     .dev-btn:disabled{opacity:.55;}
     /* ===== 強調は「太さ」ではなく「色」で =====
        日本語は小さい字を太らせると画数がつぶれて読めなくなる。
@@ -2121,7 +2132,7 @@
     .report-total div,.seg-btn small,.ts-tx small,.df-note,.dp-meta,.rl-swing small,
     .np-row>span,.sb-l,.sb-v,.shop-maker,.shop-label,.pm-note,.fc-val{font-weight:500}
     /* いちばん小さい字は、少しだけ大きくして余白をとる */
-    .fc-val{font-size:12px;letter-spacing:-.02em}
+    .fc-val{font-size:14px;letter-spacing:-.02em}
     .fc-m,.rb-kind,.dp-tag,.kind-tag{letter-spacing:.01em}
     /* ボタンは短い語なので太さを残すが、800 までは要らない */
     .mini-btn,.seg-btn,.shop-tab{font-weight:500}
@@ -2131,7 +2142,7 @@
     /* 元の指定のほうが詳細度が高くて残った分。ここは重さを明示的に戻す */
     .wxr-c,.s-eff,.sg-go,.rl-bar span,.fc-peaks .pk b,.rank-more,
     .rank-badge>span,.hl>span{font-weight:500!important}
-    .fc-peaks .pk b{font-size:12px}
+    .fc-peaks .pk b{font-size:14px}
     /* ===== タイトル画面 ===== */
     /* 上端ぞろえ。中央ぞろえだと、設定を開いた瞬間に全体が再配置されてボタンが動く */
     .title-screen{position:fixed;inset:0;z-index:60;display:grid;justify-items:center;align-content:start;overflow:auto;
@@ -2150,11 +2161,11 @@
     @keyframes tsFly{0%{transform:translate(0,0) rotate(-4deg)}50%{transform:translate(62vw,-5vh) rotate(3deg)}100%{transform:translate(125vw,2vh) rotate(-4deg)}}
     .ts-inner{position:relative;z-index:1;width:min(460px,100%);text-align:center}
     .ts-logo{margin-bottom:22px}
-    .ts-eyebrow{display:block;font-size:12px;font-weight:500;letter-spacing:.3em;color:#4e8fb3;margin-bottom:6px}
+    .ts-eyebrow{display:block;font-size:14px;font-weight:500;letter-spacing:.3em;color:#4e8fb3;margin-bottom:6px}
     .ts-logo h1{margin:0;font-size:clamp(27px,8.2vw,40px);line-height:1.2;font-weight:800;color:#17384a;
       text-shadow:0 3px 0 #ffffffcc,0 6px 14px #4a90b52e;letter-spacing:.01em}
     .ts-logo h1 b{display:block;color:#1373a6}
-    .ts-logo p{margin:10px 0 0;font-size:13px;font-weight:500;color:#4e7f98}
+    .ts-logo p{margin:10px 0 0;font-size:14px;font-weight:500;color:#4e7f98}
     .ts-menu{display:flex;flex-direction:column;gap:10px}
     .ts-btn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;cursor:pointer;text-align:left;
       border:2.5px solid #ffffff;border-radius:16px;background:#ffffffe8;color:#17384a;
@@ -2171,21 +2182,21 @@
     .ts-ic{font-size:24px;line-height:1;flex:0 0 auto}
     .ts-tx{flex:1;min-width:0}
     .ts-tx b{display:block;font-size:16px;font-weight:800}
-    .ts-tx small{display:block;font-size:12px;font-weight:500;color:#405964;margin-top:3px;line-height:1.4}
+    .ts-tx small{display:block;font-size:14px;font-weight:500;color:#405964;margin-top:3px;line-height:1.4}
     .ts-btn.primary .ts-tx small{color:#dbf2ff}
-    .ts-go{font-size:13px;color:#8fb6c9;flex:0 0 auto}
+    .ts-go{font-size:14px;color:#8fb6c9;flex:0 0 auto}
     .ts-btn.primary .ts-go{color:#eaf8ff}
     .ts-config{margin-top:12px;padding:14px;text-align:left;border:2.5px solid #fff;border-radius:16px;
       background:#ffffffe8;box-shadow:0 4px 0 #a9d4ea,0 10px 22px #5a9dc128}
     .ts-config .field{margin-top:0}
     .ts-config .field+.field{margin-top:14px}
-    .ts-config label{color:#4e7f98 !important;font-size:12px}
+    .ts-config label{color:#4e7f98 !important;font-size:14px}
     .ts-danger{margin-top:14px;padding-top:12px;border-top:1.5px dashed #cfe6f1}
-    .ts-danger p{margin:0 0 7px;font-size:12px;color:#405964;line-height:1.5}
+    .ts-danger p{margin:0 0 7px;font-size:14px;color:#405964;line-height:1.5}
     .ts-danger button{width:auto;padding:8px 14px;border:2px solid #ffc0b0;border-radius:10px;background:#fff5f2;
-      color:#c0392b;font-weight:500;font-size:12px;cursor:pointer}
+      color:#c0392b;font-weight:500;font-size:14px;cursor:pointer}
     .ts-danger button:disabled{opacity:.45;cursor:not-allowed}
-    .ts-foot{margin:18px 0 0;font-size:12px;color:#405964;line-height:1.6}
+    .ts-foot{margin:18px 0 0;font-size:14px;color:#405964;line-height:1.6}
     .toast{z-index:70 !important}   /* タイトル画面の上にも出す */
     @media(max-height:620px){.ts-logo{margin-bottom:14px}.ts-logo p{margin-top:6px}.ts-foot{display:none}}
     /* ── 2026-10-21：指で押せる大きさに ──
@@ -2214,7 +2225,7 @@
     .map-actions.pinned{position:fixed !important;bottom:0;top:auto;z-index:40;
       box-shadow:0 -6px 18px #0b355014;border-radius:14px 14px 0 0}
     .pin-week{position:fixed;right:12px;bottom:68px;z-index:41;border:0;border-radius:999px;
-      padding:13px 20px;min-height:48px;font-family:inherit;font-size:13px;font-weight:700;
+      padding:13px 20px;min-height:48px;font-family:inherit;font-size:14px;font-weight:700;
       color:#05202b;background:linear-gradient(180deg,#7fe0a8,#2fb06a);
       box-shadow:0 6px 16px #1d7a4e40;cursor:pointer}
     .pin-week[hidden]{display:none}
@@ -2222,6 +2233,15 @@
        説明文はほぼ 12px なので、ここがいちばん潰れて見える場所だった
        （「この機体で毎日1往復したとき」「機内サービス・装備」など）。
        クラス付きの規則のほうが詳細度が高いので、数字の 700 は下で生き残る。 */
+    /* ── 2026-11-16：本文の大きさを12px/13px → 14px に上げた ──
+       10-15 に「10px・11pxが164個あってカクカクする」として下限を12pxへ引き上げたが、
+       その下限がそのまま上限になり、画面に出ている文字の84%（航路タブで741字中619字）が
+       12pxだった。10-20 には太さを800→700→500へ落として「12pxで使える太字は500が上限」と
+       結論が出ており、太さの側はすでに詰め切っている。残っていた原因は大きさそのもの。
+       「離」は19画。12×12pxの枠では画のすき間が1px未満になり、丸ゴシック（M PLUS Rounded 1c）の
+       丸い先端と太さ500がそこを埋めてしまう。
+       12pxと13pxをまとめて14pxにした（13pxを残すと本文より小さくなって序列が逆転する）。
+       15px以上の見出しはそのまま。 */
     b,strong{font-weight:500}
     /* ── 2026-10-20：12pxの漢字に 700/800 を当てると潰れる ──
        400/500/700/800 を並べて実測した。「離」「機」「鹿」のような画数の多い字は、
@@ -4947,7 +4967,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       return `<h2>${facilityFullName(name)}のデータ</h2>${masterDetail('ap',items,{slim:true})}`;
     }
     function airportDevHtml(name){
-      if(!canDevelop(name))return `<p style="font-size:12px;color:var(--muted);margin-top:8px">この空港に就航すると、地元への働きかけができるようになります。</p>`;
+      if(!canDevelop(name))return `<p style="font-size:14px;color:var(--muted);margin-top:8px">この空港に就航すると、地元への働きかけができるようになります。</p>`;
       const d=devOf(name),rw=parseRunway(name),rc=runwayCount(name),mine=myFlightsAt(name);
       const items=[];
       /* いまの機運と、次に動く整備 */
@@ -6754,7 +6774,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         <div class="fc-peaks"><span class="pk hot">⛰ 最高 ${hi.c.month}第${hi.c.weekOfMonth}週 <b>${hi.v.toFixed(2)}</b>${hi.wk===state.week?'（今週）':`（${hi.wk-state.week}週後）`}</span><span class="pk cold">🕳 最低 ${lo.c.month}第${lo.c.weekOfMonth}週 <b>${lo.v.toFixed(2)}</b>${lo.wk===state.week?'（今週）':`（${lo.wk-state.week}週後）`}</span></div>
         ${evs.length?`<div class="fc-ev">📅 この先の行事：${evs.join('　/　')}</div>`:''}
         <h3 class="step-title" style="margin-top:12px">🌤 空模様の見通し</h3>${wxRows}
-        <p style="font-size:12px;color:var(--muted);margin:6px 2px 0">先の予報ほど外れます（2週後はおよそ半分の確率）。台風・大雪は<b>その地方の便だけ</b>落ちます。</p>`;
+        <p style="font-size:14px;color:var(--muted);margin:6px 2px 0">先の予報ほど外れます（2週後はおよそ半分の確率）。台風・大雪は<b>その地方の便だけ</b>落ちます。</p>`;
     }
     // セグメント式ボタン（ドロップダウンの代替）
     function seg(name,opts,cur){return `<div class="seg">`+opts.map(o=>`<button type="button" class="seg-btn${String(o.v)===String(cur)?' on':''}" data-seg="${name}" data-v="${o.v}"${o.dis?' disabled':''}>${o.label}${o.sub?`<small>${o.sub}</small>`:''}</button>`).join('')+`</div>`;}
@@ -6867,7 +6887,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       const flying=state.planes.filter(p=>planeRoutes(p).length).length;
       const tot=state.planes.reduce((s,p)=>s+planeWeeklyOutlook(p).net,0);
       return `<h2>保有機材の一覧</h2>
-        <p style="font-size:12px;color:var(--muted);margin:2px 0 6px">${state.planes.length}機（運航中 ${flying}機／待機 ${state.planes.length-flying}機）。機体ごとに、いま飛んでいる便と曜日・時刻、そして<b>週の見込み</b>です。<br>本社経費・借入利息はここに含みません（会社全体の費用です）。</p>
+        <p style="font-size:14px;color:var(--muted);margin:2px 0 6px">${state.planes.length}機（運航中 ${flying}機／待機 ${state.planes.length-flying}機）。機体ごとに、いま飛んでいる便と曜日・時刻、そして<b>週の見込み</b>です。<br>本社経費・借入利息はここに含みません（会社全体の費用です）。</p>
         <div class="fl-total ${tot>=0?'pos':'neg'}"><span>全機あわせた週の見込み</span><b>${tot>=0?'+':'−'}${yen(Math.abs(Math.round(tot)))}</b></div>
         <div class="fleet-list">${state.planes.map(p=>{
           const m=aircraftCatalog[p.type],cfg=cabinConfig(p);
@@ -7310,7 +7330,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
           <span><b>💰 現金</b>いちばん安く済みます。以後の支払いはゼロ。</span>
           <span><b>🏦 ローン</b>頭金${Math.round(DOWN_RATE*100)}%だけ払い、残りは機体を担保に借ります。利息は年${(loanRate()*52*100).toFixed(1)}%、<b>元金は好きなときに返せます</b>。現金を使い切らずに機数を増やしたいとき。</span>
           <span><b>📄 リース</b>初期費用がいちばん軽いかわり、数年で購入より高くつき、<b>機体は残りません</b>。保証金は返却で戻ります。</span></div>`;
-        const head=`<p style="font-size:12px;color:var(--muted);margin:4px 0 8px">路線規模に合う機体を選びましょう。各カードは<b>座席・航続・必要滑走路</b>だけを出しています。性能や解説は<b>「くわしく」</b>で開きます。</p>`+payNote+sortUI;
+        const head=`<p style="font-size:14px;color:var(--muted);margin:4px 0 8px">路線規模に合う機体を選びましょう。各カードは<b>座席・航続・必要滑走路</b>だけを出しています。性能や解説は<b>「くわしく」</b>で開きます。</p>`+payNote+sortUI;
         if(cur.k==='class')
           return head+['commuter','prop','regional','narrow','wide'].map(cls=>{
             /* 分類の中は小さい順に並べる。カタログへの追記順に左右されないよう、ここで毎回そろえる */
@@ -7321,7 +7341,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         return head+`<div class="shop-group">${cur.ic} ${cur.label} — ${rev?cur.rev:cur.note}（全${all.length}機）</div>`
           +sortedAircraft().map(([id,m])=>planeCardHtml(id,m,mx,baseRw,icon)).join('');}
       const isEquip=state.shopTab==='equip',cat=isEquip?equipmentCatalog:facilityCatalog,owned=isEquip?state.equipment:state.facilities,kind=isEquip?'equip':'facility';
-      return `<p style="font-size:12px;color:var(--muted);margin:4px 0 8px">${isEquip?'会社全体の運航に効く強化です（各1つまで）。':'拠点・会社を強くする施設です（各1つまで）。'}</p>`+Object.entries(cat).map(([id,it])=>{const price=buildPrice(it.cost),have=owned.includes(id),afford=state.cash>=price;return `<div class="shop-item${have?' owned':''}"><div class="shop-ic">${it.icon}</div><div class="shop-info"><b>${it.name}</b><span>${it.desc}</span><span class="shop-price">${yen(price)}${price<it.cost?`<i class="shop-yutai">🏗 優待 −${Math.round((1-price/it.cost)*100)}%</i>`:''}</span></div><button class="mini-btn buy-item" data-kind="${kind}" data-id="${id}" ${have||!afford?'disabled':''}>${have?'導入済み':afford?'購入':'資金不足'}</button></div>`;}).join('');
+      return `<p style="font-size:14px;color:var(--muted);margin:4px 0 8px">${isEquip?'会社全体の運航に効く強化です（各1つまで）。':'拠点・会社を強くする施設です（各1つまで）。'}</p>`+Object.entries(cat).map(([id,it])=>{const price=buildPrice(it.cost),have=owned.includes(id),afford=state.cash>=price;return `<div class="shop-item${have?' owned':''}"><div class="shop-ic">${it.icon}</div><div class="shop-info"><b>${it.name}</b><span>${it.desc}</span><span class="shop-price">${yen(price)}${price<it.cost?`<i class="shop-yutai">🏗 優待 −${Math.round((1-price/it.cost)*100)}%</i>`:''}</span></div><button class="mini-btn buy-item" data-kind="${kind}" data-id="${id}" ${have||!afford?'disabled':''}>${have?'導入済み':afford?'購入':'資金不足'}</button></div>`;}).join('');
     }
     /* 2026-10-27：建設会社の優待（buildCostMult）はここ。表示も同じ buildPrice を通す */
     function buyUpgrade(kind,id){const isEquip=kind==='equip',cat=isEquip?equipmentCatalog:facilityCatalog,owned=isEquip?state.equipment:state.facilities,it=cat[id];if(!it||owned.includes(id))return;
@@ -7692,9 +7712,9 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       <div class="fin-grid"><div><span>借りている額</span><b>${yen(state.loan)}</b></div><div><span>毎週の利息</span><b class="loss">−${yen(wk)}</b></div>${lease?`<div><span>毎週のリース料</span><b class="loss">−${yen(Math.round(lease))}</b></div>`:''}
         <div><span>機体の資産価値</span><b>${yen(fleetValue())}</b></div><div><span>毎週の目減り</span><b class="loss">−${yen(state.planes.reduce((s,p)=>s+planeDepreciation(p),0))}</b></div>
         <div><span>資金＋資産</span><b>${yen(Math.round(state.cash)+fleetValue()-state.loan)}</b></div></div>
-      <p style="font-size:12px;color:var(--muted);margin:6px 2px 0">機体は<b>持っているだけで値が下がります</b>（生産中の型で年${Math.round(DEPR_NEW*100)}%、生産終了なら年${Math.round(DEPR_OLD*100)}%）。借入枠はこの<b>資産価値の7割</b>なので、古い機体ばかりだと枠も痩せます。</p>
+      <p style="font-size:14px;color:var(--muted);margin:6px 2px 0">機体は<b>持っているだけで値が下がります</b>（生産中の型で年${Math.round(DEPR_NEW*100)}%、生産終了なら年${Math.round(DEPR_OLD*100)}%）。借入枠はこの<b>資産価値の7割</b>なので、古い機体ばかりだと枠も痩せます。</p>
       <div class="fin-ops"><button class="mini-btn fin-btn" data-fin="borrow" ${loanRoom()<loanStep()?'disabled':''}>${yen(loanStep())} 借りる</button><button class="mini-btn fin-btn" data-fin="repay" ${state.loan<=0?'disabled':''}>${yen(Math.min(state.loan,loanStep()))} 返す</button></div>
-      <p style="font-size:12px;color:var(--muted);margin:7px 2px 0">利息は毎週 <b>${(loanRate()*100).toFixed(2)}%</b>。機体を買う頭金が足りないときの<b>つなぎ</b>に使いましょう。資金がマイナスになると倒産です。</p></div>`;}
+      <p style="font-size:14px;color:var(--muted);margin:7px 2px 0">利息は毎週 <b>${(loanRate()*100).toFixed(2)}%</b>。機体を買う頭金が足りないときの<b>つなぎ</b>に使いましょう。資金がマイナスになると倒産です。</p></div>`;}
     /* ── 2026-10-27：お金の窓（🏦銀行・📈証券）──
        借入は「会社タブの右サイドバー」、買収は「地図の下の折りたたみ」と、
        お金の話が離れた2か所に分かれていて、どちらも見つけにくかった。
@@ -7908,7 +7928,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       const rows=Object.keys(rivals).filter(c=>!(state.rivalMerged||{})[c]).map(c=>({c,v:carrierValue(c),f:carrierFreq(c),a:al[c]}))
         .sort((x,y)=>{const rx=x.a?rank[x.a]:9,ry=y.a?rank[y.a]:9;return rx-ry||x.v-y.v;});
       const badge=a=>a==='member'?'<span class="al-b own">仲間</span>':a==='ally'?'<span class="al-b cd">提携中</span>':'';
-      return `<p style="font-size:12px;color:var(--muted);margin:2px 2px 8px">🤝 <b>提携</b>すると乗継のお客さんが増え、その会社は攻めてこなくなります。<br>💰 <b>仲間にする</b>と、その会社の毎週の収入とお客さんがまるごと自社のものに。</p>`
+      return `<p style="font-size:14px;color:var(--muted);margin:2px 2px 8px">🤝 <b>提携</b>すると乗継のお客さんが増え、その会社は攻めてこなくなります。<br>💰 <b>仲間にする</b>と、その会社の毎週の収入とお客さんがまるごと自社のものに。</p>`
       +rows.map(({c,v,f,a})=>{
         const ac=allyCost(c),mc=memberCost(c),why=memberBlockedWhy(c);
         let btns='';
@@ -7920,13 +7940,13 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         /* 2026-10-21：押せない理由を黙っていると、ただ壊れたボタンに見える */
         return `<div class="al-row"><div class="al-ic" style="background:${rivals[c].color}22;color:${rivals[c].color}">✈</div><div class="al-info"><b>${c} ${badge(a)}</b><span>${f}往復/日${a==='member'?`　毎週 +${yen(carrierWeeklyProfit(c))}`:''}${(a!=='member'&&carrierUnits(c))?`　持株 ${(carrierStake(c)*100).toFixed(1)}%（そのぶん値引き）`:''}</span>${(a!=='member'&&why)?`<span class="al-why">${why}</span>`:''}</div><div class="al-btns">${btns}</div></div>`;}).join('');
     }
-    function pnlChartHtml(){const h=state.history;if(h.length<2)return '<p style="font-size:12px;color:var(--muted)">運航を重ねると、ここに資金推移グラフが出ます。</p>';const W=290,H=96,pad=6,cashes=h.map(x=>x.cash),min=Math.min(...cashes,0),max=Math.max(...cashes,1),xf=i=>pad+i/(h.length-1)*(W-2*pad),yf=v=>H-pad-(v-min)/((max-min)||1)*(H-2*pad),pts=h.map((p,i)=>`${xf(i).toFixed(1)},${yf(p.cash).toFixed(1)}`).join(' '),zy=yf(0);return `<svg viewBox="0 0 ${W} ${H}" class="pnl-chart" preserveAspectRatio="none"><line x1="0" y1="${zy.toFixed(1)}" x2="${W}" y2="${zy.toFixed(1)}" stroke="#e0a0a0" stroke-dasharray="3 3"/><polyline points="${pts}" fill="none" stroke="#1f9fe0" stroke-width="2"/></svg><div class="chart-cap">資金推移（直近${h.length}週）</div>`;}
+    function pnlChartHtml(){const h=state.history;if(h.length<2)return '<p style="font-size:14px;color:var(--muted)">運航を重ねると、ここに資金推移グラフが出ます。</p>';const W=290,H=96,pad=6,cashes=h.map(x=>x.cash),min=Math.min(...cashes,0),max=Math.max(...cashes,1),xf=i=>pad+i/(h.length-1)*(W-2*pad),yf=v=>H-pad-(v-min)/((max-min)||1)*(H-2*pad),pts=h.map((p,i)=>`${xf(i).toFixed(1)},${yf(p.cash).toFixed(1)}`).join(' '),zy=yf(0);return `<svg viewBox="0 0 ${W} ${H}" class="pnl-chart" preserveAspectRatio="none"><line x1="0" y1="${zy.toFixed(1)}" x2="${W}" y2="${zy.toFixed(1)}" stroke="#e0a0a0" stroke-dasharray="3 3"/><polyline points="${pts}" fill="none" stroke="#1f9fe0" stroke-width="2"/></svg><div class="chart-cap">資金推移（直近${h.length}週）</div>`;}
     function planePL(plane){const r=activeRouteOf(plane),nightW=nightCost(plane,planePark(plane))*7,lease=plane.leased?plane.leaseFee:0;if(!r)return{plane,route:null,rev:0,fuel:0,fees:0,crew:0,maint:0,svc:0,night:nightW,lease,net:-nightW-lease};const wk=weeklyEstimate(r,plane);return{plane,route:r,rev:wk.revenue,fuel:wk.fuel,fees:wk.fees,crew:wk.crew,maint:wk.maint,svc:wk.svc,night:wk.night,lease,net:wk.net-lease};}
     function fleetPLHtml(){
       const pls=state.planes.map(planePL);const y=n=>'¥'+Math.round(n).toLocaleString();
       const T=pls.reduce((a,x)=>({rev:a.rev+x.rev,fuel:a.fuel+x.fuel,crew:a.crew+x.crew,maint:a.maint+x.maint,fees:a.fees+x.fees,svc:a.svc+x.svc,night:a.night+x.night,lease:a.lease+x.lease,net:a.net+x.net}),{rev:0,fuel:0,crew:0,maint:0,fees:0,svc:0,night:0,lease:0,net:0});
       const cell=(l,v,cls)=>`<div class="pl-cell ${cls||''}"${cls==='crewcell'?' title="パイロットと客室乗務員の給与。飛ばした時間ぶんだけかかります"':''}><span>${l}</span><b>${v}</b></div>`;
-      const rows=pls.map(x=>`<div class="pl-row${x.net<0?' neg':''}"><div class="pl-head"><b>${x.plane.id}　${aircraftCatalog[x.plane.type].name}${x.plane.leased?' <span class="lease-tag">リース</span>':''}</b><span>${x.plane.leased?`<button class="mini-btn lease-return" data-p="${x.plane.id}" style="width:auto;padding:3px 8px;font-size:12px" title="保証金 ${yen(leaseDeposit(x.plane))} が戻ります">返却 +${yen(leaseDeposit(x.plane))}</button>`:`<button class="mini-btn plane-sell" data-p="${x.plane.id}" style="width:auto;padding:3px 8px;font-size:12px" title="取得 ${yen(planePaid(x.plane))}／${planeAge(x.plane).toFixed(1)}年保有。手数料${Math.round(SELL_FEE*100)}%を引いた額が入ります">売却 +${yen(planeSellPrice(x.plane))}</button>`}${x.route?routeName(x.route):'💤 待機中'}</span></div>
+      const rows=pls.map(x=>`<div class="pl-row${x.net<0?' neg':''}"><div class="pl-head"><b>${x.plane.id}　${aircraftCatalog[x.plane.type].name}${x.plane.leased?' <span class="lease-tag">リース</span>':''}</b><span>${x.plane.leased?`<button class="mini-btn lease-return" data-p="${x.plane.id}" style="width:auto;padding:3px 8px;font-size:14px" title="保証金 ${yen(leaseDeposit(x.plane))} が戻ります">返却 +${yen(leaseDeposit(x.plane))}</button>`:`<button class="mini-btn plane-sell" data-p="${x.plane.id}" style="width:auto;padding:3px 8px;font-size:14px" title="取得 ${yen(planePaid(x.plane))}／${planeAge(x.plane).toFixed(1)}年保有。手数料${Math.round(SELL_FEE*100)}%を引いた額が入ります">売却 +${yen(planeSellPrice(x.plane))}</button>`}${x.route?routeName(x.route):'💤 待機中'}</span></div>
       ${x.plane.leased?'':(()=>{const v=planeValue(x.plane),paid=planePaid(x.plane),d=v-paid,wk=planeDepreciation(x.plane),floored=v<=paid*VALUE_FLOOR+1;
         return `<div class="pl-val"><span>資産価値</span><b>${yen(v)}</b><i class="${d>=0?'up':'down'}">取得比 ${d>=0?'+':'−'}${yen(Math.abs(d))}</i><small>${floored?'これ以上は下がりません（解体部品の値段）':`毎週 −${yen(wk)}（年${Math.round(deprRate(x.plane.type)*100)}%・${REAL_NEW.has(x.plane.type)?'生産中':'生産終了で下落が速い'}）`}</small></div>`;})()}<div class="pl-grid">${cell('売上',y(x.rev),'rev')}${cell('燃料','−'+y(x.fuel))}${cell('人件費','−'+y(x.crew),'crewcell')}${cell('整備','−'+y(x.maint))}${cell('空港料','−'+y(x.fees))}${cell('機内','−'+y(x.svc))}${cell('夜間格納','−'+y(x.night))}${x.lease?cell('リース料','−'+y(x.lease)):''}${cell('週次収支',(x.net>=0?'+':'')+yen(x.net),'net '+(x.net>=0?'pos':'loss'))}</div></div>`).join('');
       return `<div class="pl-sum"><div><span>全機 売上</span><b>${y(T.rev)}</b></div><div><span>全機 経費</span><b>−${y(T.fuel+T.crew+T.maint+T.fees+T.svc+T.night+T.lease)}</b></div><div class="${T.net>=0?'pos':'loss'}"><span>全機 週次収支</span><b>${T.net>=0?'+':'−'}${yen(Math.abs(Math.round(T.net)))}</b></div></div>${rows}`;
@@ -8089,7 +8109,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
       <b>幹線に入る前にその地域で名前を売っておく</b>手が打てます。上限（細い線）は<b>その地域でどれだけ大きな市場に飛んでいるか</b>で決まります。</p>
       <div class="rg-list">${regRows}</div>
       <h3 class="step-title">🎯 路線ごとの販促</h3>
-      ${routes.length?routes.map(r=>{const mp=Math.round((maturityFactor(r)-0.6)/0.6*100);return `<div class="promo-route"><div class="pr-head"><b>${routeName(r)}</b><span>路線認知度 <b style="color:#1373a6">${mp}%</b>（就航${r.matWeeks||0}週）</span></div><div class="pr-ops"><button class="mini-btn promo-btn" data-act="campaign" data-r="${r.id}" ${state.cash<adPrice(15000000)?'disabled':''}>🎯 キャンペーン ${yen(adPrice(15000000))}</button><button class="mini-btn promo-btn" data-act="event" data-r="${r.id}" ${state.cash<adPrice(35000000)?'disabled':''}>🎉 就航イベント ${yen(adPrice(35000000))}</button></div></div>`;}).join(''):'<p style="color:var(--muted);font-size:12px">運航中の路線がありません。航路タブで路線を開設すると、ここで販促できます。</p>'}`;
+      ${routes.length?routes.map(r=>{const mp=Math.round((maturityFactor(r)-0.6)/0.6*100);return `<div class="promo-route"><div class="pr-head"><b>${routeName(r)}</b><span>路線認知度 <b style="color:#1373a6">${mp}%</b>（就航${r.matWeeks||0}週）</span></div><div class="pr-ops"><button class="mini-btn promo-btn" data-act="campaign" data-r="${r.id}" ${state.cash<adPrice(15000000)?'disabled':''}>🎯 キャンペーン ${yen(adPrice(15000000))}</button><button class="mini-btn promo-btn" data-act="event" data-r="${r.id}" ${state.cash<adPrice(35000000)?'disabled':''}>🎉 就航イベント ${yen(adPrice(35000000))}</button></div></div>`;}).join(''):'<p style="color:var(--muted);font-size:14px">運航中の路線がありません。航路タブで路線を開設すると、ここで販促できます。</p>'}`;
     }
     function companyHtml(){
       /* 機体を選ぶ最中に「この飛行機は何なのか」を引けるよう、遊んでいる途中からも図鑑に入れる */
@@ -8114,14 +8134,14 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
         const now=(st==='now'&&c.now)?(()=>{try{return c.now()}catch(e){return ''}})():'';
         return `<div class="ch-row ${st}"><span class="ch-ic">${st==='done'?'✅':c.ic}</span><div><b>${c.n}</b><span>${c.g}</span>${now?`<span class="ch-now">📍 ${now}</span>`:''}${st==='now'?`<span class="ch-hint">${c.hint}</span>`:''}</div></div>`;}).join('')}</div>
       <h3 class="step-title">🏆 全国ランキング（週間旅客数）</h3>${rankBoardHtml()}
-      <p style="font-size:12px;color:var(--muted);margin:4px 2px 0">大手が乗り入れていない空白路線を積み上げ、シェアを伸ばして日本一を目指しましょう。</p>
+      <p style="font-size:14px;color:var(--muted);margin:4px 2px 0">大手が乗り入れていない空白路線を積み上げ、シェアを伸ばして日本一を目指しましょう。</p>
       ${modLines.length?`<div class="market"><b>現在の強化効果</b><br><span>${modLines.join('　/　')}</span></div>`:''}
       ${/* 2026-10-27：右のサイドバーにあった「🏦 お金を借りる」を外した。
             企画タブの〔🏦 銀行〕へ移したので、ここに置くと入口が2つになる。 */''}
       ${masterDetail('coSide',[
         {k:'sys',ic:'⚙️',label:'表示設定・セーブ',sub:'自動保存',body:()=>
           `<div class="field"><label>金額の表示</label><div class="seg">${Object.keys(moneyFormats).map(k=>`<button type="button" class="seg-btn${(state.moneyFmt||'sen')===k?' on':''}" data-money="${k}">${moneyFormats[k]}<small>${(function(){const f=state.moneyFmt;state.moneyFmt=k;const s=yen(123456789);state.moneyFmt=f;return s;})()}</small></button>`).join('')}</div></div>`
-          +`<p style="font-size:12px;color:var(--muted);margin:10px 2px 8px">進行は<b>自動保存</b>されます。次に開くと「コンティニュー」で再開できます。</p>`
+          +`<p style="font-size:14px;color:var(--muted);margin:10px 2px 8px">進行は<b>自動保存</b>されます。次に開くと「コンティニュー」で再開できます。</p>`
           +`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="mini-btn" id="replayTutBtn" style="width:auto;padding:8px 14px">🗼 案内をもう一度見る</button><button class="mini-btn" id="toTitleBtn" style="width:auto;padding:8px 14px">🏠 タイトルへ戻る</button><button class="mini-btn" id="resetGameBtn" style="width:auto;padding:8px 14px">最初からやり直す</button></div>`}
       ],{narrow:true})}
       `;
@@ -8186,7 +8206,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
     ];
     /* 時刻表ビュー：区間ごとに1行。出発空港・出発時刻・着陸空港・着陸時刻・機材・座席・搭乗率・利益 */
     function timetableHtml(){
-      if(!state.routes.length)return '<p style="color:var(--muted);font-size:12px">まだ路線がありません。</p>';
+      if(!state.routes.length)return '<p style="color:var(--muted);font-size:14px">まだ路線がありません。</p>';
       const rows=[];
       state.routes.forEach(r=>{
         const pl=state.planes.find(p=>p.id===r.aircraftId);
@@ -8318,7 +8338,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
     }
     function routeTotalsHtml(){
       const rows=routeRows();
-      if(!rows.length)return '<p style="color:var(--muted);font-size:12px">まだ路線がありません。航路タブで1本ひくと、ここに合計が出ます。</p>';
+      if(!rows.length)return '<p style="color:var(--muted);font-size:14px">まだ路線がありません。航路タブで1本ひくと、ここに合計が出ます。</p>';
       /* 合計はいま飛んでいる路線だけ。運休中は今週の収支に効かない */
       const live=rows.filter(x=>x.wk&&!x.rest);
       const T=live.reduce((a,x)=>({rev:a.rev+x.wk.revenue,op:a.op+x.wk.opcost,ng:a.ng+x.wk.night,
@@ -8339,7 +8359,7 @@ ${isAirfield(name)?`<p class="kind-note">⚖ <b>${facilityFullName(name)}</b> �
     }
     function routeListHtml(ro){
       if(!state.routes.length)return '<h3 class="step-title">就航路線一覧</h3>'+routeMakeBtnHtml(ro)
-        +'<p style="color:var(--muted);font-size:12px">まだ路線がありません。行き先を選んで機体を載せると、ここに並びます。</p>';
+        +'<p style="color:var(--muted);font-size:14px">まだ路線がありません。行き先を選んで機体を載せると、ここに並びます。</p>';
       const rows=routeRows();
       const sk=state.routeSort||'net',sd0=routeSorts.find(s=>s.k===sk)||routeSorts[0];
       if(sd0.get)rows.sort((a,b)=>sd0.get(b)-sd0.get(a));
