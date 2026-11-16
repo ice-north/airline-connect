@@ -285,6 +285,37 @@ const SCAN = () => {
       multi.nightRoutes >= 2 && multi.nightRows === multi.nightCo,
       multi.nightRoutes + '本で 路線 ' + multi.nightRows.toLocaleString() + '／会社 ' + multi.nightCo.toLocaleString());
 
+    /* 企画タブ：選択肢は地図の下、中身は右の欄（2026-11-16にこの形へ変えた） */
+    const promo = await page.evaluate(() => {
+      const names = Object.keys(airports);
+      resetGame();
+      state.selectedBase = names.find(x => x.includes('福岡')); startGame(); state.cash = 9e9;
+      leasePlaneById('Q400'); state.fleetSetup = null; state.shopOpen = false;
+      state.draft = { stops: [names.find(x => x.includes('宮崎'))], park: state.base, frequency: 7,
+                      fare: '普通', timeBand: 2, season: 'all', days: [0,1,2,3,4,5,6],
+                      trips: 1, planeId: null, pick: null };
+      createRoute(); assignRoute(state.planes[0].id, state.routes[0].id);
+      state.panelView = 'promo'; render();
+      const picks = [...document.querySelectorAll('#wide .md-pick .md-item')];
+      const out = { n: picks.length, inSide: document.querySelectorAll('#panel .md-pick').length, bodies: [] };
+      /* 5つとも押して、右の欄が切り替わり、はみ出さないか */
+      ['ad', 'route', 'bank', 'stock', 'own'].forEach(k => {
+        const b = document.querySelector(`#wide .md-pick [data-k="${k}"]`);
+        if (!b) { out.bodies.push(k + ':札がない'); return; }
+        b.click();
+        const h = (document.querySelector('#panel h2') || {}).textContent || '';
+        const side = document.getElementById('panel').getBoundingClientRect().right;
+        const over = [...document.querySelectorAll('#panel *')].filter(e => e.getBoundingClientRect().right > side + 1).length;
+        const empty = document.querySelectorAll('#panel *').length < 2;
+        out.bodies.push(k + (empty ? ':中身が空' : over ? ':はみ出し' + over : '✓') + '／' + h.trim());
+      });
+      return out;
+    });
+    check('企画タブ　選択肢は地図の下にある', promo.n === 5 && promo.inSide === 0,
+      '下に' + promo.n + '個・右に' + promo.inSide + '個');
+    check('企画タブ　押すと右の欄に中身が出る', promo.bodies.every(x => x.includes('✓')),
+      promo.bodies.join(' / '));
+
     /* 買い物：運転資金が残らない買い方に警告が出るか */
     const warn = await page.evaluate(() => {
       const names = Object.keys(airports);
